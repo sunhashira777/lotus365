@@ -1,0 +1,220 @@
+import GradientHeading from '@/components/GradientHeading';
+import AllBetListModal from '@/components/NewModals/AllBetListModal';
+import Pagination from '@/containers/Pagination';
+import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
+import { getQueryString } from '@/utils/formatter';
+import { reactIcons } from '@/utils/icons';
+import dayjs from 'dayjs';
+import moment from 'moment';
+import React, { useEffect, useRef, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+function OpenBets() {
+  const startDatePickerRef = useRef(null);
+  const endDatePickerRef = useRef(null);
+
+  const [showAll, setShowAll] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const take = 10;
+
+  // ✅ FIX: avoid mutating same date object
+  const [startDate, setStartDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 2);
+    return d;
+  });
+
+  const [endDate, setEndDate] = useState(new Date());
+  const [selectedSport, setSelectedSport] = useState('Cricket');
+
+  const [betsData, setBetsData] = useState({
+    bets: [],
+    totalCount: 0,
+  });
+
+  const getAllBets = async () => {
+    if (!isLoggedIn()) return;
+
+    try {
+      const params = getQueryString({
+        offset: (page - 1) * take,
+        limit: take,
+        startDate: moment(startDate).startOf('day').toISOString(),
+        endDate: moment(endDate).endOf('day').toISOString(),
+        status: 'current',
+        sport: selectedSport, // ✅ FIXED
+      });
+
+      const response = await getAuthData(`/bet/GetAllEventsBets?${params}`);
+
+      if (response?.status === 200) {
+        setBetsData({
+          bets: response?.data?.data || [],
+          totalCount: response?.data?.total || 0,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getAllBets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, startDate, endDate, selectedSport]);
+
+  return (
+    <>
+      <div className="min-h-screen mx-1 md:mx-0">
+        <div className="pb-2 md:py-2">
+          <GradientHeading heading={'Open Bets'} />
+        </div>
+
+        {/* Filters */}
+        <div className="flex gap-[5px] items-center w-full mb-2">
+          <div className="w-full">
+            <p className="text-14">From Date</p>
+            <div className="relative">
+              <DatePicker
+                ref={startDatePickerRef}
+                className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+                selected={startDate}
+                onChange={(date) => {
+                  setStartDate(date);
+                  setPage(1);
+                }}
+                popperPlacement="bottom-start"
+                dateFormat="dd-MM-yyyy"
+              />
+              <span
+                onClick={() => startDatePickerRef.current?.setFocus()}
+                className="ay-center z-0 right-2 cursor-pointer"
+              >
+                {reactIcons.calendar}
+              </span>
+            </div>
+          </div>
+
+          <div className="w-full">
+            <p className="text-14">To Date</p>
+            <div className="relative">
+              <DatePicker
+                ref={endDatePickerRef}
+                className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+                selected={endDate}
+                onChange={(date) => {
+                  setEndDate(date);
+                  setPage(1);
+                }}
+                popperPlacement="bottom-start"
+                dateFormat="dd-MM-yyyy"
+              />
+              <span
+                onClick={() => endDatePickerRef.current?.setFocus()}
+                className="ay-center z-0 right-2 cursor-pointer"
+              >
+                {reactIcons.calendar}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-[5px] items-center w-full">
+          <div className="w-full">
+            <p className="text-14">Type</p>
+            <select
+              value={selectedSport}
+              onChange={(e) => {
+                setSelectedSport(e.target.value);
+                setPage(1);
+              }}
+              className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            >
+              <option value="Cricket">Cricket</option>
+              <option value="Soccer">Soccer</option>
+              <option value="Tennis">Tennis</option>
+            </select>
+          </div>
+
+          <div className="w-full">
+            <div className="text-14 h-6"></div>
+            <button
+              onClick={() => setPage(1)}
+              className="bg-primary-1300 text-16 h-10 flex-center rounded-[4px] w-full text-white"
+            >
+              APPLY
+            </button>
+          </div>
+        </div>
+
+        {/* Bets List */}
+        <div className="my-4">
+          {betsData.bets.length > 0 ? (
+            betsData.bets.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setSelectedEventId(item?.event_id);
+                  setShowAll(true);
+                }}
+                className="bg-white px-[10px] py-2 rounded-[5px] mb-2 flex justify-between gap-2 shadow-[0_1px_10px_rgba(0,0,0,0.2)]"
+              >
+                <div className="flex gap-1">
+                  <div className="font-semibold text-14 leading-4 ">
+                    {index + 1 + (page - 1) * take}.
+                  </div>
+
+                  <div className="font-semibold text-14 ">
+                    <h1 className="font-semibold text-14 leading-4 ">
+                      {item?.event}
+                    </h1>
+
+                    {/* ✅ FIX: null safe + correct format */}
+                    <p className="text-12 font-medium">
+                      {item?.last_updated
+                        ? dayjs(item.last_updated).format('DD-MM-YY hh:mm:ss')
+                        : '-'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-primary-1300 px-3 text-white font-semibold h-7 flex-center text-10 rounded-sm">
+                  {item?.bet_count}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-1 mb-5 text-center text-14 bg-[#DAE1DF] border border-[#aaa] cursor-pointer">
+              No Event Found
+            </div>
+          )}
+
+          {/* Pagination */}
+          {betsData?.totalCount > 0 && (
+            <Pagination
+              pageCount={betsData?.totalCount}
+              setPageNumber={setPage}
+              take={take}
+            />
+          )}
+        </div>
+      </div>
+
+      {showAll && (
+        <AllBetListModal
+          isOpen={showAll}
+          handleClose={() => setShowAll(false)}
+          eventId={selectedEventId}
+          fromDate={startDate}
+          toDate={endDate}
+          type="current"
+        />
+      )}
+    </>
+  );
+}
+
+export default OpenBets;
