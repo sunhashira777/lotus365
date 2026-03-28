@@ -196,8 +196,8 @@ const UnderMarket = ({
                             }}
                             text={items?.backPrice1 || '0'}
                             size={
-                              items?.backPrice1 && items?.backsize1
-                                ? intToString(items?.backsize1)
+                              items?.backPrice1 && items?.backSize1
+                                ? intToString(items?.backSize1)
                                 : '0'
                             }
                             disabled={items?.backPrice1 ? false : true}
@@ -206,8 +206,8 @@ const UnderMarket = ({
                           <PinkBtn
                             text={items?.layPrice1 || '0'}
                             size={
-                              items?.layPrice1 && items?.laysize1
-                                ? intToString(items?.laysize1)
+                              items?.layPrice1 && items?.laySize1
+                                ? intToString(items?.laySize1)
                                 : ''
                             }
                             onClick={async () => {

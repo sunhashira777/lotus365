@@ -164,15 +164,15 @@ const Fancy = ({
                               items.LayPrice1,
                               data.market,
                               matchName,
-                              items.LaySize1,
+                              items.laySize1,
                               items.RunnerName,
                               data,
                             );
                           }}
                           text={items?.LayPrice1 || '-'}
                           size={
-                            items?.LaySize1 && items?.LayPrice1
-                              ? intToString(items?.LaySize1)
+                            items?.laySize1 && items?.LayPrice1
+                              ? intToString(items?.laySize1)
                               : ''
                           }
                           disabled={items?.LayPrice1 ? false : true}
@@ -186,15 +186,15 @@ const Fancy = ({
                               items.BackPrice1,
                               data.market,
                               matchName,
-                              items.BackSize1,
+                              items.backSize1,
                               items.RunnerName,
                               data,
                             );
                           }}
                           text={items?.BackPrice1 || '-'}
                           size={
-                            items?.BackSize1 && items?.BackPrice1
-                              ? intToString(items?.BackSize1)
+                            items?.backSize1 && items?.BackPrice1
+                              ? intToString(items?.backSize1)
                               : ''
                           }
                           disabled={items?.BackPrice1 ? false : true}

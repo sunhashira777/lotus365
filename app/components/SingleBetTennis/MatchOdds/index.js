@@ -260,8 +260,8 @@ const MatchOdds = ({
                             }}
                             text={items?.lay?.[0]?.price || '0'}
                             size={
-                              items?.laysize1 && items?.lay?.[0]?.price
-                                ? intToString(items?.laysize1 || 0)
+                              items?.laySize1 && items?.lay?.[0]?.price
+                                ? intToString(items?.laySize1 || 0)
                                 : '0'
                             }
                             disabled={items?.lay?.[0]?.price ? false : true}
@@ -284,8 +284,8 @@ const MatchOdds = ({
                             }}
                             text={items?.lay?.[1]?.price || '0'}
                             size={
-                              items?.laysize2 && items?.lay?.[1]?.price
-                                ? intToString(items?.laysize2 || 0)
+                              items?.laySize2 && items?.lay?.[1]?.price
+                                ? intToString(items?.laySize2 || 0)
                                 : '0'
                             }
                             disabled={items?.lay?.[1]?.price ? false : true}
@@ -308,8 +308,8 @@ const MatchOdds = ({
                             }}
                             text={items?.lay?.[2]?.price || '0'}
                             size={
-                              items?.laysize3 && items?.lay?.[2]?.price
-                                ? intToString(items?.laysize3 || 0)
+                              items?.laySize3 && items?.lay?.[2]?.price
+                                ? intToString(items?.laySize3 || 0)
                                 : '0'
                             }
                             disabled={items?.lay?.[2]?.price ? false : true}

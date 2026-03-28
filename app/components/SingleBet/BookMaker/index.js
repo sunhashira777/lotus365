@@ -195,8 +195,8 @@ const BookMaker = ({
                             }}
                             text={items?.backPrice1 || '0'}
                             size={
-                              items?.backsize1 && items?.backPrice1
-                                ? intToString(items?.backsize1)``
+                              items?.backSize1 && items?.backPrice1
+                                ? intToString(items?.backSize1)``
                                 : '0'
                             }
                             disabled={items?.backPrice1 ? false : true}
@@ -219,8 +219,8 @@ const BookMaker = ({
                             }}
                             text={items?.layPrice1 || '0'}
                             size={
-                              items?.laysize1 && items?.layPrice1
-                                ? intToString(items?.laysize1)
+                              items?.laySize1 && items?.layPrice1
+                                ? intToString(items?.laySize1)
                                 : '0'
                             }
                             disabled={items?.layPrice1 ? false : true}

@@ -108,7 +108,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                           {_items?.runners?.[0]?.backPrice1 ? (
                             <BlueBtn
                               text={_items?.runners?.[0]?.backPrice1}
-                              size={_items?.runners?.[0]?.backsize1 || '-'}
+                              size={_items?.runners?.[0]?.backSize1 || '-'}
                             />
                           ) : (
                             <BlueBtn disabled={true} text={'-'} />
@@ -116,7 +116,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                           {_items?.runners?.[2]?.backPrice1 ? (
                             <BlueBtn
                               text={_items?.runners?.[2]?.backPrice1 || '-'}
-                              size={_items?.runners?.[2]?.backsize1 || '-'}
+                              size={_items?.runners?.[2]?.backSize1 || '-'}
                             />
                           ) : (
                             <>
@@ -126,7 +126,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                           {_items?.runners?.[1]?.backPrice1 ? (
                             <BlueBtn
                               text={_items?.runners?.[1]?.backPrice1 || '-'}
-                              size={_items?.runners?.[1]?.backsize1 || '-'}
+                              size={_items?.runners?.[1]?.backSize1 || '-'}
                             />
                           ) : (
                             <>
@@ -148,7 +148,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                           {_items?.runners?.[0]?.layPrice1 ? (
                             <PinkBtn
                               text={_items?.runners?.[0]?.layPrice1 || '-'}
-                              size={_items?.runners?.[0]?.laysize1 || '-'}
+                              size={_items?.runners?.[0]?.laySize1 || '-'}
                             />
                           ) : (
                             <PinkBtn disabled={true} text={'-'} />
@@ -156,7 +156,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                           {_items?.runners?.[2]?.layPrice1 ? (
                             <PinkBtn
                               text={_items?.runners?.[2]?.layPrice1 || '-'}
-                              size={_items?.runners?.[2]?.laysize1 || '-'}
+                              size={_items?.runners?.[2]?.laySize1 || '-'}
                             />
                           ) : (
                             <>
@@ -166,7 +166,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                           {_items?.runners?.[1]?.layPrice1 ? (
                             <PinkBtn
                               text={_items?.runners?.[1]?.layPrice1 || '-'}
-                              size={_items?.runners?.[1]?.laysize1 || '-'}
+                              size={_items?.runners?.[1]?.laySize1 || '-'}
                             />
                           ) : (
                             <>

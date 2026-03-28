@@ -186,8 +186,8 @@ const MatchOddsSoccer = ({
                             }}
                             text={items?.backPrice3 || '0'}
                             size={
-                              items?.backsize3 && items?.backPrice3
-                                ? intToString(items?.backsize3 || 0)
+                              items?.backSize3 && items?.backPrice3
+                                ? intToString(items?.backSize3 || 0)
                                 : '0'
                             }
                             disabled={items?.backPrice3 ? false : true}
@@ -210,8 +210,8 @@ const MatchOddsSoccer = ({
                             }}
                             text={items?.backPrice2 || '0'}
                             size={
-                              items?.backsize2 && items?.backPrice2
-                                ? intToString(items?.backsize2 || 0)
+                              items?.backSize2 && items?.backPrice2
+                                ? intToString(items?.backSize2 || 0)
                                 : '0'
                             }
                             disabled={items?.backPrice2 ? false : true}
@@ -234,8 +234,8 @@ const MatchOddsSoccer = ({
                             }}
                             text={items?.backPrice1 || '0'}
                             size={
-                              items?.backsize1 && items?.backPrice1
-                                ? intToString(items?.backsize1 || 0)
+                              items?.backSize1 && items?.backPrice1
+                                ? intToString(items?.backSize1 || 0)
                                 : '0'
                             }
                             disabled={items?.backPrice1 ? false : true}
@@ -258,8 +258,8 @@ const MatchOddsSoccer = ({
                             }}
                             text={items?.layPrice1 || '0'}
                             size={
-                              items?.laysize1 && items?.layPrice1
-                                ? intToString(items?.laysize1 || 0)
+                              items?.laySize1 && items?.layPrice1
+                                ? intToString(items?.laySize1 || 0)
                                 : '0'
                             }
                             disabled={items?.layPrice1 ? false : true}
@@ -282,8 +282,8 @@ const MatchOddsSoccer = ({
                             }}
                             text={items?.layPrice2 || '0'}
                             size={
-                              items?.laysize2 && items?.layPrice2
-                                ? intToString(items?.laysize2 || 0)
+                              items?.laySize2 && items?.layPrice2
+                                ? intToString(items?.laySize2 || 0)
                                 : '0'
                             }
                             disabled={items?.layPrice2 ? false : true}
@@ -306,8 +306,8 @@ const MatchOddsSoccer = ({
                             }}
                             text={items?.layPrice3 || '0'}
                             size={
-                              items?.laysize3 && items?.layPrice3
-                                ? intToString(items?.laysize3 || 0)
+                              items?.laySize3 && items?.layPrice3
+                                ? intToString(items?.laySize3 || 0)
                                 : '0'
                             }
                             disabled={items?.layPrice3 ? false : true}

@@ -586,8 +586,8 @@ const MobCricket = () => {
                                 }}
                                 text={items?.backPrice1 || '-'}
                                 size={
-                                  items?.backsize1 && items?.backPrice1
-                                    ? intToString(items?.backsize1 || 0)
+                                  items?.backSize1 && items?.backPrice1
+                                    ? intToString(items?.backSize1 || 0)
                                     : ''
                                 }
                                 disabled={items?.backPrice1 ? false : true}
@@ -610,8 +610,8 @@ const MobCricket = () => {
                                 }}
                                 text={items?.layPrice1 || '-'}
                                 size={
-                                  items?.laysize1 && items?.layPrice1
-                                    ? intToString(items?.laysize1 || 0)
+                                  items?.laySize1 && items?.layPrice1
+                                    ? intToString(items?.laySize1 || 0)
                                     : ''
                                 }
                                 disabled={items?.layPrice1 ? false : true}
@@ -736,8 +736,8 @@ const MobCricket = () => {
                                   }}
                                   text={items?.backPrice1 || '0'}
                                   size={
-                                    items?.backsize1 && items?.backPrice1
-                                      ? intToString(items?.backsize1)
+                                    items?.backSize1 && items?.backPrice1
+                                      ? intToString(items?.backSize1)
                                       : '0'
                                   }
                                   disabled={items?.backPrice1 ? false : true}
@@ -765,8 +765,8 @@ const MobCricket = () => {
                                   }}
                                   text={items?.layPrice1 || '-'}
                                   size={
-                                    items?.laysize1 && items?.layPrice1
-                                      ? intToString(items?.laysize1)
+                                    items?.laySize1 && items?.layPrice1
+                                      ? intToString(items?.laySize1)
                                       : '0'
                                   }
                                   disabled={items?.layPrice1 ? false : true}
@@ -889,7 +889,7 @@ const MobCricket = () => {
                                             items.LayPrice1,
                                             sessionData.market,
                                             matchData?.name,
-                                            items.LaySize1,
+                                            items.laySize1,
                                             items.RunnerName,
                                             sessionData,
                                             minLimitsession,
@@ -901,8 +901,8 @@ const MobCricket = () => {
                                       }}
                                       text={items?.LayPrice1 || '0'}
                                       size={
-                                        items?.LaySize1 && items?.LayPrice1
-                                          ? intToString(items?.LaySize1)
+                                        items?.laySize1 && items?.LayPrice1
+                                          ? intToString(items?.laySize1)
                                           : '0'
                                       }
                                       disabled={items?.LayPrice1 ? false : true}
@@ -918,7 +918,7 @@ const MobCricket = () => {
                                             items.BackPrice1,
                                             sessionData.market,
                                             matchData?.name,
-                                            items.BackSize1,
+                                            items.backSize1,
                                             items.RunnerName,
                                             sessionData,
                                             minLimitsession,
@@ -930,8 +930,8 @@ const MobCricket = () => {
                                       }}
                                       text={items?.BackPrice1 || '0'}
                                       size={
-                                        items?.BackSize1 && items?.BackPrice1
-                                          ? intToString(items?.BackSize1)
+                                        items?.backSize1 && items?.BackPrice1
+                                          ? intToString(items?.backSize1)
                                           : '0'
                                       }
                                       disabled={
