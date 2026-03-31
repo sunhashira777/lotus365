@@ -174,22 +174,24 @@ export const addAccountValidation = yup.object().shape({
     .string()
     .required('Please select bank name')
     .max(60, 'Bank name must be at most 60 characters long'),
-  acountholdername: yup
+  accountHolder: yup
     .string()
     .required('Please enter account holder name')
     .min(2, 'Account holder name must be at least 2 characters long')
     .max(50, 'Account holder name must be at most 50 characters long'),
-  ifscCode: yup
+  ifsc: yup
     .string()
     .required('Please enter IFSC code')
     .min(4, 'Ifsc Code must be at least 4 characters long')
     .max(20, 'Ifsc Code must be at most 20 characters long'),
-
+  condition: Yup.boolean()
+    .oneOf([true], 'Please accept terms & policy')
+    .required('Please accept terms & policy'),
   // accountType: yup.string().required('Please select type'),
   accountNumber: yup
     .string()
     .required('Please enter account number')
-    .min(4, 'Acount number must be at least 4 characters long')
+    .min(4, 'Account number must be at least 4 characters long')
     .max(20, 'Account number must be at most 20 characters long'),
   withdrawPassword: Yup.string().required('Please enter withdraw password'),
 });

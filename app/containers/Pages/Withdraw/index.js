@@ -61,9 +61,10 @@ const WithdrawCard = () => {
   const getBankAccountList = async () => {
     if (islogin) {
       try {
-        const response = await getAuthData('/user/get-user-bank-account');
+        const response = await getAuthData('/bank?page=1&limit=20');
+
         if (response?.status === 201 || response?.status === 200) {
-          setBankAccountList(response?.data); // Return the data instead of logging it
+          setBankAccountList(response?.data?.banks || []);
         }
       } catch (e) {
         console.error(e);
@@ -88,48 +89,52 @@ const WithdrawCard = () => {
   const handleSubmit = async (id, type) => {
     setForm({ ...form, id: id });
     setType(type);
+
     try {
       setFormError({});
+
       await withdrawValidation.validate(form2, {
         abortEarly: false,
       });
-      const response = await postAuthData('/user/widraw-req', {
-        userId: UserInfo.id,
-        amount: form2?.amount,
-        bankAccountId: id,
+
+      // 🔥 NEW API CALL
+      const response = await postAuthData('/bank/deposit-withdraw-request', {
+        type: 'Debit', // 👈 withdraw ke liye (backend ke hisaab se change kar sakta hai)
+        amount: Number(form2?.amount),
+        bankId: Number(id),
       });
+
       if (response?.status === 200 || response?.status === 201) {
         toast.success('Withdraw Request Sent Successfully');
+
         setForm((prevForm) => ({
           ...prevForm,
-          amount: '', // Resetting amount to empty string
+          amount: '',
         }));
+
         setForm2((prevForm2) => ({
           ...prevForm2,
-          amount: '', // Resetting amount to empty string
+          amount: '',
         }));
       } else {
-        toast.error('Something went wrong');
+        toast.error(response?.data?.message || 'Something went wrong');
       }
     } catch (error) {
       if (isYupError(error)) {
         setFormError(parseYupError(error));
       } else {
-        toast.error(error?.message || 'Unauthorised');
+        toast.error(
+          error?.response?.data?.message || error?.message || 'Withdraw failed',
+        );
       }
     }
   };
 
   const handleDeleteClick = async (id, type) => {
-    const response = await deleteAuthData(
-      type === 'account'
-        ? `/user/delete-user-account/${id}`
-        : `/user/delete-userapi/${id}`,
-    );
+    const response = await deleteAuthData(`/bank/${id}`);
+
     if (response?.status === 200 || response?.status === 201) {
-      toast.success(
-        `${type === 'account' ? 'Account' : 'UPI id'} Delete Successfully`,
-      );
+      toast.success('Account Delete Successfully');
       getBankAccountList();
     } else {
       toast.error(response?.data || 'Something went wrong');
@@ -167,12 +172,12 @@ const WithdrawCard = () => {
                   </div>
                   <div className="flex justify-between items-center my-1 ">
                     <p className="lg:text-16 text-14">
-                      NAME: {items?.acountholdername}
+                      NAME: {items?.accountHolder}
                     </p>
-                    <CopyToClipboard text={items?.acountholdername}>
+                    <CopyToClipboard text={items?.accountHolder}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(items?.acountholdername)}
+                        onClick={() => copieBtn(items?.accountHolder)}
                       >
                         {reactIcons.copy}
                       </span>
@@ -193,12 +198,12 @@ const WithdrawCard = () => {
                   </div>
                   <div className="flex justify-between items-center my-1">
                     <p className="lg:text-16 text-14">
-                      IFSC Code: {items?.ifscCode}
+                      IFSC Code: {items?.ifsc}
                     </p>
-                    <CopyToClipboard text={items?.ifscCode}>
+                    <CopyToClipboard text={items?.ifsc}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(items?.ifscCode)}
+                        onClick={() => copieBtn(items?.ifsc)}
                       >
                         {reactIcons.copy}
                       </span>
