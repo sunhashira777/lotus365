@@ -38,29 +38,46 @@ const TransactionsPage = () => {
 
   const getAllTransactions = async () => {
     const islogin = isLoggedIn();
-    if (islogin) {
-      try {
-        const params = getQueryString({
-          offset: (page - 1) * take,
-          limit: take,
-          // startDate: moment(startDate).startOf('day').toISOString(),
-          // endDate: moment(endDate).endOf('day').toISOString(),
-          status: filterData,
-          requestType: activeTab === 'All' ? '' : activeTab.toLowerCase(),
-        });
+    if (!islogin) return;
 
-        const response = await getAuthData(
-          `/user/get-deposit-withdrawreq?${params}`,
-        );
-        if (response?.status === 200) {
-          setTransactionData({
-            bets: response?.data?.data || [],
-            totalCount: response?.data?.totalCount || 0,
-          });
-        }
-      } catch (e) {
-        console.error(e);
+    try {
+      // ✅ MAP TAB → TYPE
+      let type = '';
+      if (activeTab === 'Deposit') type = 'Credit';
+      if (activeTab === 'Withdraw') type = 'Debit';
+
+      const params = getQueryString({
+        page,
+        limit: take,
+        status: filterData || undefined,
+        type: type || undefined, // ✅ dynamic
+        // isUpi: true,
+        // isBank: true,
+      });
+
+      const response = await getAuthData(
+        `/banker/my-deposit-withdraw?${params}`,
+      );
+
+      if (response?.status === 200 || response?.status === 201) {
+        const list = response?.data?.data || [];
+
+        // ✅ FORMAT DATA FOR UI
+        const formatted = list.map((item) => ({
+          id: item.id,
+          amount: item.amount,
+          status: item.status,
+          requestType: item.type === 'Credit' ? 'deposit' : 'withdraw',
+          updatedAt: item.updatedAt,
+        }));
+
+        setTransactionData({
+          bets: formatted,
+          totalCount: response?.data?.pagination?.totalItems || 0,
+        });
       }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -79,9 +96,9 @@ const TransactionsPage = () => {
           id=""
         >
           <option value="">All</option>
-          <option value="pending">Pending/Processing</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
+          <option value="Pending">Pending/Processing</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
         </select>
       </div>
       <ul className="bg-white mb-2 p-2 rounded-md mt-2 grid grid-cols-3 ">

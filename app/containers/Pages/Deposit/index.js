@@ -31,8 +31,8 @@ const Deposit = () => {
   const [paymentStep, setPaymentStep] = useState(1);
   // eslint-disable-next-line
   const [depositListData, setDepositListData] = useState([]);
-  const [qrData, setQrData] = useState({});
-  const [accountData, setAccountData] = useState({});
+  const [bankData, setBankData] = useState({});
+  const [upiData, setUpiData] = useState({});
   const [selectedImage, setSelectedImage] = useState({});
   const [qrType, setQrType] = useState('');
   const dispatch = useDispatch();
@@ -61,11 +61,11 @@ const Deposit = () => {
   const [form, setForm] = useState({
     paymentMethod: 'account',
     utr: '',
-    img: '',
+    img: '', // filename (backend)
+    previewUrl: '', // UI
     amount: '',
     condition: false,
   });
-
   const [formError, setFormError] = useState({
     paymentMethod: '',
     utr: '',
@@ -86,97 +86,125 @@ const Deposit = () => {
   // eslint-disable-next-line
   const accountDetails =
     form?.paymentMethod === 'account'
-      ? accountData?.bankName &&
-        accountData?.acountholdername &&
-        accountData?.accountNumber &&
-        accountData?.ifscCode &&
-        accountData?.accountType
+      ? bankData?.bankName &&
+        bankData?.acountholdername &&
+        bankData?.accountNumber &&
+        bankData?.ifscCode &&
+        bankData?.accountType
         ? [
             {
-              text: `Bank : ${accountData?.bankName}`,
-              copy: accountData?.bankName,
+              text: `Bank : ${bankData?.bankName}`,
+              copy: bankData?.bankName,
             },
 
             {
-              text: `A/c Holder Name : ${accountData?.acountholdername}`,
-              copy: accountData?.acountholdername,
+              text: `A/c Holder Name : ${bankData?.acountholdername}`,
+              copy: bankData?.acountholdername,
             },
             {
-              text: `A/c No. : ${accountData?.accountNumber}`,
-              copy: accountData?.accountNumber,
+              text: `A/c No. : ${bankData?.accountNumber}`,
+              copy: bankData?.accountNumber,
             },
 
             {
-              text: `IFSC Code : ${accountData?.ifscCode}`,
-              copy: accountData?.ifscCode,
+              text: `IFSC Code : ${bankData?.ifscCode}`,
+              copy: bankData?.ifscCode,
             },
             {
-              text: `A/c Type : ${accountData?.accountType}`,
-              copy: accountData?.accountType,
+              text: `A/c Type : ${bankData?.accountType}`,
+              copy: bankData?.accountType,
             },
           ]
         : []
-      : qrData?.upi
-      ? [{ text: `Upi Id : ${qrData?.upi}`, copy: `${qrData?.upi}` }]
+      : upiData?.upi
+      ? [{ text: `Upi Id : ${upiData?.upi}`, copy: `${upiData?.upi}` }]
       : [];
 
   useEffect(() => {
     getDepositList();
-    getQrCode();
-    getAccountNumber();
-  }, [take, page, qrType]);
+    getBankAndUpi(); //
+  }, [take, page]);
 
+  const getFullImageUrl = async (img) => {
+    if (!img) return '';
+
+    if (img.startsWith('http')) return img;
+
+    return await getAuthData(`/storage/${img}`);
+  };
   const getDepositList = async () => {
+    const islogin = isLoggedIn();
+    if (!islogin) return;
+
+    try {
+      const response = await getAuthData(
+        `/banker/my-deposit-withdraw?page=${page}&limit=${take}&type=Credit&status=Pending&isUpi=true&isBank=true`,
+      );
+
+      if (response?.status === 200 || response?.status === 201) {
+        const list = response?.data?.data || [];
+
+        // ✅ MAP DATA FOR UI (IMPORTANT 🔥)
+        const formattedData = list.map(async (item) => ({
+          id: item.id,
+          amount: item.amount,
+          status: item.status,
+          utr: item.transactionCode,
+          image: await getFullImageUrl(item.image),
+          createdAt: item.createdAt,
+
+          // ✅ Detect payment type
+          paymentType: item.upiId ? 'UPI' : 'BANK',
+
+          // ✅ UPI details
+          upiId: item?.upi?.upiId || '',
+
+          // ✅ Bank details (future safe)
+          bankName: item?.bank?.bankName || '',
+        }));
+
+        setDepositListData(formattedData);
+
+        setPagination({
+          totalCount: response?.data?.pagination?.totalItems || 0,
+        });
+      }
+    } catch (error) {
+      console.error('Deposit List Error:', error);
+      toast.error(
+        error?.response?.data?.message || 'Failed to fetch deposit list',
+      );
+    }
+  };
+
+  const getBankAndUpi = async () => {
     const islogin = isLoggedIn();
     if (islogin) {
       try {
-        const response = await getAuthData(
-          `/user/deposits?limit=${take}&offset=${(page - 1) * take}`,
-        );
-        if (response?.status === 201 || response?.status === 200) {
-          setDepositListData(response.data?.deposits);
-          setPagination({
-            totalCount: response.data.totalCount,
+        const response = await getAuthData('/banker/show-account');
+
+        if (response?.status === 200 || response?.status === 201) {
+          const bank = response?.data?.bank?.[0] || {};
+          const upi = response?.data?.upi?.[0] || {};
+
+          // ✅ MAP ACCORDING TO OLD STRUCTURE (IMPORTANT)
+          setBankData({
+            id: bank?.id,
+            bankName: bank?.bankName,
+            accountNumber: bank?.accountNumber,
+            ifscCode: bank?.ifsc,
+            acountholdername: bank?.accountHolder,
+            accountType: bank?.accountType,
+          });
+
+          setUpiData({
+            upi: upi?.upiId,
+            id: upi?.id,
+            image: upi?.qrCode,
           });
         }
       } catch (e) {
         console.error(e);
-        return null;
-      }
-    }
-  };
-  const getQrCode = async () => {
-    const islogin = isLoggedIn();
-    if (islogin) {
-      try {
-        const response = await getAuthData(
-          `/user/get-qr-true-status?qrtype=${
-            qrType === 'account' ? '' : qrType
-          }`,
-        );
-        if (response?.status === 201 || response?.status === 200) {
-          setQrData(response?.data?.data?.[0]);
-        } else {
-          setQrData({});
-        }
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
-  };
-
-  const getAccountNumber = async () => {
-    const islogin = isLoggedIn();
-    if (islogin) {
-      try {
-        const response = await getAuthData('/user/get-account-true-status');
-        if (response?.status === 201 || response?.status === 200) {
-          setAccountData(response.data?.[0]);
-        }
-      } catch (e) {
-        console.error(e);
-        return null;
       }
     }
   };
@@ -187,31 +215,52 @@ const Deposit = () => {
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
-    setSelectedImage(file || null);
+    if (!file) return;
 
-    if (file) {
-      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (validImageTypes.includes(file.type)) {
-        const data = new FormData();
-        data.append('image', file);
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-        const image = await postAuthData('/user/uploads', data);
+    if (!validImageTypes.includes(file.type)) {
+      toast.error('Only JPG, JPEG, PNG files are allowed');
+      event.target.value = '';
+      setSelectedImage(null);
+      return;
+    }
 
-        if (image?.status) {
-          setForm({ ...form, img: image?.data?.imageUrl });
-          setFormError({ ...formError, img: '' });
-        } else {
-          toast.error(image?.data || 'Something went wrong!');
-          setSelectedImage(null);
-          event.target.value = ''; // reset input
-        }
+    try {
+      setSelectedImage(file);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await postAuthData('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res?.status && res?.data?.meta?.filename) {
+        setForm((prev) => ({
+          ...prev,
+          img: res.data.meta.filename, // ✅ backend ke liye
+          previewUrl: res.data.url, // ✅ UI ke liye
+        }));
+
+        setFormError((prev) => ({ ...prev, img: '' }));
+
+        toast.success('Image uploaded successfully ✅');
       } else {
-        toast.error(
-          'Invalid file type. Please select a JPEG, PNG, or JPG image.',
-        );
-        setSelectedImage(null);
-        event.target.value = ''; // reset input
+        throw new Error(res?.message || 'Upload failed');
       }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Image upload failed';
+
+      toast.error(errorMessage);
+
+      setSelectedImage(null);
+      event.target.value = '';
     }
   };
 
@@ -252,44 +301,74 @@ const Deposit = () => {
 
   const handleDepositSubmit = async (e) => {
     e.preventDefault();
+
     try {
       setFormError({});
+
       await depositValidation.validate(form, {
         abortEarly: false,
       });
 
-      if (form.condition) {
-        const newData = { ...form };
-        delete newData.condition;
+      if (!form.condition) return;
 
-        const response = await postAuthData('/user/create-deposit', newData);
-        if (response?.status === 200 || response?.status === 201) {
-          toast.success('Deposit Request Sent Successfully');
-          setForm({
-            paymentMethod: 'account',
-            utr: '',
-            img: '',
-            amount: '',
-            condition: false,
-          });
-          setPaymentStep(1);
-          getDepositList();
-          setSelectedImage(null);
-          document.getElementById('file').value = ''; // reset file input
-        } else if (response?.status !== 200 && response?.status !== 201) {
-          const errorMessage = response?.data?.error || 'Something went wrong';
-          toast.error(errorMessage);
-        }
+      // ✅ COMMON PAYLOAD
+      const payload = {
+        type: 'Credit',
+        amount: Number(form.amount),
+        UTR: form.utr,
+        image: form.img, // ✅ filename
+      };
+
+      let response;
+
+      // ✅ DYNAMIC API CALL
+      if (form.paymentMethod === 'account') {
+        response = await postAuthData('/bank/deposit-withdraw-request', {
+          ...payload,
+          bankId: Number(bankData?.id), // ✅ dynamic
+        });
+      } else {
+        response = await postAuthData('/upi/deposit-withdraw-request', {
+          ...payload,
+          UPI: Number(upiData?.id), // ✅ dynamic
+        });
+      }
+
+      if (response?.status === 200 || response?.status === 201) {
+        toast.success('Deposit Request Sent Successfully ✅');
+
+        setForm({
+          paymentMethod: 'account',
+          utr: '',
+          img: '',
+          previewUrl: '',
+          amount: '',
+          condition: false,
+        });
+
+        setPaymentStep(1);
+        getDepositList();
+        setSelectedImage(null);
+
+        document.getElementById('file').value = '';
+      } else {
+        throw new Error(response?.data?.message || 'Something went wrong');
       }
     } catch (error) {
       if (isYupError(error)) {
         setFormError(parseYupError(error));
       } else {
-        toast.error(error?.message || 'Unauthorised');
+        const msg =
+          error?.response?.data?.message || error?.message || 'Deposit failed';
+
+        if (msg.includes('UTR')) {
+          toast.error('⚠️ UTR already used. Try another.');
+        } else {
+          toast.error(msg);
+        }
       }
     }
   };
-
   useEffect(() => {
     const localStakeData = JSON.parse(localStorage.getItem('localStakeData'));
     if (localStakeData && Array.isArray(localStakeData)) {
@@ -404,13 +483,13 @@ const Deposit = () => {
                         Bank Name
                       </p>
                       <p className=" text-black  text-12 whitespace-nowrap">
-                        : {accountData?.bankName}
+                        : {bankData?.bankName}
                       </p>
                     </div>
-                    <CopyToClipboard text={accountData?.bankName}>
+                    <CopyToClipboard text={bankData?.bankName}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(accountData?.bankName)}
+                        onClick={() => copieBtn(bankData?.bankName)}
                       >
                         {reactIcons.copy}
                       </span>
@@ -422,13 +501,13 @@ const Deposit = () => {
                         Account Number
                       </p>
                       <p className=" text-black  text-12 whitespace-nowrap">
-                        : {accountData?.accountNumber}
+                        : {bankData?.accountNumber}
                       </p>
                     </div>
-                    <CopyToClipboard text={accountData?.accountNumber}>
+                    <CopyToClipboard text={bankData?.accountNumber}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(accountData?.accountNumber)}
+                        onClick={() => copieBtn(bankData?.accountNumber)}
                       >
                         {reactIcons.copy}
                       </span>
@@ -440,36 +519,36 @@ const Deposit = () => {
                         IFSC Code
                       </p>
                       <p className=" text-black  text-12 whitespace-nowrap">
-                        : {accountData?.ifscCode}
+                        : {bankData?.ifscCode}
                       </p>
                     </div>
-                    <CopyToClipboard text={accountData?.ifscCode}>
+                    <CopyToClipboard text={bankData?.ifscCode}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(accountData?.ifscCode)}
+                        onClick={() => copieBtn(bankData?.ifscCode)}
                       >
                         {reactIcons.copy}
                       </span>
                     </CopyToClipboard>
                   </div>
-                  {/* accountData?.bankName &&
-        accountData?.acountholdername &&
-        accountData?.accountNumber &&
-        accountData?.ifscCode &&
-        accountData?.accountType */}
+                  {/* bankData?.bankName &&
+        bankData?.acountholdername &&
+        bankData?.accountNumber &&
+        bankData?.ifscCode &&
+        bankData?.accountType */}
                   <div className="flex justify-between items-center my-1 md:my-2 gap-2">
                     <div className="flex items-center font-semibold">
                       <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
                         Account Holder Name
                       </p>
                       <p className="  text-black text-12 whitespace-nowrap">
-                        : {accountData?.acountholdername}
+                        : {bankData?.acountholdername}
                       </p>
                     </div>
-                    <CopyToClipboard text={accountData?.acountholdername}>
+                    <CopyToClipboard text={bankData?.acountholdername}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(accountData?.acountholdername)}
+                        onClick={() => copieBtn(bankData?.acountholdername)}
                       >
                         {reactIcons.copy}
                       </span>
@@ -483,7 +562,7 @@ const Deposit = () => {
                     <div className="flex">
                       <div className="flex-1 flex justify-center">
                         <img
-                          src={qrData?.image} // <-- put your QR image path
+                          src={upiData?.image} // <-- put your QR image path
                           alt="UPI QR Code"
                           className="w-[200px] h-[200px] object-contain border rounded-md"
                         />
@@ -492,7 +571,7 @@ const Deposit = () => {
                       {/* Action Buttons */}
                       <div className="flex flex-col spa ce-y-3 ml-3">
                         <Link
-                          to={qrData?.image}
+                          to={upiData?.image}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -504,8 +583,8 @@ const Deposit = () => {
                           <Share2 size={18} />
                         </button>
                         <a
-                          href={qrData?.image}
-                          download={qrData?.image}
+                          href={upiData?.image}
+                          download={upiData?.image}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -520,12 +599,12 @@ const Deposit = () => {
                     <div className="mt-4 flex items-center text-sm">
                       <span className="font-semibold">UPI ID:</span>
                       <span className="ml-2 text-blue-700 font-semibold">
-                        {qrData?.upi}
+                        {upiData?.upi}
                       </span>
-                      <CopyToClipboard text={qrData?.upi}>
+                      <CopyToClipboard text={upiData?.upi}>
                         <span
                           className="cursor-pointer"
-                          onClick={() => copieBtn(qrData?.upi)}
+                          onClick={() => copieBtn(upiData?.upi)}
                         >
                           {reactIcons.copy}
                         </span>
@@ -586,13 +665,13 @@ const Deposit = () => {
                             Account Number
                           </p>
                           <p className=" text-black  text-12 whitespace-nowrap">
-                            : {accountData?.accountNumber}
+                            : {bankData?.accountNumber}
                           </p>
                         </div>
-                        <CopyToClipboard text={accountData?.accountNumber}>
+                        <CopyToClipboard text={bankData?.accountNumber}>
                           <span
                             className="cursor-pointer"
-                            onClick={() => copieBtn(accountData?.accountNumber)}
+                            onClick={() => copieBtn(bankData?.accountNumber)}
                           >
                             {reactIcons.copy}
                           </span>
@@ -604,13 +683,13 @@ const Deposit = () => {
                             IFSC Code
                           </p>
                           <p className=" text-black  text-12 whitespace-nowrap">
-                            : {accountData?.ifscCode}
+                            : {bankData?.ifscCode}
                           </p>
                         </div>
-                        <CopyToClipboard text={accountData?.ifscCode}>
+                        <CopyToClipboard text={bankData?.ifscCode}>
                           <span
                             className="cursor-pointer"
-                            onClick={() => copieBtn(accountData?.ifscCode)}
+                            onClick={() => copieBtn(bankData?.ifscCode)}
                           >
                             {reactIcons.copy}
                           </span>
@@ -622,15 +701,13 @@ const Deposit = () => {
                             Account Holder Name
                           </p>
                           <p className="  text-black text-12 whitespace-nowrap">
-                            : {accountData?.acountholdername}
+                            : {bankData?.acountholdername}
                           </p>
                         </div>
-                        <CopyToClipboard text={accountData?.acountholdername}>
+                        <CopyToClipboard text={bankData?.acountholdername}>
                           <span
                             className="cursor-pointer"
-                            onClick={() =>
-                              copieBtn(accountData?.acountholdername)
-                            }
+                            onClick={() => copieBtn(bankData?.acountholdername)}
                           >
                             {reactIcons.copy}
                           </span>
@@ -644,7 +721,7 @@ const Deposit = () => {
                         <div className="flex">
                           <div className="flex-1 flex justify-center">
                             <img
-                              src={qrData?.image} // <-- put your QR image path
+                              src={upiData?.image} // <-- put your QR image path
                               alt="UPI QR Code"
                               className="w-[200px] h-[200px] object-contain border rounded-md"
                             />
@@ -653,7 +730,7 @@ const Deposit = () => {
                           {/* Action Buttons */}
                           <div className="flex flex-col spa ce-y-3 ml-3">
                             <Link
-                              to={qrData?.image}
+                              to={upiData?.image}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -665,8 +742,8 @@ const Deposit = () => {
                               <Share2 size={18} />
                             </button>
                             <a
-                              href={qrData?.image}
-                              download={qrData?.image}
+                              href={upiData?.image}
+                              download={upiData?.image}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -681,12 +758,12 @@ const Deposit = () => {
                         <div className="mt-4 flex items-center text-sm">
                           <span className="font-semibold">UPI ID:</span>
                           <span className="ml-2 text-blue-700 font-semibold">
-                            {qrData?.upi}
+                            {upiData?.upi}
                           </span>
-                          <CopyToClipboard text={qrData?.upi}>
+                          <CopyToClipboard text={upiData?.upi}>
                             <span
                               className="cursor-pointer"
-                              onClick={() => copieBtn(qrData?.upi)}
+                              onClick={() => copieBtn(upiData?.upi)}
                             >
                               {reactIcons.copy}
                             </span>
