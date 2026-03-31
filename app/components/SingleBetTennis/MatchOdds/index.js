@@ -83,6 +83,7 @@ const MatchOdds = ({
       }
     }
   }, [bets, dispatch, isMobile]);
+  console.log('runners data', data?.runners);
 
   return (
     <div className="flex flex-col mb-5">
@@ -315,11 +316,12 @@ const MatchOdds = ({
                             disabled={items?.lay?.[2]?.price ? false : true}
                           />
                         </div>
-                        {items?.status !== '' && items?.status !== 'Active' && (
-                          <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
-                            <SuspendedBtn status={items?.status} />
-                          </div>
-                        )}
+                        {items?.status !== '' &&
+                          items?.status?.toLowerCase() !== 'active' && (
+                            <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                              <SuspendedBtn status={items?.status} />
+                            </div>
+                          )}
                       </div>
                     </div>
                     {activeBetSlip == Number(items?.selectionId) &&

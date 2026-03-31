@@ -1,4 +1,4 @@
-const IMAGEKIT_BASE_URL = process.env.IMAGEKIT_URL;
+const IMAGEKIT_BASE_URL = '';
 // IMAGEKIT_URL=https://ik.imagekit.io/esfzc31bu
 
 /**

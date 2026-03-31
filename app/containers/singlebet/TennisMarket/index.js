@@ -57,7 +57,7 @@ const TennisMarket = () => {
     const fetchDataWithDynamicDelay = async () => {
       getTennisEventData();
       const inplay = matchData?.inplay;
-      const delay = isLogin ? (inplay ? 400 : 5000) : 5000;
+      const delay = isLogin ? (inplay ? 10000 : 10000) : 5000;
 
       timeoutRef.current = setTimeout(() => {
         fetchDataWithDynamicDelay();

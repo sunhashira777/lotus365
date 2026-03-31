@@ -81,7 +81,7 @@ const Cricket = () => {
 
   const getCricketData = () => {
     getFixtureData(
-      'cricket',
+      'Cricket',
       setInplayTrue,
       setInplayFalse,
       setisLoading,
@@ -90,7 +90,7 @@ const Cricket = () => {
   };
 
   useEffect(() => {
-    const fetchInterval = isLogin ? 5000 : 10000;
+    const fetchInterval = isLogin ? 10000 : 10000;
     getCricketData();
     const intervalId = setInterval(() => {
       getCricketData();

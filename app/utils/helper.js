@@ -580,9 +580,10 @@ export const getFixtureData = async (
 ) => {
   setLoading(true);
   try {
-    const response = await getAuthData('fixture', `/fixture?sport=${game}`);
+    // 'fixture',
+    const response = await getAuthData(`/fixture?sport=${game}`);
     if (response?.status === 200 || response?.status === 201) {
-      const data = response?.data.filter((item) => item.isDelete === false);
+      const data = response?.data?.fixture;
       if (data) {
         const todayDate = new Date().toISOString().split('T')[0];
         const inplayTrueData = [];
@@ -590,9 +591,9 @@ export const getFixtureData = async (
         setLoading(false);
         setLoaderOneTime(true);
         data
-          .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
+          .sort((a, b) => new Date(a?.startTime) - new Date(b?.startTime))
           .forEach((item) => {
-            const entryDate = new Date(item?.matchDateTime)
+            const entryDate = new Date(item?.startTime)
               ?.toISOString()
               ?.split('T')[0];
             if (
@@ -696,6 +697,7 @@ export const fetchEventData = async (game, eventId, setters) => {
 
     if (response?.status === 200 || response?.status === 201) {
       const resData = response?.data;
+      console.log('resData', resData);
 
       if (resData) {
         setLoading(false);
@@ -716,6 +718,7 @@ export const fetchEventData = async (game, eventId, setters) => {
         };
 
         const allMarkets = transformMarkets(catalogue?.markets);
+        console.log('allMarkets', allMarkets);
 
         // ✅ Match Odds extract
         const matchOddsData = allMarkets.find(

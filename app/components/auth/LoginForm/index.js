@@ -36,31 +36,18 @@ const LoginForm = ({ onClose }) => {
     e.preventDefault();
     try {
       setFormError({});
-      const response = await postData('/user/create-demo-user');
-      if (
-        response?.status === 200 &&
-        (response?.data?.data?.ut === 'USER' ||
-          response?.data?.data?.ut === 'DEMO')
-      ) {
+      const response = await postData('/auth/demo/login');
+      if (response?.status === 200 || response?.status === 201) {
         setAuthCookie();
-        Cookies.set('__users__isLoggedIn', response?.data?.data?.token);
+        Cookies.set('__users__isLoggedIn', response?.data?.accessToken);
         localStorage.setItem(
           '__users__isLoggedIn',
-          response?.data?.data?.token,
+          response?.data?.accessToken,
         );
         toast.success('Login Successfully');
 
         onClose();
         window.location.reload();
-      } else if (
-        response?.status === 200 &&
-        (response?.data?.data?.ut !== 'USER' ||
-          response?.data?.data?.ut !== 'DEMO')
-      ) {
-        toast.error('User not found');
-      } else {
-        toast.dismiss();
-        toast.error(response?.data?.error || 'Something went wrong');
       }
     } catch (error) {
       if (isYupError(error)) {
