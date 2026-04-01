@@ -38,6 +38,7 @@ import {
   LayoutTwo,
   OpenBets,
   Casino,
+  GameDetails,
 } from './containers/pageListAsync';
 import {
   ImageUpload,
@@ -63,7 +64,7 @@ sagaMiddleware.run(rootSaga);
 
 function App() {
   const isMobile = useMediaQuery('(max-width:768px)');
-
+  const sportsRoutes = ['Cricket', 'Football', 'Tennis'];
   return (
     <Provider store={store}>
       <BrowserRouter>
@@ -80,16 +81,28 @@ function App() {
           <Route path="/" element={isMobile ? <MobLayout /> : <Sidebar />}>
             <Route index element={<DesktopHome />} />
             <Route path="/cricket" element={<Cricket />} />
-            <Route
+            <Route path="/tennis" element={<Tennis />} />
+            <Route path="/football" element={<Football />} />
+
+            {sportsRoutes.map((sport) => {
+              const sportPath = sport.toLowerCase();
+              return (
+                <Route key={sport}>
+                  <Route
+                    path={`/${sportPath}/market/:eventId`}
+                    element={<GameDetails sportName={sport} />}
+                  />
+                </Route>
+              );
+            })}
+            {/* <Route
               path="/cricket/market/:eventId"
               element={isMobile ? <MobCricket /> : <CricketMarket />}
             />
-            <Route path="/tennis" element={<Tennis />} />
             <Route
               path="/tennis/market/:eventId"
               element={isMobile ? <MobTennis /> : <TennisMarket />}
-            />
-            <Route path="/football" element={<Football />} />
+            /> */}
             <Route
               path="/football/market/:eventId"
               element={isMobile ? <MobFootball /> : <FootballMarket />}

@@ -51,30 +51,23 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
       if (OddsPrice > 1) {
         setBets([
           {
-            marketId: String(data?.market_id),
             eventId: Number(eventId),
-            gameId: Number(data?.sportId),
+            marketId: String(data?.Matchodds),
             selectionId: String(selectionId),
             betOn: selectType,
             price: parseFloat(OddsPrice),
             stake: '',
             eventType: game,
-            competition: _marketData?.competition_name,
-            event: data?.name,
             market: _marketData.market_name,
             gameType: _marketData.market_name,
             nation: betDetails,
             type: selectType,
-            calcFact: 0,
+
             bettingOn: betType,
-            runners: 2,
-            row: 1,
-            matchName: data?.name,
-            percent: 100,
+
             selection: betDetails,
-            minimumBet: minBetLimit,
-            maximumBet: maxBetLimit,
-            _marketData,
+            // minimumBet: minBetLimit,
+            // maximumBet: maxBetLimit,
           },
         ]);
       } else {
@@ -92,6 +85,8 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
     minLimitOdds = data?.offPlayMinLimit;
     maxLimitOdds = data?.offPlayMaxLimit;
   }
+  console.log('Matchodds', data);
+
   return (
     <div className="flex flex-col mb-5">
       <div className="flex items-center py-[10px] justify-between bg-[#ECEAEA]">
@@ -171,7 +166,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
                           <BlueBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId || data?.matchId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Cricket',
@@ -194,7 +189,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
                           <BlueBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId || data?.matchId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Cricket',
@@ -217,7 +212,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
                           <BlueBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId || data?.matchId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Cricket',
@@ -240,7 +235,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
                           <PinkBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId || data?.matchId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Cricket',
@@ -263,7 +258,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
                           <PinkBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId || data?.matchId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Cricket',
@@ -286,7 +281,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
                           <PinkBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId || data?.matchId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Cricket',

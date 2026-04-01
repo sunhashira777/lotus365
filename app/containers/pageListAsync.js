@@ -185,3 +185,7 @@ export const LayoutTwo = loadable(() => import('./LayoutTwo'), {
 export const NotificationPage = loadable(() => import('./NotificationPage'), {
   fallback: <Loading />,
 });
+
+export const GameDetails = loadable(() => import('./GameDetails'), {
+  fallback: <Loading />,
+});
