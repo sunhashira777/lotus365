@@ -71,16 +71,35 @@ const Casino = () => {
   const getCategories = async () => {
     try {
       const params = new URLSearchParams();
+      params.append('page', 1);
+      params.append('limit', 100); // zyada lo taaki categories mil jaye
+      params.append('status', 'ACTIVE');
+
       if (activeProvider.toLowerCase() !== 'all') {
         params.append('provider', activeProvider);
       }
 
-      const res = await getAuthData(
-        `/user/get-casino-category?${params.toString()}`,
-      );
+      const res = await getAuthData(`/casino/games?${params.toString()}`);
 
-      setCategories(res?.status ? res?.data?.games || [] : []);
-    } catch {
+      const games = res?.games || [];
+      const mappedGames = games.map((g) => ({
+        ...g,
+        game_id: g.externalId, // launch ke liye
+        game_images: g.gameImage, // UI ke liye
+      }));
+      // 🔥 UNIQUE CATEGORIES NIKALNA
+      const uniqueCategories = [
+        { category: 'All' },
+        ...Array.from(
+          new Set(mappedGames.map((g) => g.category).filter(Boolean)),
+        ).map((cat) => ({ category: cat })),
+      ];
+
+      setCategories(
+        mappedGames.length > 0 ? uniqueCategories : [{ category: 'All' }],
+      );
+    } catch (err) {
+      console.error(err);
       toast.error('Failed to fetch categories');
     }
   };
@@ -92,28 +111,34 @@ const Casino = () => {
     loadMore ? setLoadingMore(true) : setLoading(true);
 
     try {
+      const page = loadMore ? Math.floor(offset / LIMIT) + 1 : 1;
+
       const params = new URLSearchParams();
-
-      if (activeProvider.toLowerCase() !== 'all')
-        params.append('provider', activeProvider);
-
-      if (activeCategory !== 'All') params.append('category', activeCategory);
-
-      if (debouncedSearch) params.append('search', debouncedSearch);
-
+      params.append('page', page);
       params.append('limit', LIMIT);
-      params.append('offset', loadMore ? offset : 0);
+      params.append('status', 'ACTIVE');
 
-      const res = await getAuthData(
-        `/user/get-casino-games?${params.toString()}`,
+      const res = await getAuthData(`/casino/games?${params.toString()}`);
+
+      const games = res?.games || [];
+
+      // 🔥 IMPORTANT mapping (old → new)
+      const mappedGames = games.map((g) => ({
+        ...g,
+        game_id: g.externalId, // launch ke liye
+        game_images: g.gameImage, // UI ke liye
+      }));
+
+      setCasinoData((prev) =>
+        loadMore ? [...prev, ...mappedGames] : mappedGames,
       );
 
-      const games = res?.data?.games || [];
-
-      setCasinoData((prev) => (loadMore ? [...prev, ...games] : games));
       setOffset((prev) => (loadMore ? prev + LIMIT : LIMIT));
 
-      if (games.length < LIMIT) setHasMore(false);
+      if (mappedGames.length < LIMIT) setHasMore(false);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to fetch games');
     } finally {
       setLoading(false);
       setLoadingMore(false);
