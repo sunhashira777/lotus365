@@ -62,7 +62,7 @@ export const sortFixtureData = (data) => {
     if (!a.inplay && b.inplay) {
       return 1;
     }
-    return new Date(a.matchDateTime) - new Date(b.matchDateTime);
+    return new Date(a.startTime) - new Date(b.startTime);
   });
 };
 export const getRunnerName = (items, fixtureEventName) => {
@@ -174,6 +174,6 @@ export const processFixtureData = (eventNames, parsedData) => {
       if (!a.inplay && b.inplay) {
         return 1;
       }
-      return new Date(a.matchDateTime) - new Date(b.matchDateTime);
+      return new Date(a.startTime) - new Date(b.startTime);
     });
 };

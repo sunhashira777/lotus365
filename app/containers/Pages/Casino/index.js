@@ -71,39 +71,29 @@ const Casino = () => {
   const getCategories = async () => {
     try {
       const params = new URLSearchParams();
-      params.append('page', 1);
-      params.append('limit', 100); // zyada lo taaki categories mil jaye
-      params.append('status', 'ACTIVE');
 
       if (activeProvider.toLowerCase() !== 'all') {
-        params.append('provider', activeProvider);
+        params.append('provider', activeProvider.toLowerCase());
       }
 
-      const res = await getAuthData(`/casino/games?${params.toString()}`);
+      const res = await getAuthData(`/casino/category?${params.toString()}`);
 
-      const games = res?.games || [];
-      const mappedGames = games.map((g) => ({
-        ...g,
-        game_id: g.externalId, // launch ke liye
-        game_images: g.gameImage, // UI ke liye
-      }));
-      // 🔥 UNIQUE CATEGORIES NIKALNA
-      const uniqueCategories = [
+      // const categoriesArray = res?.games || [];
+      const categoriesArray = res?.data?.games || [];
+      // 🔥 FORMAT SAME AS OLD UI
+      const formattedCategories = [
         { category: 'All' },
-        ...Array.from(
-          new Set(mappedGames.map((g) => g.category).filter(Boolean)),
-        ).map((cat) => ({ category: cat })),
+        ...categoriesArray.map((cat) => ({
+          category: cat,
+        })),
       ];
 
-      setCategories(
-        mappedGames.length > 0 ? uniqueCategories : [{ category: 'All' }],
-      );
+      setCategories(formattedCategories);
     } catch (err) {
       console.error(err);
       toast.error('Failed to fetch categories');
     }
   };
-
   /* -------------------- Fetch Games -------------------- */
   const getCasinoData = async (loadMore = false) => {
     if (loading || loadingMore || !hasMore) return;
@@ -118,9 +108,12 @@ const Casino = () => {
       params.append('limit', LIMIT);
       params.append('status', 'ACTIVE');
 
-      const res = await getAuthData(`/casino/games?${params.toString()}`);
+      // ✅ PROVIDER FIX
+      if (activeProvider.toLowerCase() !== 'all') {
+        params.append('provider', activeProvider.toLowerCase());
+      }
 
-      const games = res?.games || [];
+      const res = await getAuthData(`/casino/games?${params.toString()}`);
 
       // 🔥 IMPORTANT mapping (old → new)
       const mappedGames = games.map((g) => ({
@@ -129,8 +122,16 @@ const Casino = () => {
         game_images: g.gameImage, // UI ke liye
       }));
 
+      // 🔥 CATEGORY FILTER FIX
+      const filteredGames =
+        activeCategory === 'All'
+          ? mappedGames
+          : mappedGames.filter(
+              (g) => g.category?.toLowerCase() === activeCategory.toLowerCase(),
+            );
+
       setCasinoData((prev) =>
-        loadMore ? [...prev, ...mappedGames] : mappedGames,
+        loadMore ? [...prev, ...filteredGames] : filteredGames,
       );
 
       setOffset((prev) => (loadMore ? prev + LIMIT : LIMIT));
@@ -144,7 +145,6 @@ const Casino = () => {
       setLoadingMore(false);
     }
   };
-
   /* -------------------- Infinite Scroll -------------------- */
   useEffect(() => {
     if (!loaderRef.current || !hasMore) return;
@@ -187,7 +187,7 @@ const Casino = () => {
         id: user.id,
       };
 
-      const res = await postAuthData('/user/create-session', payload);
+      const res = await postAuthData('/casino/launch', payload);
 
       if (res?.status === 200 && res?.data?.data) {
         const raw = res.data.data;

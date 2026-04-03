@@ -69,7 +69,7 @@ const DesktopFixtureTennis = ({ type, fixtureData, isLoading }) => {
   };
 
   const sortedInplayFalseMatches = fixtureData.sort((a, b) => {
-    return new Date(a.matchDateTime) - new Date(b.matchDateTime);
+    return new Date(a.startTime) - new Date(b.startTime);
   });
   return (
     <div className="tennis mt-2">
