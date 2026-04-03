@@ -161,9 +161,7 @@ const TennisMarket = () => {
                   </div>
                 ) : (
                   <div className="text-12">
-                    {moment(matchData?.matchDateTime).format(
-                      'DD/MM/YYYY hh:mm A',
-                    )}
+                    {moment(matchData?.startTime).format('DD/MM/YYYY hh:mm A')}
                   </div>
                 )}
                 {/* matchData?.odds?.inplay && */}

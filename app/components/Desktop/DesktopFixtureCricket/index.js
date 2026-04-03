@@ -76,7 +76,7 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
   };
 
   const sortedInplayFalseMatches = fixtureData?.sort((a, b) => {
-    return new Date(a.matchDateTime) - new Date(b.matchDateTime);
+    return new Date(a.startTime) - new Date(b.startTime);
   });
   const [activeIndex, setActiveIndex] = useState(0);
   const swipersRef = useRef([]);

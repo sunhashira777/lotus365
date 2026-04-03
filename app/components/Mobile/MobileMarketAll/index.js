@@ -56,10 +56,10 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                 <div className="w-[50px] h-[42px] border-r border-[#ddd]">
                   <div className=" flex-col  flex w-fit justify-center h-full text-[#1e8067] font-medium text-[9px] ">
                     <div className="leading-3   text-center w-full">
-                      {moment(_items?.matchDateTime).format('DD/MM/YYYY')}
+                      {moment(_items?.startTime).format('DD/MM/YYYY')}
                     </div>
                     <div className="leading-3  text-center w-full">
-                      {moment(_items?.matchDateTime).format('hh:mm A')}
+                      {moment(_items?.startTime).format('hh:mm A')}
                     </div>
                   </div>
                 </div>
