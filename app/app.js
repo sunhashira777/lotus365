@@ -1,12 +1,7 @@
 import './i18n';
 import React from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
-import { configureStore } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
-import createReducer from './redux/reducers';
-import rootSaga from './redux/rootSaga';
 import {
   AccountStatement,
   AddAccount,
@@ -38,7 +33,7 @@ import {
   LayoutTwo,
   OpenBets,
   Casino,
-  GameDetails,
+  GameDetailsPage,
 } from './containers/pageListAsync';
 import {
   ImageUpload,
@@ -49,24 +44,11 @@ import {
 import PrivateRoute from './containers/auth/PrivateRoute';
 import { useMediaQuery } from '@mui/material';
 
-const sagaMiddleware = createSagaMiddleware();
-const reducer = createReducer();
-const store = configureStore({
-  reducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(sagaMiddleware),
-  devTools:
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    window.__REDUX_DEVTOOLS_EXTENSION__(),
-});
-
-sagaMiddleware.run(rootSaga);
-
 function App() {
   const isMobile = useMediaQuery('(max-width:768px)');
   const sportsRoutes = ['Cricket', 'Football', 'Tennis'];
   return (
-    <Provider store={store}>
+    <>
       <BrowserRouter>
         <ModalManager />
         <ScrollToTop />
@@ -83,30 +65,32 @@ function App() {
             <Route path="/cricket" element={<Cricket />} />
             <Route path="/tennis" element={<Tennis />} />
             <Route path="/football" element={<Football />} />
-
             {sportsRoutes.map((sport) => {
               const sportPath = sport.toLowerCase();
               return (
                 <Route key={sport}>
                   <Route
                     path={`/${sportPath}/market/:eventId`}
-                    element={<GameDetails sportName={sport} />}
+                    element={<GameDetailsPage sportName={sport} />}
                   />
                 </Route>
               );
             })}
+
             {/* <Route
               path="/cricket/market/:eventId"
               element={isMobile ? <MobCricket /> : <CricketMarket />}
             />
+
             <Route
               path="/tennis/market/:eventId"
               element={isMobile ? <MobTennis /> : <TennisMarket />}
-            /> */}
+            />
+
             <Route
               path="/football/market/:eventId"
               element={isMobile ? <MobFootball /> : <FootballMarket />}
-            />
+            /> */}
             <Route path="no-market" element={<NoMarketAvailable />} />
           </Route>
           <Route path="/casino" element={<Casino />} />
@@ -155,7 +139,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       <Toaster position="top-center" reverseOrder={false} />
-    </Provider>
+    </>
   );
 }
 

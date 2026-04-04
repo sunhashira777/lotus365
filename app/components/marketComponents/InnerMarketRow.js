@@ -1,24 +1,14 @@
-import { MarketType } from '@/types/betPlace';
-import { Market, Runner } from '@/types/market';
+import { resetBetDetails } from '@/api/Slices/betSlice';
+import useInnerMarketRow from '@/hooks/useInnerMarketRow';
 import React, { useState } from 'react';
-import { useInnerMarketRow } from '../Hooks/useInnerMarketRow';
-import OddButton from '@/components/OddButton';
-import BetSlip from '@/components/BetSlip';
-import BookListModal from '@/components/BookListModal';
-import { formatNumber } from '@/utils';
-import BottomSheetModal from '@/components/common/BottomSheetModal';
 import { useDispatch } from 'react-redux';
-import { resetBetDetails } from '@/store/slices/betSlice';
-interface InnerMarketRowProps {
-  marketData: Market;
-  runnersData: Runner;
-  oddsClassName?: string;
-  reverseOddsOrder?: boolean;
-  marketCategory: MarketType;
-  min?: string | number | null;
-  max?: string | number | null;
-}
-const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
+import PropTypes from 'prop-types';
+import OddButton from './OddButton';
+import { formatNumber } from '@/utils/marketFormaterHelpers';
+import BetSlipComponent from '../BetSlip/BetSlipComponent';
+import BookListModal from './BookListModal';
+
+const InnerMarketRow = ({
   marketData,
   runnersData,
   oddsClassName = 'justify-center',
@@ -27,6 +17,7 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
   min,
   max,
 }) => {
+  const [openBookModal, setOpenBookModal] = useState(false);
   const {
     totalOdds,
     renderOdds,
@@ -50,13 +41,15 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
     dispatch(resetBetDetails());
   };
   if (!runnersData) return null;
-  const [openBookModal, setOpenBookModal] = useState(false);
 
   return (
     <>
-      <div className=" border-b-[2px] md:last:border-b border-primary-light py-1 sm:py-2 px-2 bg-inplay-rowBg rounded-full">
+      <div className="px-2 bg-white">
         <div className="flex justify-between items-center text-inplay-rowText">
-          <div title={runnerName} className="text-xs font-semibold mx-2 capitalize">
+          <div
+            title={runnerName}
+            className="text-[10px] font-semibold mx-2 capitalize"
+          >
             {runnerName}
           </div>
 
@@ -65,7 +58,9 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
             <div className="relative flex items-center gap-2 mr-5 md:mr-0">
               {marketCategory !== 'FANCY' && totalExposure ? (
                 <div
-                  className={`bg-primary/20 rounded px-2 py-0.5 xl:absolute -left-2 xl:-translate-x-full text-xs font-bold flex items-center ${totalExposure < 0 ? 'text-red-500' : 'text-green-500'}`}
+                  className={`bg-primary/20 rounded px-2 py-0.5 xl:absolute -left-2 xl:-translate-x-full text-xs font-bold flex items-center ${
+                    totalExposure < 0 ? 'text-red-500' : 'text-green-500'
+                  }`}
                 >
                   {formatNumber(totalExposure)}
                 </div>
@@ -76,13 +71,13 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
                 <button
                   onClick={() => setOpenBookModal(true)}
                   disabled={exposureFromBookset === 0}
-                  className="bg-btn-gradient text-white disabled:opacity-30 rounded-full px-3 py-1 md:absolute -left-2 md:-translate-x-full text-11 shadow-xl font-bold flex items-center"
+                  className="bg-green-500 text-white disabled:opacity-30 rounded-full px-1 py-0.5 md:absolute -left-2 md:-translate-x-full shadow-xl font-bold flex items-center text-[10px]"
                 >
                   Book
                 </button>
               )}
 
-              <div className="relative flex items-center gap-2 xl:gap-3">
+              <div className="relative flex items-center gap-1">
                 {renderOdds.map(({ type, items }) =>
                   (items ?? []).map((odd, index) => (
                     <OddButton
@@ -94,7 +89,9 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
                       size={odd.size}
                       type={type}
                       disabled={odd.price ? false : true}
-                      position={type === 'back' ? items.length - index : index + 1}
+                      position={
+                        type === 'back' ? items.length - index : index + 1
+                      }
                       onClick={() => {
                         // document.documentElement.scrollTop = 0;
                         // document.body.scrollTop = 0;
@@ -103,11 +100,11 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
                           odd.price,
                           type.toUpperCase(),
                           marketCategory === 'FANCY' ? odd.size : null,
-                          index
+                          index,
                         );
                       }}
                     />
-                  ))
+                  )),
                 )}
 
                 {blockedStatus && (
@@ -120,20 +117,13 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
           </div>
         </div>
       </div>
-      <BottomSheetModal
-        isOpen={
-          betDetails.selectionId === selectionId && betDetails.marketId === marketData.marketId
-        }
-        onClose={handleClose}
-      >
-        {/* MOBILE BET SLIP */}
-        {betDetails.selectionId === selectionId && betDetails.marketId === marketData.marketId && (
+      {betDetails.selectionId === selectionId &&
+        betDetails.marketId === marketData.marketId && (
           <div className="block lg:hidden border-b border-primary-light">
-            <BetSlip />
+            {' '}
+            <BetSlipComponent />
           </div>
         )}
-      </BottomSheetModal>
-
       {openBookModal && (
         <BookListModal
           open={openBookModal}
@@ -145,12 +135,40 @@ const InnerMarketRow: React.FC<InnerMarketRowProps> = ({
   );
 };
 
+InnerMarketRow.propTypes = {
+  marketData: PropTypes.shape({
+    marketId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    marketName: PropTypes.string,
+    marketStatus: PropTypes.string,
+    gameStatus: PropTypes.string,
+    marketCategory: PropTypes.string,
+  }).isRequired,
+
+  runnersData: PropTypes.shape({
+    selectionId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    runnerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    runnerName: PropTypes.string,
+    status: PropTypes.string,
+    back: PropTypes.array,
+    lay: PropTypes.array,
+  }).isRequired,
+
+  oddsClassName: PropTypes.string,
+
+  reverseOddsOrder: PropTypes.bool,
+
+  marketCategory: PropTypes.string.isRequired, // e.g. 'NORMAL', 'FANCY'
+
+  min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+  max: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
 export default React.memo(InnerMarketRow, (prev, next) => {
   return (
     prev.marketData.marketId === next.marketData.marketId &&
-    prev.runnersData === next.runnersData &&
     prev.marketCategory === next.marketCategory &&
     prev.min === next.min &&
-    prev.max === next.max
+    prev.max === next.max &&
+    prev.runnersData.length === next.runnersData.length
   );
 });

@@ -47,6 +47,17 @@ module.exports = {
           1200: '#1f5158',
           1300: '#1E8067',
         },
+        marketHead: '#DDDDDD',
+        'odd-pink': {
+          100: '#F9C9D4',
+          300: '#F9C9D4',
+          500: '#F9C9D4',
+        },
+        'odd-blue': {
+          100: '#A7D8FD',
+          300: '#A7D8FD',
+          500: '#A7D8FD',
+        },
       },
       borderRadius: {
         20: '20px',

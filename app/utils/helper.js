@@ -718,8 +718,6 @@ export const fetchEventData = async (game, eventId, setters) => {
         };
 
         const allMarkets = transformMarkets(catalogue?.markets);
-        console.log('allMarkets', allMarkets);
-
         // ✅ Match Odds extract
         const matchOddsData = allMarkets.find(
           (item) => item.market_name === 'Match Odds',
@@ -728,8 +726,7 @@ export const fetchEventData = async (game, eventId, setters) => {
         const bookmakerData = allMarkets.find(
           (item) => item.market_name.toLowerCase() === 'bookmaker',
         );
-
-        // ✅ OLD setters compatibility
+        console.log(matchOddsData, resData, 'allMarkets', bookmakerData);
         if (
           setOddsData &&
           setBookmakerData &&
@@ -740,7 +737,7 @@ export const fetchEventData = async (game, eventId, setters) => {
         ) {
           setOddsData(matchOddsData || {});
           setBookmakerData(bookmakerData || {});
-          setFancyData(resData?.fancyMarkets || {});
+          setFancyData(resData?.catalogue?.fancyMarkets || {});
           setSessionData(resData?.sessionMarkets || {});
 
           setMatchOddsMarket({

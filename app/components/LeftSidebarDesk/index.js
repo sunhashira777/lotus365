@@ -9,13 +9,13 @@ import { getImage } from '@/utils/imagekit';
 const LeftSidebarDesk = () => {
   const [step, setStep] = useState(0);
   const [selectedGame, setSelectedGame] = useState(null);
-  const betData = useSelector((state) => state.bet.selectedBet);
+  const betData = useSelector((state) => state?.bet?.selectedBet);
 
   const isLogin = isLoggedIn();
   const [state, setState] = React.useState(false);
 
   useEffect(() => {
-    if (isLogin && betData.length > 0) {
+    if (isLogin && betData?.length > 0) {
       setState(true);
     }
     // eslint-disable-next-line

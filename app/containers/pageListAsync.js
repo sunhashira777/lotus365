@@ -186,6 +186,9 @@ export const NotificationPage = loadable(() => import('./NotificationPage'), {
   fallback: <Loading />,
 });
 
-export const GameDetails = loadable(() => import('./GameDetails'), {
-  fallback: <Loading />,
-});
+export const GameDetailsPage = loadable(
+  () => import('./Pages/GameDetailsPage'),
+  {
+    fallback: <Loading />,
+  },
+);

@@ -8,7 +8,7 @@ import RulesModal from '../RulesModal';
 import AuraLobbyModal from '../NewModals/AuraLobbyModal';
 
 const ModalManager = () => {
-  const { type, isOpen } = useSelector((state) => state.modal);
+  const { type, isOpen } = useSelector((state) => state?.modal);
   const dispatch = useDispatch();
 
   if (!isOpen) return null;

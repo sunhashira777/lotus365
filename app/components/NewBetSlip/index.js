@@ -27,7 +27,7 @@ const amountArr = [100, 200, 300, 400, 500, 800, 700, 1000];
 const NewBetSlip = () => {
   const [acceptOddsChange, setAcceptOddsChange] = useState(true);
   const [betData, setBetData] = useState({});
-  const bets = useSelector((state) => state.bet.selectedBet);
+  const bets = useSelector((state) => state.bet?.selectedBet);
   const dispatch = useDispatch();
   const { eventId } = useParams();
   const [enent_ID, setEnent_ID] = useState(false);
@@ -45,10 +45,10 @@ const NewBetSlip = () => {
   }, [bets]);
 
   useEffect(() => {
-    if (bets.length == 0) {
+    if (bets?.length == 0) {
       dispatch(fetchCurrentCalculationAction({}));
     }
-  }, [bets.length]);
+  }, [bets?.length]);
 
   useEffect(() => {
     if (userInfo) {

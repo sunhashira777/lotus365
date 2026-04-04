@@ -20,6 +20,7 @@ import BetEditStake from '../NewModals/BetEditStake';
 import MobOpenBets from '../MobOpenBets';
 import { useParams } from 'react-router-dom';
 import { numberWithCommas } from '@/utils/numberWithCommas';
+import BetSlipComponent from './BetSlipComponent';
 
 const BetSlip = () => {
   const isLogin = isLoggedIn();
@@ -38,7 +39,8 @@ const BetSlip = () => {
   const [activeTab, setActiveTab] = useState('betslip');
   const [betData, setBetData] = useState({});
   const [currentBetWinLossDatas, setCurrentBetWinLossData] = useState(null);
-  const bets = useSelector((state) => state.bet.selectedBet);
+  const bets = useSelector((state) => state);
+  console.log('userbets', bets);
   const dispatch = useDispatch();
   const [enent_ID, setEnent_ID] = useState(false);
   const [loading, setIsloading] = useState(false);
@@ -53,10 +55,10 @@ const BetSlip = () => {
   }, [bets]);
 
   useEffect(() => {
-    if (bets.length == 0) {
+    if (bets?.length == 0) {
       dispatch(fetchCurrentCalculationAction({}));
     }
-  }, [bets.length]);
+  }, [bets?.length]);
 
   const increaseStake = () => {
     if (betData.stake > 0) {
@@ -210,91 +212,6 @@ const BetSlip = () => {
     }
   };
 
-  // const placeBet = async (e) => {
-  //   e.preventDefault();
-  //   const checkRestriction = await handleRestrictedGames(betData?.gameId);
-  //   if (checkRestriction) {
-  //     toast.error('Betting on this sport is not permitted.');
-  //     setIsloading(false);
-  //     return;
-  //   }
-  //   if (userInfo.betLock) {
-  //     toast.error('Betting is currently locked. You cannot place a bet.');
-  //     return;
-  //   }
-  //   setIsloading(true);
-  //   setFormError({});
-
-  //   let data =
-  //     betData?.market == 'bookmaker'
-  //       ? {
-  //           ...betData,
-  //           stake: Number(betData?.stake),
-  //           price: betData.price / 100 + 1,
-  //         }
-  //       : { ...betData, stake: Number(betData?.stake) };
-  //   data.stake = Number(data?.stake);
-  //   if (data?.stake !== 0 && data?.price !== 0) {
-  //     try {
-  //       await betValidationSchema.validate(
-  //         {
-  //           ...data,
-  //           minimumBet:
-  //             userInfo.currency_type === 'HKD'
-  //               ? (betData?.minimumBet || 0) / 10
-  //               : betData?.minimumBet || 0,
-  //           maximumBet:
-  //             userInfo.currency_type === 'HKD'
-  //               ? (betData?.maximumBet || Infinity) / 100
-  //               : betData?.maximumBet || Infinity,
-  //         },
-  //         {
-  //           abortEarly: false,
-  //         },
-  //       );
-  //       setTimeout(async () => {
-  //         await postAuthData('/user/place-bet', data)
-  //           .then((response) => {
-  //             if (response.status === 200) {
-  //               setIsloading(false);
-  //               toast.success('Bet Placed Successfully');
-  //               handleRemoveBet(data.selectionId);
-  //               dispatch(fetchCurrentCalculationAction({}));
-  //               dispatch(fetchBetDetailsAction([]));
-  //               dispatch(init([]));
-  //               handleProfitzero();
-  //               dispatch(setBetPlacementSuccess());
-  //             } else {
-  //               setIsloading(false);
-  //               if (response.data.length > 0) {
-  //                 toast.dismiss();
-  //                 toast.error(response?.data?.error || 'Something went wrong');
-  //               } else {
-  //                 toast.dismiss();
-  //                 toast.error(response?.data?.error || 'Something went wrong');
-  //               }
-  //             }
-  //           })
-  //           .catch((e) => {
-  //             setIsloading(false);
-  //             console.error(e);
-  //           });
-  //       }, 1000);
-  //     } catch (error) {
-  //       if (isYupError(error)) {
-  //         setFormError(parseYupError(error));
-  //       } else {
-  //         toast.error('An error occurred while placing the bet');
-  //       }
-  //       setIsloading(false);
-  //     }
-  //   } else {
-  //     setIsloading(false);
-  //     toast.dismiss();
-  //     toast.error('can not place bet due to missing odds');
-  //   }
-  // };
-
   const handleIncrease = () => {
     if (betData?.price > 1) {
       if (betData?.market == 'Match Odds') {
@@ -392,196 +309,8 @@ const BetSlip = () => {
           </button>
         </div>
         {/* main div */}
-        <div className={activeTab === 'openBets' ? 'hidden' : ''}>
-          {betData && betData?.marketId && (
-            <div className="bg-white p-2">
-              <div className="flex items-center gap-1">
-                <div
-                  className={`${
-                    bets?.[0]?.betOn === 'BACK'
-                      ? 'bg-[#a7d8fd]'
-                      : 'bg-[#f9c9d4]'
-                  } w-3 h-3`}
-                ></div>
-                <p>{bets?.[0]?.betOn === 'BACK' ? 'back' : 'lay'}</p>
-              </div>
-              <p className=" text-[13px] font-bold text-black">
-                {bets?.[0]?.event}
-              </p>
-              <div
-                className={`relative p-2 ${
-                  bets?.[0]?.betOn === 'BACK' ? 'bg-[#a7d8fd]' : 'bg-[#f9c9d4]'
-                } my-1`}
-              >
-                <div className="flex items-center justify-between text-12 font-lato ">
-                  <p> {bets?.[0]?.selection}</p>
-                  <p> Max Market: {betData?.maximumBet}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col gap-1">
-                    <div className="flex justify-between">
-                      <label htmlFor="" className="text-12 font-[200]  ">
-                        Odds
-                      </label>
-                    </div>
-                    <div className="relative rounded-md overflow-hidden bg-white">
-                      <input
-                        type="text"
-                        disabled
-                        value={
-                          betData?.market == 'bookmaker'
-                            ? parseFloat(
-                                (betData?.price / 100 + 1 || 0).toFixed(2),
-                              )
-                            : parseFloat((betData?.price || 0).toFixed(2))
-                        }
-                        className="outline-none   rounded-sm w-full h-[28px] max-w-[103px] px-8 py-2"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleDecrease}
-                        className="absolute ay-center rounded-sm cursor-pointer h-[22px] w-[22px] left-1 bg-[#051316] font-bold  flex-center text-white"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleIncrease}
-                        className="absolute ay-center rounded-sm cursor-pointer h-[22px] w-[22px] right-1 bg-[#051316] font-bold flex-center text-white"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="" className=" font-[200] text-12">
-                      Stake
-                    </label>
-                    <div className="relative rounded-md overflow-hidden">
-                      <input
-                        type="number"
-                        onChange={handleChange}
-                        value={betData?.stake}
-                        placeholder="0"
-                        className="outline-none border border-gray-200 text-center  max-w-[90px] rounded-sm w-full h-[26px] "
-                      />
-                    </div>
-                  </div>
-                  <div className="">
-                    <p className="text-black font-[200]">
-                      {bets?.[0]?.betOn === 'BACK' ? 'Profit' : 'Liability'}
-                    </p>
-                    <p className="text-black text-12 font-bold">
-                      {bets?.[0]?.betOn === 'BACK'
-                        ? !isNaN(
-                            Number(currentBetWinLossDatas?.calculation?.win),
-                          )
-                          ? Number(
-                              currentBetWinLossDatas?.calculation?.win,
-                            ).toFixed(0)
-                          : 0
-                        : !isNaN(
-                            Number(currentBetWinLossDatas?.calculation?.loss),
-                          )
-                        ? Number(
-                            currentBetWinLossDatas?.calculation?.loss,
-                          ).toFixed(0)
-                        : 0}
-                    </p>
-                  </div>
-                  <div
-                    onClick={() => {
-                      handleRemoveBet(betData?.selectionId);
-                    }}
-                    className="bg-[#B2493E] text-white rounded-sm h-5 w-5 flex-center text-xl font-bold mt-auto mb-1"
-                  >
-                    {reactIcons.close}
-                  </div>
-                </div>
-                <div className="bg-white p-3 grid grid-cols-3 gap-y-3  gap-x-2 mt-2">
-                  <button
-                    onClick={() => setBetData({ ...betData, stake: 100 })}
-                    className="border  bg-[#1E8067] h-[14px] text-white font-medium text-10 leading-none rounded-sm flex-center"
-                  >
-                    Min
-                  </button>
 
-                  {stakebutton &&
-                    stakebutton.map((item) => {
-                      return (
-                        <button
-                          key={item}
-                          onClick={() => {
-                            setBetData({
-                              ...betData,
-                              stake: item?.value,
-                            });
-                          }}
-                          className={`border  rounded-sm h-[14px] text-white font-medium text-10 leading-none flex-center ${
-                            item === betData?.stake
-                              ? 'bg-[#1E8067]'
-                              : 'bg-[#1E8067]'
-                          }`}
-                        >
-                          {item?.text}
-                        </button>
-                      );
-                    })}
-                  <button
-                    onClick={() => setBetData({ ...betData, stake: 25000 })}
-                    className="border text-10 h-[14px] leading-none text-white font-medium  bg-[#1E8067] rounded-sm flex-center"
-                  >
-                    Max
-                  </button>
-                  <button
-                    onClick={() => {
-                      setBetData({ ...betData, stake: '' });
-                    }}
-                    className="text-12 font-medium h-[14px] flex items-center"
-                  >
-                    Clear
-                  </button>
-                </div>
-                <div className="flex items-center justify-between gap-2  mt-2">
-                  <button
-                    onClick={() => {
-                      setBetData({ ...betData, stake: '' });
-                    }}
-                    // onClick={() => {
-                    //   handleRemoveBet(betData?.selectionId);
-                    // }}
-                    className="bg-[#B2493E] text-white px-4 py-1 text-12 font-semibold rounded-sm shadow-[inset_-2px_-2px_#8d3a31]"
-                  >
-                    Remove All
-                  </button>
-                  <button
-                    disabled={
-                      betData?.stake === '' || betData?.stake === 0 || loading
-                        ? true
-                        : false
-                    }
-                    onClick={(e) => placeBet(e)}
-                    className={`text-white px-4 flex gap-2 items-center text-12 font-semibold shadow-[inset_-2px_-2px_#1E8067] py-1 rounded-sm ${
-                      betData?.stake === '' || betData?.stake === 0
-                        ? 'bg-[#5c996f] '
-                        : 'bg-[#5C996F] '
-                    }`}
-                  >
-                    {loading && (
-                      <AiOutlineLoading3Quarters className="animate-spin text-14" />
-                    )}{' '}
-                    Place Order
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-          {!betData?.marketId && (
-            <div className="text-14 bg-white p-2">
-              Click on the odds to add selections to the betslip
-            </div>
-          )}
-        </div>
+        {activeTab !== 'openBets' && <BetSlipComponent />}
 
         <div className={`${activeTab === 'betslip' ? 'hidden' : ''}`}>
           <MobOpenBets eventId={eventId} />

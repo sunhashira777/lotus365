@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 function MobLayout() {
   const isLogin = isLoggedIn();
   const [state, setState] = React.useState(false);
-  const betData = useSelector((state) => state.bet.selectedBet);
+  const betData = useSelector((state) => state?.bet?.selectedBet);
   const login = isLoggedIn();
   const [showMarquee, setShowMarquee] = useState(true);
   const toggleDrawer = () => (event) => {
@@ -22,7 +22,7 @@ function MobLayout() {
     setState(!state);
   };
   useEffect(() => {
-    if (isLogin && betData.length > 0) {
+    if (isLogin && betData?.length > 0) {
       setState(true);
     }
     // eslint-disable-next-line

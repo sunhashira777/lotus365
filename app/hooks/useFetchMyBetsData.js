@@ -14,7 +14,7 @@ export const useFetchMyBetsData = ({
   const [loading, setLoading] = useState(false);
 
   const login = isLoggedIn();
-  const bets = useSelector((state) => state.bet.selectedBet);
+  const bets = useSelector((state) => state.bet?.selectedBet);
 
   const getAllBets = async () => {
     if (getAllBetsDataBool) return;

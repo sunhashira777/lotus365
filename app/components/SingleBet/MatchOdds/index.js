@@ -34,6 +34,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bets, dispatch, isMobile]);
+  console.log('matchoddsdata', data);
 
   const addToBetPlace = (
     eventId,
@@ -44,9 +45,19 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
     betType,
     selectType,
     _marketData,
-    minBetLimit,
-    maxBetLimit,
   ) => {
+    console.log(
+      '_marketData',
+      eventId,
+      selectionId,
+      betDetails,
+      game,
+      OddsPrice,
+      betType,
+      selectType,
+      _marketData,
+    );
+
     if (isLogin) {
       if (OddsPrice > 1) {
         setBets([
@@ -55,17 +66,21 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
             marketId: String(data?.Matchodds),
             selectionId: String(selectionId),
             betOn: selectType,
-            price: parseFloat(OddsPrice),
-            stake: '',
-            eventType: game,
-            market: _marketData.market_name,
-            gameType: _marketData.market_name,
-            nation: betDetails,
-            type: selectType,
-
+            marketName: data?.marketName,
+            marketType: 'NORMAL',
+            runnerName: betDetails,
             bettingOn: betType,
+            rate: OddsPrice,
 
-            selection: betDetails,
+            // price: parseFloat(OddsPrice),
+            // stake: '',
+            // runnerName: '',
+            // eventType: game,
+            // market: _marketData.market_name,
+            // gameType: _marketData.market_name,
+            // nation: betDetails,
+            // type: selectType,
+            // selection: betDetails,
             // minimumBet: minBetLimit,
             // maximumBet: maxBetLimit,
           },
@@ -303,7 +318,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
                           />
                         </div>
                         {items?.status !== '' && items?.status !== 'ACTIVE' && (
-                          <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                          <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10">
                             <SuspendedBtn status={items?.status} />
                           </div>
                         )}

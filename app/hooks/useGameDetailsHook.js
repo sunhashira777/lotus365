@@ -1,30 +1,28 @@
-import { useGetCatalogueByEventIdQuery } from '@/apis/catalogueApi';
-import { formatRunners, getOrderedMarkets } from '@/helpers';
-import { useIsDemoUser } from '@/hooks/useIsDemoUser';
-import { useGetScorecardQuery } from '@/store/api/eventsApi';
-import { FancyMarket, FancyMarketItem } from '@/Types';
-
+import { useGetCatalogueByEventIdQuery } from '@/api/catalogueApi';
+import {
+  formatRunners,
+  getOrderedMarkets,
+} from '@/utils/marketFormaterHelpers';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-export const marketTypes = ['match odds', 'bookmaker', 'mini bookmaker', 'over/under', 'set'];
-const useCatalogData = (sportName?: string) => {
+export const marketTypes = [
+  'match odds',
+  'bookmaker',
+  'mini bookmaker',
+  'over/under',
+  'set',
+];
+const useGameDetailsHook = () => {
   const navigate = useNavigate();
   const { eventId } = useParams();
-  const [pollingInterval, setPollingInterval] = useState(2000);
-  const [activeCatTab, setActiveCatTab] = useState('Fancy');
   const [activeTab, setActiveTab] = useState('All');
-  const [showLiveScore, setShowLiveScore] = useState(true);
-  const isDemoUser = useIsDemoUser();
-  const { data: liveTvAndscore } = useGetScorecardQuery(Number(eventId), {
-    skip: !eventId || isDemoUser,
-  });
-  const { data, isLoading: isLoadingEventDetails } = useGetCatalogueByEventIdQuery(
-    { eventId: Number(eventId) },
-    { pollingInterval }
-  );
-
-  // Catalogue fields
+  const [pollingInterval, setPollingInterval] = useState(2000);
+  const { data, isLoading: isLoadingEventDetails } =
+    useGetCatalogueByEventIdQuery(
+      { eventId: Number(eventId) },
+      { pollingInterval },
+    );
   const {
     startTime,
     inplay,
@@ -34,9 +32,12 @@ const useCatalogData = (sportName?: string) => {
     status,
   } = data?.catalogue ?? {};
 
-  const { maxBetAmount, minBetAmount, sessionMaxBetAmount, sessionMinBetAmount } =
-    data?.betConfig ?? {};
-
+  const {
+    maxBetAmount,
+    minBetAmount,
+    sessionMaxBetAmount,
+    sessionMinBetAmount,
+  } = data?.betConfig ?? {};
   // Market ordering
   const allMarkets = getOrderedMarkets(markets, marketTypes);
 
@@ -64,16 +65,23 @@ const useCatalogData = (sportName?: string) => {
         };
       }) || []
     );
-  }, [allMarkets, minBetAmount, maxBetAmount, sessionMinBetAmount, sessionMaxBetAmount]);
+  }, [
+    allMarkets,
+    minBetAmount,
+    maxBetAmount,
+    sessionMinBetAmount,
+    sessionMaxBetAmount,
+  ]);
 
-  // FANCY MARKETS
   const fancyMarketData = useMemo(() => {
     return (
       Object.entries(fancyMarkets)
-        .filter(([marketName]) => activeTab === 'All' || marketName === activeTab)
+        .filter(
+          ([marketName]) => activeTab === 'All' || marketName === activeTab,
+        )
         .map(([marketName, marketItems]) => ({
           marketName,
-          markets: [...(marketItems as FancyMarketItem[])]
+          markets: [...marketItems]
             .sort((a, b) => (a.sortPriority ?? 0) - (b.sortPriority ?? 0))
             .map((m) => ({
               ...m,
@@ -82,48 +90,26 @@ const useCatalogData = (sportName?: string) => {
         })) || []
     );
   }, [fancyMarkets, activeTab]);
+
   const sessionMarkets = useMemo(() => {
-    const fancyMarkets = data?.catalogue?.fancyMarkets as Record<string, FancyMarket[]> | undefined;
+    const fancyMarkets = data?.catalogue?.fancyMarkets;
 
     return Object.values(fancyMarkets ?? {})
       .flat()
-      .sort((a: FancyMarket, b: FancyMarket) => (a.sortPriority ?? 0) - (b.sortPriority ?? 0))
-      .map((m: FancyMarket) => ({
+      .sort((a, b) => (a.sortPriority ?? 0) - (b.sortPriority ?? 0))
+      .map((m) => ({
         ...m,
         runners: formatRunners(m),
       }));
   }, [data]);
-
-  useEffect(() => {
-    setActiveTab('All');
-  }, [activeCatTab]);
-
+  console.log('marketdata', data);
   useEffect(() => {
     setPollingInterval(inplay ? 1000 : 2000);
   }, [inplay]);
-
-  const liveScoreUrl = liveTvAndscore?.scorecardUrl;
-  const liveTvUrl = liveTvAndscore?.liveTvUrl;
-
-  useEffect(() => {
-    if (status?.toLowerCase() === 'closed') {
-      setTimeout(() => {
-        navigate('/bet-history');
-      }, 1000);
-    }
-  }, [status]);
-  console.log('syat=sss', data?.catalogue);
-
+  const liveScoreUrl = null;
+  const liveTvUrl = null;
   return {
     isLoadingEventDetails,
-    activeCatTab,
-    setActiveCatTab,
-    activeTab,
-    setActiveTab,
-    showLiveScore,
-    setShowLiveScore,
-
-    // data
     liveScoreUrl,
     liveTvUrl,
     startTime,
@@ -139,4 +125,4 @@ const useCatalogData = (sportName?: string) => {
   };
 };
 
-export default useCatalogData;
+export default useGameDetailsHook;
