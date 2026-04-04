@@ -84,7 +84,7 @@ const MobileFixtureTennis = ({ type, fixtureData, isLoading }) => {
   };
 
   const sortedInplayFalseMatches = fixtureData.sort((a, b) => {
-    return new Date(a.matchDateTime) - new Date(b.matchDateTime);
+    return new Date(a.startTime) - new Date(b.startTime);
   });
   return (
     <div className="tennis mt-2">
@@ -375,24 +375,20 @@ const MobileFixtureTennis = ({ type, fixtureData, isLoading }) => {
                           className="flex items-center justify-between"
                         >
                           <div className="grid grid-cols-3 flex-1 h-[40px]">
-                            {isToday(_items?.matchDateTime) ? (
+                            {isToday(_items?.startTime) ? (
                               <div className="col-span-1 flex-center h-full text-red-500 text-[9px] border border-gray-100">
                                 Today{' '}
-                                {moment(_items?.matchDateTime).format(
-                                  'hh:mm A',
-                                )}
+                                {moment(_items?.startTime).format('hh:mm A')}
                               </div>
                             ) : (
                               <div className="col-span-1 flex-col flex items-center justify-center h-full text-red-500 text-[9px] border border-gray-100">
                                 <div className="leading-3 flex ">
-                                  {moment(_items?.matchDateTime).format(
+                                  {moment(_items?.startTime).format(
                                     'DD/MM/YYYY',
                                   )}
                                 </div>
                                 <div className="leading-3 flex ">
-                                  {moment(_items?.matchDateTime).format(
-                                    'hh:mm A',
-                                  )}
+                                  {moment(_items?.startTime).format('hh:mm A')}
                                 </div>
                               </div>
                             )}{' '}

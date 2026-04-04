@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { postAuthData } from '@/utils/apiHandlers';
 import { isYupError, parseYupError } from '@/utils/Yup';
-import { addAccountValidation, addUpiValidation } from '@/utils/validation';
+import { addAccountValidation } from '@/utils/validation';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { reactIcons } from '@/utils/icons';
@@ -12,19 +12,14 @@ const AddAccount = () => {
   const userId = useSelector((state) => state.user.id);
   const [isPassword, setIsPassword] = useState(false);
 
-  const userName = useSelector((state) => state.user.username);
-  const [activeTab, setActiveTab] = useState('Account');
   const [form, setForm] = useState({});
   const [formError, setFormError] = useState({});
 
   useEffect(() => {
     if (userId) {
-      setForm({ ...form, userId: userId });
-      if (activeTab != 'Account') {
-        setForm({ ...form, upiName: userName });
-      }
+      setForm((prev) => ({ ...prev, userId }));
     }
-  }, [userId, userName, activeTab]);
+  }, [userId]);
 
   const inputBox = [
     {
@@ -35,7 +30,7 @@ const AddAccount = () => {
     {
       label: 'Account holder’s name',
       placeholder: 'Eg. John Doe',
-      keyName: 'acountholdername',
+      keyName: 'accountHolder',
     },
     {
       label: 'Account number',
@@ -45,175 +40,170 @@ const AddAccount = () => {
     {
       label: 'IFSC Code',
       placeholder: 'Eg SBIN0005943',
-      keyName: 'ifscCode',
+      keyName: 'ifsc',
     },
   ];
 
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    value = value.trim();
-    setForm({ ...form, [name]: value });
-    setFormError({
-      ...formError,
+    let { name, value, type, checked } = e.target;
+
+    value = type === 'checkbox' ? checked : value.trim();
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setFormError((prev) => ({
+      ...prev,
       [name]: '',
-    });
+    }));
   };
+
   const handleAddAccountSubmit = async (e) => {
     e.preventDefault();
+
+    console.log('FORM DATA 👉', form);
+
     try {
       setFormError({});
+
       await addAccountValidation.validate(form, {
         abortEarly: false,
       });
-      const response = await postAuthData('/user/add-user-bank-account', form);
+
+      console.log('✅ VALIDATION PASSED');
+
+      const payload = {
+        accountNumber: form.accountNumber,
+        ifsc: form.ifsc,
+        accountHolder: form.accountHolder,
+        accountType: 'Savings',
+        bankName: form.bankName,
+        selectType: 'Account1',
+        minAmount: 100,
+        maxAmount: 100000,
+        txnCode: form.withdrawPassword,
+      };
+
+      console.log('📦 PAYLOAD 👉', payload);
+
+      const response = await postAuthData('/bank', payload);
+
+      console.log('🔥 API RESPONSE 👉', response);
+
       if (response?.status === 200 || response?.status === 201) {
         toast.success('Account Added Successfully');
-        setFormError({
+
+        setForm({
           bankName: '',
+          accountHolder: '',
           accountNumber: '',
-          ifscCode: '',
+          ifsc: '',
           withdrawPassword: '',
+          condition: false,
         });
       } else {
         toast.error(response?.data || 'Something went wrong');
       }
     } catch (error) {
+      console.log('❌ ERROR 👉', error);
+
       if (isYupError(error)) {
-        setFormError(parseYupError(error));
+        const parsed = parseYupError(error);
+        console.log('🚨 VALIDATION ERRORS 👉', parsed);
+
+        setFormError(parsed);
+
+        // 🔥 IMPORTANT: toast show kar
+        toast.error(Object.values(parsed)[0]);
       } else {
         toast.error(error?.message || 'Unauthorised');
       }
     }
   };
-
-  const handleAddUpiSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setFormError({});
-      await addUpiValidation.validate(form, {
-        abortEarly: false,
-      });
-      const response = await postAuthData('/user/add-userupi', form);
-      if (response?.status === 200 || response?.status === 201) {
-        toast.success('UPI Id Added Successfully');
-        setActiveTab('Account');
-        setFormError({
-          upiId: '',
-          upiName: '',
-          userId: '',
-        });
-      } else {
-        toast.error(response?.data || 'Something went wrong');
-      }
-    } catch (error) {
-      if (isYupError(error)) {
-        setFormError(parseYupError(error));
-      } else {
-        toast.error(error?.message || 'Unauthorised');
-      }
-    }
-  };
-
-  // const tabList = [
-  //   {
-  //     id: 1,
-  //     title: 'Account',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Upi Id',
-  //   },
-  // ];
-
   return (
-    <div className="w-full  relative transform overflow-hidden  align-middle  transition-all">
-      <div className=" flex flex-col gap-4">
+    <div className="w-full">
+      <div className="flex flex-col gap-4">
         {inputBox.map((item, index) => (
-          <>
-            <div key={index} className="">
-              <label
-                htmlFor={item.label}
-                className="text-black flex text-start text-14 md:text-16 font-bold"
-              >
-                {item.label}
-              </label>
-              <div className="bg-gradient p-[1px] rounded-md overflow-hidden h-[38px] md:h-[48px]">
-                <input
-                  name={item.keyName}
-                  placeholder={item.placeholder}
-                  id={item.label}
-                  onChange={handleChange}
-                  className="w-full h-full  text-black outline-none px-4 py-1 border border-black rounded-md text-14 md:text-16"
-                />
-              </div>
-              {formError[item.keyName] && (
-                <div className="form-eror flex text-start text-14">
-                  {formError[item.keyName]}
-                </div>
-              )}
+          <div key={index}>
+            <label className="text-black text-14 md:text-16 font-bold">
+              {item.label}
+            </label>
+
+            <div className="bg-gradient p-[1px] rounded-md h-[48px]">
+              <input
+                name={item.keyName}
+                placeholder={item.placeholder}
+                value={form[item.keyName] || ''}
+                onChange={handleChange}
+                className="w-full h-full px-4 border border-black rounded-md"
+              />
             </div>
-          </>
-        ))}{' '}
-        <div className="">
-          <label
-            htmlFor=""
-            className="text-black flex text-start text-14 md:text-16 font-bold"
-          >
-            Withdraw Password
-          </label>
-          <div className="bg-gradient p-[1px] relative rounded-md overflow-hidden h-[38px] md:h-[48px]">
+
+            {formError[item.keyName] && (
+              <div className="text-red-500 text-12">
+                {formError[item.keyName]}
+              </div>
+            )}
+          </div>
+        ))}
+
+        {/* Withdraw Password */}
+        <div>
+          <label className="font-bold">Withdraw Password</label>
+
+          <div className="relative h-[48px]">
             <input
               name="withdrawPassword"
               placeholder="Enter Withdraw Password"
-              id=""
-              type={!isPassword ? 'password' : 'text'}
+              type={isPassword ? 'text' : 'password'}
+              value={form.withdrawPassword || ''}
               onChange={handleChange}
-              className="w-full h-full  text-black outline-none px-4 py-1 border border-black rounded-md text-14 md:text-16"
+              className="w-full h-full px-4 border border-black rounded-md"
             />
+
             <span
               onClick={() => setIsPassword(!isPassword)}
-              className="absolute ay-center right-2"
+              className="absolute right-3 top-3 cursor-pointer"
             >
               {isPassword ? reactIcons.eye : reactIcons.eyeSlash}
             </span>
           </div>
-          {formError?.withdrawPassword && (
-            <div className="form-eror flex text-start text-14">
-              {formError?.withdrawPassword}
-            </div>
-          )}
 
-          <div className="flex items-start justify-start gap-2 mt-4">
-            <input
-              type="checkbox"
-              className="w-5 h-5 accent-primary-red"
-              name="condition"
-              checked={form.condition}
-              onChange={handleChange}
-              id="odds"
-            />
-            <label htmlFor="odds" className="leading-5 text-14 ">
-              I have read and agree with{' '}
-              <Link to="#" className="text-primary-1300 underline">
-                the terms of payment and withdrawal policy.
-              </Link>
-            </label>
-          </div>
-          {formError.condition && (
-            <div className="form-eror xl:text-16   text-14">
-              {formError.condition}
+          {formError.withdrawPassword && (
+            <div className="text-red-500 text-12">
+              {formError.withdrawPassword}
             </div>
           )}
         </div>
+
+        {/* Checkbox */}
+        <div className="flex gap-2 mt-2">
+          <input
+            type="checkbox"
+            name="condition"
+            checked={form.condition || false}
+            onChange={handleChange}
+          />
+          <label className="text-14">
+            I agree with{' '}
+            <Link to="#" className="text-primary-1300 underline">
+              terms & policy
+            </Link>
+          </label>
+        </div>
+
+        {formError.condition && (
+          <div className="text-red-500 text-12">{formError.condition}</div>
+        )}
       </div>
 
       <button
-        onClick={
-          activeTab === 'Account' ? handleAddAccountSubmit : handleAddUpiSubmit
-        }
-        className="bg-primary-1300 my-5 text-14 h-[35px] flex-center rounded-[4px] w-full text-white shadow-[2px_2px_#00000040]"
+        onClick={handleAddAccountSubmit}
+        className="bg-primary-1300 mt-5 h-[40px] w-full text-white rounded-md"
       >
-        Proceed
+        Add Bank Account
       </button>
     </div>
   );

@@ -497,9 +497,9 @@ export const desktopModalStyle = {
 //       const inplayFalseData = [];
 
 //       data
-//         .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
+//         .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
 //         .forEach((item) => {
-//           const entryDate = new Date(item.matchDateTime)
+//           const entryDate = new Date(item.startTime)
 //             .toISOString()
 //             .split('T')[0];
 
@@ -538,7 +538,7 @@ export const getFixtureDataMobile = async (
 
     // 🔵 Upcoming (inplay FALSE)
     const upcomingRes = await getAuthData(
-      `/fixture?sport=${game}&inplay=false&matchTime=upcoming`,
+      `/fixture?sport=${game}&inplay=false&matchTime=today`,
     );
 
     let inplayTrueData = [];
