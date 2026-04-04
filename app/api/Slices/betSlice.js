@@ -15,7 +15,7 @@ const betSlice = createSlice({
       state.isBetting = action.payload;
     },
     setBetDetails: (state, action) => {
-      state.betDetails = action.payload || {};
+      state.betDetails = action.payload;
     },
     setBetPL: (state, action) => {
       state.betPL = action.payload;

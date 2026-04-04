@@ -116,7 +116,7 @@ const Casino = () => {
       const res = await getAuthData(`/casino/games?${params.toString()}`);
 
       // 🔥 IMPORTANT mapping (old → new)
-      const mappedGames = games.map((g) => ({
+      const mappedGames = []?.map((g) => ({
         ...g,
         game_id: g.externalId, // launch ke liye
         game_images: g.gameImage, // UI ke liye
