@@ -44,7 +44,7 @@ const BetSlip = () => {
   const dispatch = useDispatch();
   const [enent_ID, setEnent_ID] = useState(false);
   const [loading, setIsloading] = useState(false);
-  const userInfo = useSelector((state) => state.user);
+  const userInfo = useSelector((state) => state?.user?.profile);
   const [formError, setFormError] = useState({
     stake: '',
   });

@@ -19,24 +19,40 @@ const style = {
 
 export default function BetProcessing({ isOpen }) {
   const [seconds, setSeconds] = React.useState(6);
+
+  // ✅ Reset when modal opens
   React.useEffect(() => {
-    if (seconds > 0) {
-      const timer = setTimeout(() => {
-        setSeconds(seconds - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
+    if (isOpen) {
+      setSeconds(6);
     }
-  }, [seconds]);
+  }, [isOpen]);
+
+  // ✅ Countdown logic (clean interval)
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const interval = setInterval(() => {
+      setSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isOpen]);
+
   return (
     <Modal
       open={isOpen}
-      // onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       closeAfterTransition
       BackdropProps={{
         sx: {
-          backgroundColor: 'rgba(0, 0, 0, 0.5)', // black with 50% opacity
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
         },
       }}
     >
@@ -44,12 +60,13 @@ export default function BetProcessing({ isOpen }) {
         <div className="bg-white hide-scrollbar p-6 flex flex-col items-center gap-4">
           <h2 className="text-16 font-bold text-center">
             Your Bet Is Being Processed <br />
-            Please Wait...{seconds}
+            Please Wait... {seconds}
           </h2>
+
           <img
             src={getImage('/images/timer.gif')}
             className="w-12 h-12 lg:h-16 lg:w-16"
-            alt=""
+            alt="timer"
           />
         </div>
       </Box>

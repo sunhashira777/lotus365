@@ -28,7 +28,7 @@ const MobHome = () => {
   const [inplayFalseSoccer, setInplayFalseSoccer] = useState([]);
   // eslint-disable-next-line
   const [loaderOneTime, setLoaderOneTime] = useState(false);
-  const userInfo = useSelector((state) => state.user);
+  const userInfo = useSelector((state) => state?.user?.profile);
   const login = isLoggedIn();
   const navigate = useNavigate();
   const handleClickCasino = (item) => {

@@ -17,7 +17,8 @@ import { getImage } from '@/utils/imagekit';
 export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
   const login = isLoggedIn();
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user);
+  // const userInfo = useSelector((state) => state?.user?.profile);;
+  const userInfo = useSelector((state) => state?.user?.profile);
   const handleLogout = () => {
     Cookies.remove('__users__isLoggedIn');
     Cookies.remove('test__users__isLoggedIn');

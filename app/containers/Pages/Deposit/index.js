@@ -36,7 +36,7 @@ const Deposit = () => {
   const [selectedImage, setSelectedImage] = useState({});
   const [qrType, setQrType] = useState('');
   const dispatch = useDispatch();
-  const User = useSelector((state) => state.user);
+  const User = useSelector((state) => state?.user?.profile);
   const login = isLoggedIn();
   // eslint-disable-next-line
   const [page, setPage] = useState(1);

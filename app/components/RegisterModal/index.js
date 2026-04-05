@@ -146,7 +146,7 @@ const RegisterModal = ({ isOpen, handleClose }) => {
     try {
       setFormError({});
       const verifyPayload = {
-        username: form?.username,
+        username: form?.username ? form?.username : form?.mobile,
         password: form?.password,
         mobile: form?.mobile,
         otp: form?.otp,
@@ -156,7 +156,7 @@ const RegisterModal = ({ isOpen, handleClose }) => {
         abortEarly: false,
       });
       const payload = {
-        username: form?.username,
+        username: form?.username ? form?.username : form?.mobile,
         password: form?.password,
         mobile: '+' + form?.dialCode + form?.mobile,
         mobileVerificationCode: form?.otp,
@@ -165,7 +165,7 @@ const RegisterModal = ({ isOpen, handleClose }) => {
       };
       const response = await postData('/auth/register', payload);
       console.log(response, 'ress');
-      if (response?.status === 201) {
+      if (response?.status === 201 || response?.status === 201) {
         toast.success('Registered Successfully');
         // window.location.reload();
 

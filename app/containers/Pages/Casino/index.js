@@ -10,7 +10,7 @@ import { openModal } from '@/redux/Slices/modalSlice';
 
 const Casino = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state?.user?.profile);
 
   const itemRefs = useRef([]);
   const loaderRef = useRef(null);
@@ -114,9 +114,9 @@ const Casino = () => {
       }
 
       const res = await getAuthData(`/casino/games?${params.toString()}`);
-
+      const gamesArray = res?.data?.games || [];
       // 🔥 IMPORTANT mapping (old → new)
-      const mappedGames = []?.map((g) => ({
+      const mappedGames = gamesArray.map((g) => ({
         ...g,
         game_id: g.externalId, // launch ke liye
         game_images: g.gameImage, // UI ke liye
@@ -189,7 +189,7 @@ const Casino = () => {
 
       const res = await postAuthData('/casino/launch', payload);
 
-      if (res?.status === 200 && res?.data?.data) {
+      if ((res?.status === 200 || res?.status === 201) && res?.data?.data) {
         const raw = res.data.data;
         const json = JSON.parse(raw.substring(raw.indexOf('{')));
 

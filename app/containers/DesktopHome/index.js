@@ -68,7 +68,7 @@ const DesktopHome = () => {
   // eslint-disable-next-line
   const [loaderOneTime, setLoaderOneTime] = useState(false);
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user);
+  const userInfo = useSelector((state) => state?.user?.profile);
   const login = isLoggedIn();
 
   // const getCricketData = () => {

@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 function ProfitAndLoss() {
   const [activeTab, setActiveTab] = useState('Cricket');
   const [profitLoss, setProfitLossData] = useState([]);
-  const User = useSelector((state) => state.user);
+  const User = useSelector((state) => state?.user?.profile);
   const [profitData, setProfitData] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());

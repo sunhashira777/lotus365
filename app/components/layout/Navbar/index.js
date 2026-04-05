@@ -21,7 +21,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [time, setTime] = useState(moment().format('HH:mm:ss'));
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state?.user?.profile);
+  const userInfo = useSelector((state) => state?.user?.profile); ////////userInfo
   const User = useSelector((state) => state?.user?.profile);
   const isLogin = isLoggedIn();
   const [open, setOpen] = useState(false);

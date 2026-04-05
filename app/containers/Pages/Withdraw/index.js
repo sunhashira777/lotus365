@@ -20,7 +20,7 @@ const WithdrawCard = () => {
   const [type, setType] = useState('');
   const islogin = isLoggedIn();
   const [accountIndex, setAccountIndex] = useState(null);
-  const UserInfo = useSelector((state) => state.user);
+  const UserInfo = useSelector((state) => state?.user?.profile);
   const copieBtn = async (copyText) => {
     toast.success(copyText + ' Coppied!!');
   };

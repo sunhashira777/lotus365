@@ -434,9 +434,7 @@ const MobileFixtureCricket = ({ type, fixtureData, isLoading }) => {
                             {isToday(_items?.startTime) ? (
                               <div className="col-span-1 flex-center h-full text-red-500 text-[9px] border border-gray-100">
                                 Today{' '}
-                                {moment(_items?.startTime).format(
-                                  'hh:mm A',
-                                )}
+                                {moment(_items?.startTime).format('hh:mm A')}
                               </div>
                             ) : (
                               <div className="col-span-1 flex-col flex items-center justify-center h-full text-red-500 text-[9px] border border-gray-100">
@@ -446,9 +444,7 @@ const MobileFixtureCricket = ({ type, fixtureData, isLoading }) => {
                                   )}
                                 </div>
                                 <div className="leading-3 flex ">
-                                  {moment(_items?.startTime).format(
-                                    'hh:mm A',
-                                  )}
+                                  {moment(_items?.startTime).format('hh:mm A')}
                                 </div>
                               </div>
                             )}{' '}

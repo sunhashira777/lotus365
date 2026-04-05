@@ -45,8 +45,8 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                 key={index}
                 onClick={() =>
                   navigate(
-                    _items?.event_id
-                      ? `/${gameNameS}/market/${_items?.event_id}`
+                    _items?.id
+                      ? `/${gameNameS}/market/${_items?.id}`
                       : `/${gameNameS}/market/${_items?.matchId}`,
                     { state: { data: _items } },
                   )

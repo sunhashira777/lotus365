@@ -29,19 +29,26 @@ const useBetPlaceHook = () => {
   );
   const [placeBet, { isLoading }] = usePlaceBetMutation();
   // const isDemoUser = useIsDemoUser();
-
   const handlePlaceBet = useCallback(async () => {
     const { min, max, ...betPayload } = betDetails;
+
     try {
       const res = await placeBet({
         ...betPayload,
         acceptOddsChange,
       }).unwrap();
 
-      toast.success(res?.message || 'Bet placed successfully');
       dispatch(setTriggerId(10));
+
+      return {
+        success: true,
+        message: res?.message || 'Bet placed successfully',
+      };
     } catch (err) {
-      toast.error(err?.data?.message || 'Failed to place bet');
+      return {
+        success: false,
+        message: err?.data?.message || 'Failed to place bet',
+      };
     } finally {
       dispatch(setBetDetails({}));
       dispatch(setBetPL(0));
