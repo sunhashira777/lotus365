@@ -33,8 +33,8 @@ const TennisMarket = () => {
   //eslint-disable-next-line
   const [odds, setOdds] = useState([]);
   const matchData = location.state?.data;
-  const userIdBalance = useSelector((state) => state?.user?.balance);
-  const userType = useSelector((state) => state?.user?.userType);
+  const userIdBalance = useSelector((state) => state?.user?.profile?.balance);
+  const userType = useSelector((state) => state?.user?.profile?.userType);
   const [isLiveMobile, setIsLiveMobile] = useState(false);
   const [isLiveTv, setIsLiveTV] = useState(false);
   const [usersBets, setusersBets] = useState({});

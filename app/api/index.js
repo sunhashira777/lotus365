@@ -5,11 +5,11 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 // import { featureFlagsSlice } from './slices/featureFlagsSlice';
 // import { uiSlice } from './slices/uiSlice';
 
-// import userReducer from './slices/userSlice';
+import userReducer from './Slices/userSlice';
 import betReducer from './Slices/betSlice';
 import triggerReducer from './Slices/triggerSlice';
 // import walletReducer from './slices/walletSlice';
-// import { casinoSlice } from './slices/casinoSlice';
+import casinoReducer from '../redux/Slices/casinoUrlSlice';
 import apiSlice from './apiSlice';
 import modalReducer from '../redux/Slices/modalSlice';
 export const store = configureStore({
@@ -19,11 +19,11 @@ export const store = configureStore({
     // ui: uiSlice.reducer,
     modal: modalReducer,
     api: apiSlice.reducer,
-    // user: userReducer,
+    user: userReducer,
     betPlace: betReducer,
     // wallet: walletReducer,
     trigger: triggerReducer,
-    // casino: casinoSlice.reducer,
+    casino: casinoReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

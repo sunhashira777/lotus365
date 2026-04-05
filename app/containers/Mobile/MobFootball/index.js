@@ -26,10 +26,10 @@ const MobFootball = () => {
   const [openBetCount, setOpenBetCount] = useState(0);
 
   const location = useLocation();
-  const userType = useSelector((state) => state?.user?.userType);
+  const userType = useSelector((state) => state?.user?.profile?.userType);
   const [fixtureEventName, setFixtureEventName] = useState([]);
   const [usersBets, setusersBets] = useState({});
-  const userIdBalancetv = useSelector((state) => state?.user?.balance);
+  const userIdBalancetv = useSelector((state) => state?.user?.profile?.balance);
   const [placedBetWinLossDatas, setPlacedBetWinLossData] = useState({});
   const [allMarketData, setAllMarketData] = useState([]);
   const matchData = location.state?.data;

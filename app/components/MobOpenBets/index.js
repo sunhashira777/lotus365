@@ -11,14 +11,17 @@ const MobOpenBets = ({ eventId, setOpenBetCount }) => {
     // endDate,
     eventId,
   });
+  console.log('betsData', eventId, betsData);
+
   const matchOddsData =
-    betsData?.bets?.filter(
-      (item) => item?.market !== 'bookmaker' && item?.market !== 'session',
+    betsData?.filter(
+      (item) =>
+        item?.marketName !== 'bookmaker' && item?.marketName !== 'session',
     ) || [];
   const bookmakerData =
-    betsData?.bets?.filter((item) => item?.market === 'bookmaker') || [];
+    betsData?.filter((item) => item?.marketName === 'bookmaker') || [];
   const fancyData =
-    betsData?.bets?.filter((item) => item?.market === 'session') || [];
+    betsData?.filter((item) => item?.marketName === 'session') || [];
 
   const filteredBets =
     activeTab === 1
@@ -102,8 +105,8 @@ const MobOpenBets = ({ eventId, setOpenBetCount }) => {
               >
                 <span>{dayjs(item?.created_at).format('DD/MM/YY hh:mm')}</span>
                 <span>{item?.selection}</span>
-                <span>{item?.price}</span>
-                <span>{item?.stake}</span>
+                <span>{item?.odds}</span>
+                <span>{item?.amount}</span>
               </div>
             ))
           ) : (

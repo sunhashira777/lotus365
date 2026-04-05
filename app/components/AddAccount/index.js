@@ -9,7 +9,7 @@ import { reactIcons } from '@/utils/icons';
 import { Link } from 'react-router-dom';
 
 const AddAccount = () => {
-  const userId = useSelector((state) => state.user.id);
+  const userId = useSelector((state) => state?.user?.profile?.id);
   const [isPassword, setIsPassword] = useState(false);
 
   const [form, setForm] = useState({});

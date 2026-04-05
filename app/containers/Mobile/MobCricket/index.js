@@ -53,13 +53,13 @@ const MobCricket = () => {
     (state) => state.activeNewBet,
   );
   const isMobile = useMediaQuery('(max-width:1024px)');
-  const userIdBalance = useSelector((state) => state?.user);
-  const userIdBalancetv = useSelector((state) => state?.user?.balance);
+  const userIdBalance = useSelector((state) => state?.user?.profile);
+  const userIdBalancetv = useSelector((state) => state?.user?.profile?.balance);
   // eslint-disable-next-line
   const [usersBets, setusersBets] = useState({});
   const [isLiveTv, setIsLiveTV] = useState(false);
   const islogin = isLoggedIn();
-  const userType = useSelector((state) => state?.user?.userType);
+  const userType = useSelector((state) => state?.user?.profile?.userType);
   const [isPlacedBetStatsCalc, setPlacedBetStatsCalc] = useState(true);
 
   const [bets, setBets] = useState([]);

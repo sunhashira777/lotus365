@@ -15,13 +15,14 @@ import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { openModal } from '@/redux/Slices/modalSlice';
 import { getImage } from '@/utils/imagekit';
+import { useGetUserProfileQuery } from '@/api/userApi';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [time, setTime] = useState(moment().format('HH:mm:ss'));
-  const login = isLoggedIn();
   const dispatch = useDispatch();
-  const User = useSelector((state) => state.user);
+  const userInfo = useSelector((state) => state?.user?.profile);
+  const User = useSelector((state) => state?.user?.profile);
   const isLogin = isLoggedIn();
   const [open, setOpen] = useState(false);
   const [openRight, setOpenRight] = useState(false);
@@ -38,7 +39,10 @@ const Navbar = () => {
 
     return () => clearInterval(intervalId);
   }, []);
-  const userInfo = useSelector((state) => state.user);
+  useGetUserProfileQuery(undefined, { skip: !isLogin });
+
+  console.log('userInfo', userInfo);
+
   const handleLogout = () => {
     Cookies.remove('__users__isLoggedIn');
     Cookies.remove('test__users__isLoggedIn');
@@ -102,14 +106,6 @@ const Navbar = () => {
     }
     // eslint-disable-next-line
   }, [searchQuery]);
-
-  useEffect(() => {
-    dispatch(init());
-    const intervalId = setInterval(() => {
-      dispatch(init());
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, [dispatch, login]);
 
   return (
     <>

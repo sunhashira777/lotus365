@@ -33,7 +33,7 @@ const Sessions = ({
   const inplay = oddsData?.inplay;
   const [isOpen, setIsOpen] = useState(false);
   const [singleRowData, setSingleRowData] = useState({});
-  const userIdBalance = useSelector((state) => state?.user);
+  const userIdBalance = useSelector((state) => state?.user?.profile);
   const [loading, setLoading] = useState(false);
   const [riskData, setRiskData] = useState([]);
   const betData = useSelector((state) => state.bet.selectedBet);
