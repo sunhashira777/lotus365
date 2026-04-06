@@ -1,7 +1,7 @@
 import useBetPlaceHook from '@/hooks/useBetPlaceHook';
 import { reactIcons } from '@/utils/icons';
 import { formatNumber } from '@/utils/marketFormaterHelpers';
-import React from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import BetProcessing from '../NewModals/BetProcessing'; // ✅ ADD THIS
@@ -24,30 +24,37 @@ const BetSlipComponent = () => {
     decreaseOdds,
   } = useBetPlaceHook();
 
-  const [processing, setProcessing] = React.useState(false); // ✅ NEW STATE
+  const [processing, setProcessing] = useState(false); // ✅ NEW STATE
 
   const { runnerName, marketName, betOn, rate, stake, min, max, marketType } =
     betDetails;
-
-  // ✅ WRAPPER FUNCTION (MAIN FIX)
   const handlePlaceBetWithProcessing = async () => {
     if (!stake || !rate) return;
 
     setProcessing(true);
 
-    // run API + timer parallel
-    const [result] = await Promise.all([
-      handlePlaceBet(),
-      new Promise((res) => setTimeout(res, 6000)),
-    ]);
+    const startTime = Date.now();
 
-    setProcessing(false);
+    try {
+      const result = await handlePlaceBet();
 
-    // 👉 ab result show karo (delay ke baad)
-    if (result?.success) {
-      toast.success(result.message);
-    } else {
-      toast.error(result.message);
+      const elapsed = Date.now() - startTime;
+      const remaining = 6000 - elapsed;
+
+      if (remaining > 0) {
+        await new Promise((res) => setTimeout(res, remaining));
+      }
+
+      setProcessing(false);
+
+      if (result?.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (err) {
+      setProcessing(false);
+      toast.error('Something went wrong');
     }
   };
 

@@ -31,7 +31,7 @@ const Tennis = () => {
 
   const getTennisData = () => {
     getFixtureData(
-      'tennis',
+      'Tennis',
       setInplayTrue,
       setInplayFalse,
       setisLoading,

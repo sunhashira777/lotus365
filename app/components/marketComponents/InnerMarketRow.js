@@ -7,6 +7,7 @@ import OddButton from './OddButton';
 import { formatNumber } from '@/utils/marketFormaterHelpers';
 import BetSlipComponent from '../BetSlip/BetSlipComponent';
 import BookListModal from './BookListModal';
+import { reactIcons } from '@/utils/icons';
 
 const InnerMarketRow = ({
   marketData,
@@ -46,10 +47,7 @@ const InnerMarketRow = ({
     <>
       <div className="px-2 bg-white">
         <div className="flex justify-between items-center text-inplay-rowText">
-          <div
-            title={runnerName}
-            className="text-[10px] font-semibold mx-2 capitalize"
-          >
+          <div title={runnerName} className="text-[10px] font-semibold mx-2 ">
             {runnerName}
           </div>
 
@@ -71,13 +69,13 @@ const InnerMarketRow = ({
                 <button
                   onClick={() => setOpenBookModal(true)}
                   disabled={exposureFromBookset === 0}
-                  className="bg-green-500 text-white disabled:opacity-30 rounded-full px-1 py-0.5 md:absolute -left-2 md:-translate-x-full shadow-xl font-bold flex items-center text-[10px]"
+                  className="disabled:opacity-30"
                 >
-                  Book
+                  {reactIcons.ladder}
                 </button>
               )}
 
-              <div className="relative flex items-center gap-1">
+              <div className="relative flex items-center gap-0.5">
                 {renderOdds.map(({ type, items }) =>
                   (items ?? []).map((odd, index) => (
                     <OddButton
