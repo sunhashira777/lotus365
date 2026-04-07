@@ -1,8 +1,8 @@
 import React from 'react';
 import { BiAdjust } from 'react-icons/bi';
-import { IoMdArrowDropdown } from 'react-icons/io';
+import { IoMdArrowDropdown, IoMdTrendingUp } from 'react-icons/io';
 import { MdRefresh } from 'react-icons/md';
-import { IoLogOutOutline } from 'react-icons/io5';
+import { IoFunnelOutline, IoLogOutOutline } from 'react-icons/io5';
 import { BiLogIn } from 'react-icons/bi';
 import { GoDotFill } from 'react-icons/go';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
@@ -84,11 +84,13 @@ export const reactIcons = {
   user: <FaUser />,
   home: <AiOutlineHome />,
   lock: <CiLock />,
+  funnel: <IoFunnelOutline />,
   ladder: <PiLadderSimple />,
   dladder: <PiLadderSimpleBold />,
   fireClock: <LuClock3 />,
   file: <RiFileListLine />,
   fire: <BsFire />,
+  TrendingUp: <IoMdTrendingUp />,
   tv: <MdLiveTv />,
   play2: <FaPlay />,
   hamburger: <GiHamburgerMenu />,

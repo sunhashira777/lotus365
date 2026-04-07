@@ -8,7 +8,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import userReducer from './Slices/userSlice';
 import betReducer from './Slices/betSlice';
 import triggerReducer from './Slices/triggerSlice';
-// import walletReducer from './slices/walletSlice';
+import walletReducer from './Slices/walletSlice';
 import casinoReducer from '../redux/Slices/casinoUrlSlice';
 import apiSlice from './apiSlice';
 import modalReducer from '../redux/Slices/modalSlice';
@@ -21,7 +21,7 @@ export const store = configureStore({
     api: apiSlice.reducer,
     user: userReducer,
     betPlace: betReducer,
-    // wallet: walletReducer,
+    wallet: walletReducer,
     trigger: triggerReducer,
     casino: casinoReducer,
   },

@@ -101,7 +101,7 @@ const useGameDetailsHook = () => {
         ...m,
         runners: formatRunners(m),
       }));
-  }, [data]);
+  }, [data?.catalogue?.fancyMarkets]);
   console.log('marketdata', data);
   useEffect(() => {
     setPollingInterval(inplay ? 1000 : 2000);

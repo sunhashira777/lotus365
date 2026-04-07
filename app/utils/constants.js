@@ -17,7 +17,7 @@ export const sportSliderLink = [
     title: 'Football',
     bgImg: '/images/sportSliderLinks/b3.webp',
     img: '/images/sportSliderLinks/s3.webp',
-    path: '/football',
+    path: '/Football',
   },
   {
     title: 'Tennis',

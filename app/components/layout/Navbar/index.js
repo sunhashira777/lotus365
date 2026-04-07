@@ -15,7 +15,7 @@ import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { openModal } from '@/redux/Slices/modalSlice';
 import { getImage } from '@/utils/imagekit';
-import { useGetUserProfileQuery } from '@/api/userApi';
+import { useGetUserProfileQuery, useGetUserWalletsQuery } from '@/api/userApi';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -32,6 +32,10 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState([]);
   const [searchOn, setSearchOn] = useState(false);
+  // useGetUserWalletsQuery(undefined, {
+  //   skip: !isLogin,
+  //   pollingInterval: 3000,
+  // });
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTime(moment().format('HH:mm:ss'));
@@ -39,7 +43,10 @@ const Navbar = () => {
 
     return () => clearInterval(intervalId);
   }, []);
-  useGetUserProfileQuery(undefined, { skip: !isLogin });
+  useGetUserProfileQuery(undefined, {
+    skip: !isLogin,
+    pollingInterval: 3000,
+  });
 
   console.log('userInfo', userInfo);
 

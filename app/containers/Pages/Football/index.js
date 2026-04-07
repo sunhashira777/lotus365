@@ -23,7 +23,7 @@ const Football = () => {
 
   const getFootballData = () => {
     getFixtureData(
-      'soccer',
+      'Football',
       setInplayTrue,
       setInplayFalse,
       setisLoading,

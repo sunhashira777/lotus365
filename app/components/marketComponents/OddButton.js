@@ -4,6 +4,9 @@ import React from 'react';
 import { valueFormatter } from '@/utils/marketFormaterHelpers';
 import clsx from 'clsx';
 import { IoLockClosedOutline } from 'react-icons/io5';
+import { isLoggedIn } from '@/utils/apiHandlers';
+import { useDispatch } from 'react-redux';
+import { openModal } from '@/redux/Slices/modalSlice';
 const OddButton = ({
   context,
   marketId,
@@ -18,6 +21,9 @@ const OddButton = ({
   isSelected = false,
   onClick = () => {},
 }) => {
+  const isLogin = isLoggedIn();
+  const dispatch = useDispatch();
+
   const selectionId = runnersData?.selectionId;
   const runnerId = runnersData?.runnerId;
 
@@ -59,7 +65,14 @@ const OddButton = ({
     <button
       ref={buttonRef}
       disabled={disabled}
-      onClick={onClick}
+      onClick={() => {
+        if (!isLogin) {
+          dispatch(openModal('login'));
+          return;
+        }
+
+        onClick(); // your original click logic
+      }}
       className={clsx(
         ' py-1 flex flex-col items-center justify-center h-8 md:h-[30px] shrink-0 w-[38px] md:w-[56px] xs:w-[50px]',
 

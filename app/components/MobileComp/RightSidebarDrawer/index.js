@@ -40,7 +40,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               {userInfo?.username} {reactIcons.copy}
             </div>
             <button
-              onClick={toggleDrawer}
+              onClick={() => (toggleDrawer, setOpen(false))}
               className="absolute top-2 z-20 right-2  text-black font-bold text-xl cursor-pointer bg-[#f4d821] rounded"
             >
               {reactIcons.close}
