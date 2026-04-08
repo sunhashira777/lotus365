@@ -25,7 +25,15 @@ import BetSlipComponent from './BetSlipComponent';
 const BetSlip = () => {
   const isLogin = isLoggedIn();
   const { eventId } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
   const [openEditStake, setOpenEditStake] = useState(false);
+  const balanceInfo = useSelector((s) => s.wallet);
+  const mainBalance = balanceInfo?.mainBalance ?? 0;
+  const exposure = balanceInfo?.exposure ?? 0;
+  const lockedAmount = balanceInfo?.lockedAmount ?? 0;
+  const totalBalance = Number(
+    (mainBalance - Math.abs(exposure) - Math.abs(lockedAmount)).toFixed(2),
+  );
   const [stakebutton, setStakeButton] = useState([
     { text: '100', value: 100 },
     { text: '200', value: 200 },
@@ -265,14 +273,36 @@ const BetSlip = () => {
     <>
       <div className=" pb-2 text-12 ">
         {isLogin && (
-          <div className="bg-[#026B4F] flex items-center justify-between  px-3 py-2">
-            <h1 className=" text-14   text-white leading-none ">
-              Available Credit:{' '}
-              {numberWithCommas(
-                userInfo?.balance - Math.abs(userInfo?.exposureAmount) || 0,
-              )}
-            </h1>
-            <div className="text-white text-2xl">{reactIcons?.downArrow}</div>
+          <div className="w-full">
+            {/* Header */}
+            <div
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-[#026B4F] flex items-center justify-between px-3 py-2 cursor-pointer"
+            >
+              <h1 className="text-white text-sm">
+                Available Credit: {numberWithCommas(totalBalance)}
+              </h1>
+
+              <div
+                className={`text-white text-2xl transition-transform duration-300 ${
+                  isOpen ? 'rotate-180' : ''
+                }`}
+              >
+                {reactIcons?.downArrow}
+              </div>
+            </div>
+
+            {/* Accordion Content */}
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                isOpen ? 'max-h-40 py-2' : 'max-h-0'
+              } bg-white px-3`}
+            >
+              <div className="text-black text-sm space-y-1">
+                <p>Balance: {numberWithCommas(totalBalance)}</p>
+                <p>Exposure: {numberWithCommas(exposure)}</p>
+              </div>
+            </div>
           </div>
         )}
 

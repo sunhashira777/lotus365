@@ -23,6 +23,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state?.user?.profile); ////////userInfo
   const User = useSelector((state) => state?.user?.profile);
+  const balanceInfo = useSelector((s) => s.wallet);
+  const mainBalance = balanceInfo?.mainBalance ?? 0;
+  const exposure = balanceInfo?.exposure ?? 0;
+  const lockedAmount = balanceInfo?.lockedAmount ?? 0;
+  const totalBalance = Number(
+    (mainBalance - Math.abs(exposure) - Math.abs(lockedAmount)).toFixed(2),
+  );
   const isLogin = isLoggedIn();
   const [open, setOpen] = useState(false);
   const [openRight, setOpenRight] = useState(false);
@@ -32,10 +39,10 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState([]);
   const [searchOn, setSearchOn] = useState(false);
-  // useGetUserWalletsQuery(undefined, {
-  //   skip: !isLogin,
-  //   pollingInterval: 3000,
-  // });
+  useGetUserWalletsQuery(undefined, {
+    skip: !isLogin,
+    pollingInterval: 3000,
+  });
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTime(moment().format('HH:mm:ss'));
@@ -221,10 +228,7 @@ const Navbar = () => {
                           {' '}
                           {reactIcons.user}{' '}
                         </span>
-                        {numberWithCommas(
-                          userInfo?.balance -
-                            Math.abs(userInfo?.exposureAmount) || 0,
-                        )}
+                        {numberWithCommas(totalBalance || 0)}
                       </button>
                     )}
                   </div>
