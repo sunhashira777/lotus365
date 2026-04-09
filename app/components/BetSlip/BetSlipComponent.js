@@ -94,14 +94,14 @@ const BetSlipComponent = () => {
                 <button
                   type="button"
                   onClick={decreaseOdds}
-                  className="absolute left-1 h-[22px] w-[22px] bg-[#051316] text-white"
+                  className="absolute left-1 top-1 h-[22px] w-[22px] bg-[#051316] text-white"
                 >
                   -
                 </button>
                 <button
                   type="button"
                   onClick={increaseOdds}
-                  className="absolute right-1 h-[22px] w-[22px] bg-[#051316] text-white"
+                  className="absolute right-1 top-1 h-[22px] w-[22px] bg-[#051316] text-white"
                 >
                   +
                 </button>
@@ -126,12 +126,6 @@ const BetSlipComponent = () => {
             </div>
 
             {/* Reset */}
-            <div
-              onClick={handleReset}
-              className="bg-[#B2493E] text-white h-5 w-5 flex-center"
-            >
-              {reactIcons.close}
-            </div>
           </div>
 
           {/* Stakes */}

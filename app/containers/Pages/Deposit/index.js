@@ -298,10 +298,10 @@ const Deposit = () => {
       }
     }
   };
-
+  const [isLoading, setLoading] = useState(false);
   const handleDepositSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       setFormError({});
 
@@ -367,6 +367,8 @@ const Deposit = () => {
           toast.error(msg);
         }
       }
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -880,9 +882,10 @@ const Deposit = () => {
                 )}
                 <button
                   onClick={handleDepositSubmit}
+                  disabled={isLoading}
                   className="bg-primary-1300 my-5 text-14 h-[35px] flex-center rounded-[4px] w-full text-white shadow-[2px_2px_#00000040]"
                 >
-                  Proceed
+                  {isLoading ? 'Processing.... ' : 'Proceed'}
                 </button>
               </div>
               <ul className="lg:hidden block bg-white border border-black p-2 rounded-md ">

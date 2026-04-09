@@ -20,13 +20,21 @@ const WithdrawCard = () => {
   const [type, setType] = useState('');
   const islogin = isLoggedIn();
   const [accountIndex, setAccountIndex] = useState(null);
-  const UserInfo = useSelector((state) => state?.user?.profile);
+  const balanceInfo = useSelector((s) => s.wallet);
+  const mainBalance = balanceInfo?.mainBalance ?? 0;
+  const exposure = balanceInfo?.exposure ?? 0;
+  const lockedAmount = balanceInfo?.lockedAmount ?? 0;
+  const totalBalance = Number(
+    (mainBalance - Math.abs(exposure) - Math.abs(lockedAmount)).toFixed(2),
+  );
   const copieBtn = async (copyText) => {
     toast.success(copyText + ' Coppied!!');
   };
   const userbal = useSelector((state) => state.user.balance);
   const userexp = useSelector((state) => state.user.exposureAmount);
   const balance = Math.floor(userbal) - Math.floor(Math.abs(userexp));
+  console.log(balance);
+
   const withdrawValidation = yup.object().shape({
     amount: yup
       .number()
@@ -41,7 +49,7 @@ const WithdrawCard = () => {
       .required('Please enter amount')
       .positive('Amount must be a positive number')
       .min(100, 'Amount should not be more than 100')
-      .max(balance, `Amount cannot exceed balance of ${balance}`),
+      .max(totalBalance, `Amount cannot exceed balance of ${totalBalance}`),
   });
   const [form, setForm] = useState({
     amount: '',

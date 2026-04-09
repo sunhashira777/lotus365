@@ -72,7 +72,6 @@ const useGameDetailsHook = () => {
     sessionMinBetAmount,
     sessionMaxBetAmount,
   ]);
-
   const fancyMarketData = useMemo(() => {
     return (
       Object.entries(fancyMarkets)
@@ -90,7 +89,6 @@ const useGameDetailsHook = () => {
         })) || []
     );
   }, [fancyMarkets, activeTab]);
-
   const sessionMarkets = useMemo(() => {
     const fancyMarkets = data?.catalogue?.fancyMarkets;
 
@@ -102,7 +100,7 @@ const useGameDetailsHook = () => {
         runners: formatRunners(m),
       }));
   }, [data?.catalogue?.fancyMarkets]);
-  console.log('marketdata', data);
+
   useEffect(() => {
     setPollingInterval(inplay ? 1000 : 2000);
   }, [inplay]);

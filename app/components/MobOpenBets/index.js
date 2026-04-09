@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
-const MobOpenBets = ({ eventId, setOpenBetCount }) => {
+const MobOpenBets = ({ eventId, setOpenBetCount, activeTabSlip }) => {
   const [activeTab, setActiveTab] = useState(1);
   const { betsData, loading } = useFetchMyBetsData({
     take: 100,
     // startDate,
     // endDate,
     eventId,
+    activeTabSlip,
   });
   console.log('betsData', eventId, betsData);
 
@@ -123,5 +124,6 @@ MobOpenBets.propTypes = {
   eventId: PropTypes.string,
   setOpenBetCount: PropTypes.func,
   openBetCount: PropTypes.any,
+  activeTabSlip: PropTypes.string,
 };
 export default MobOpenBets;

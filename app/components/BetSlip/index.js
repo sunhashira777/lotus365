@@ -58,9 +58,8 @@ const BetSlip = () => {
   });
 
   useEffect(() => {
-    setBetData(bets?.[0]);
-    setEnent_ID(bets?.[0]?.eventId);
-  }, [bets]);
+    setActiveTab('betslip');
+  }, [bets?.betPlace?.betdetails?.selectionId]);
 
   useEffect(() => {
     if (bets?.length == 0) {
@@ -343,7 +342,7 @@ const BetSlip = () => {
         {activeTab !== 'openBets' && <BetSlipComponent />}
 
         <div className={`${activeTab === 'betslip' ? 'hidden' : ''}`}>
-          <MobOpenBets eventId={eventId} />
+          <MobOpenBets eventId={eventId} activeTabSlip={activeTab} />
         </div>
       </div>
 

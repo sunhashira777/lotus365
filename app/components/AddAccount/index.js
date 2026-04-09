@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 const AddAccount = () => {
   const userId = useSelector((state) => state?.user?.profile?.id);
   const [isPassword, setIsPassword] = useState(false);
-
+  const [isLoading, setLoading] = useState(false);
   const [form, setForm] = useState({});
   const [formError, setFormError] = useState({});
 
@@ -62,6 +62,7 @@ const AddAccount = () => {
 
   const handleAddAccountSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     console.log('FORM DATA 👉', form);
 
@@ -86,8 +87,6 @@ const AddAccount = () => {
         txnCode: form.withdrawPassword,
       };
 
-      console.log('📦 PAYLOAD 👉', payload);
-
       const response = await postAuthData('/bank', payload);
 
       console.log('🔥 API RESPONSE 👉', response);
@@ -104,7 +103,7 @@ const AddAccount = () => {
           condition: false,
         });
       } else {
-        toast.error(response?.data || 'Something went wrong');
+        toast.error(response?.data?.message || 'Something went wrong');
       }
     } catch (error) {
       console.log('❌ ERROR 👉', error);
@@ -120,6 +119,8 @@ const AddAccount = () => {
       } else {
         toast.error(error?.message || 'Unauthorised');
       }
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -201,9 +202,10 @@ const AddAccount = () => {
 
       <button
         onClick={handleAddAccountSubmit}
+        disabled={isLoading}
         className="bg-primary-1300 mt-5 h-[40px] w-full text-white rounded-md"
       >
-        Add Bank Account
+        {isLoading ? 'Adding Account.....' : 'Add Bank Account'}
       </button>
     </div>
   );

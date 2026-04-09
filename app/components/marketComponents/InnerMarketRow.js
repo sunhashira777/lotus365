@@ -41,6 +41,9 @@ const InnerMarketRow = ({
   const handleClose = () => {
     dispatch(resetBetDetails());
   };
+  console.log('renderOdds', renderOdds);
+  console.log(marketData, runnersData, 'runnersData');
+
   if (!runnersData) return null;
 
   return (
@@ -164,9 +167,12 @@ InnerMarketRow.propTypes = {
 export default React.memo(InnerMarketRow, (prev, next) => {
   return (
     prev.marketData.marketId === next.marketData.marketId &&
+    prev.marketData.marketStatus === next.marketData.marketStatus &&
     prev.marketCategory === next.marketCategory &&
     prev.min === next.min &&
     prev.max === next.max &&
-    prev.runnersData.length === next.runnersData.length
+    prev.runnersData.status === next.runnersData.status &&
+    prev.runnersData.back?.[0]?.price === next.runnersData.back?.[0]?.price &&
+    prev.runnersData.lay?.[0]?.price === next.runnersData.lay?.[0]?.price
   );
 });

@@ -9,6 +9,7 @@ export const useFetchMyBetsData = ({
   take = 10,
   eventId,
   type, // CURRENT / PAST
+  activeTabSlip,
 }) => {
   const [betsData, setBetsData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,7 @@ export const useFetchMyBetsData = ({
       getAllBets();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [take, bets, eventId, type]);
+  }, [take, bets, eventId, type, activeTabSlip]);
 
   return { betsData, loading, refetch: getAllBets, login };
 };
