@@ -74,14 +74,14 @@ const OddButton = ({
         onClick(); // your original click logic
       }}
       className={clsx(
-        ' py-1 flex flex-col items-center justify-center h-8 md:h-[30px] shrink-0 w-[38px] md:w-[56px] xs:w-[50px]',
+        'border-b border-[#ddd] bet-btn flex flex-col items-center justify-center gap-[6px] ',
 
         {
-          [type === 'back' ? 'bg-odd-blue-100' : 'bg-odd-pink-100']:
+          [type === 'back' ? 'bg-[#a7d8fd] ' : 'bg-odd-pink-100']:
             position === 3,
-          [type === 'back' ? 'bg-odd-blue-300' : 'bg-odd-pink-300']:
+          [type === 'back' ? 'bg-[#a7d8fd]  ' : 'bg-odd-pink-300']:
             position === 2,
-          [type === 'back' ? 'bg-odd-blue-500' : 'bg-odd-pink-500']:
+          [type === 'back' ? 'bg-[#a7d8fd]' : 'bg-odd-pink-500']:
             position === 1,
         },
 
@@ -115,10 +115,10 @@ const OddButton = ({
         <IoLockClosedOutline />
       ) : (
         <>
-          <span className="text-black text-[12px] leading-[12px] tracking-[0.15px] shrink-0">
+          <span className="text-12 font-semibold leading-none">
             {displayPrice}
           </span>
-          <span className="text-black opacity-60 text-[9px] font-black shrink-0 leading-[12px] tracking-[0.15px]">
+          <span className="text-[9px] truncate leading-none">
             {displaySize}
           </span>
         </>

@@ -23,10 +23,10 @@ const useBetPlaceHook = () => {
   const betPL = useSelector((s) => s.betPlace.betPL);
   const { data: stakes, isLoading: stakesLoader } = useGetStakeSetQuery();
   const stakesArr = useMemo(
-    () =>
-      stakes?.stakeSet?.length ? stakes.stakeSet.slice(0, 6) : defaultStakes,
+    () => (stakes?.stakeSet?.length ? stakes.stakeSet : defaultStakes),
     [stakes],
   );
+
   const [placeBet, { isLoading }] = usePlaceBetMutation();
   // const isDemoUser = useIsDemoUser();
   const handlePlaceBet = useCallback(async () => {

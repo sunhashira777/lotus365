@@ -13,7 +13,7 @@ export const useFetchMyBetsData = ({
 }) => {
   const [betsData, setBetsData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [total, setTotal] = useState();
   const login = isLoggedIn();
   const bets = useSelector((state) => state.bet?.selectedBet);
 
@@ -33,8 +33,6 @@ export const useFetchMyBetsData = ({
 
       const response = await getAuthData(`/bet/history?${params}`);
 
-      console.log('MODAL API 👉', response);
-
       if (response?.status === 200) {
         let data = response?.data?.bets || [];
 
@@ -42,7 +40,7 @@ export const useFetchMyBetsData = ({
         if (eventId) {
           data = data.filter((item) => item?.eventId == eventId);
         }
-
+        setTotal(response?.data?.pagination?.totalItems);
         setBetsData(data);
       }
     } catch (err) {
@@ -59,6 +57,5 @@ export const useFetchMyBetsData = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [take, bets, eventId, type, activeTabSlip]);
-
-  return { betsData, loading, refetch: getAllBets, login };
+  return { betsData, loading, refetch: getAllBets, login, total };
 };

@@ -17,6 +17,7 @@ import {
   DesktopFixtureTennis,
 } from '@/components';
 import { getImage } from '@/utils/imagekit';
+import { useFetchMyBetsData } from '@/hooks/useFetchMyBetsData';
 
 const gifArr = [
   {
@@ -68,8 +69,8 @@ const DesktopHome = () => {
   // eslint-disable-next-line
   const [loaderOneTime, setLoaderOneTime] = useState(false);
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state?.user?.profile);
   const login = isLoggedIn();
+  const { total } = useFetchMyBetsData({ take: 100 });
 
   // const getCricketData = () => {
   //   getFixtureDataMobile(
@@ -433,7 +434,7 @@ const DesktopHome = () => {
             <div className="flex items-center gap-1">
               <p className="text-[13px] font-bold">Open Bets</p>
               <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center ">
-                {userInfo?.betcountValue || 0}
+                {total}
               </div>
             </div>
           </div>

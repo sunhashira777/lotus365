@@ -49,7 +49,7 @@ const InnerMarketRow = ({
   return (
     <>
       <div className="px-2 bg-white">
-        <div className="flex justify-between items-center text-inplay-rowText">
+        <div className="flex justify-between items-center text-inplay-rowText border-b border-[#ddd]">
           <div title={runnerName} className="text-[10px] font-semibold mx-2 ">
             {runnerName}
           </div>

@@ -57,7 +57,7 @@ const BetSlipComponent = () => {
       toast.error('Something went wrong');
     }
   };
-
+  console.log('stakesArr', min, max);
   return (
     <div>
       <div className="bg-white p-2">
@@ -77,7 +77,7 @@ const BetSlipComponent = () => {
         >
           <div className="flex items-center justify-between text-12 font-lato ">
             <p> {runnerName}</p>
-            <p> Max Market: 10000 </p>
+            <p> Max Market: {max} </p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -140,27 +140,44 @@ const BetSlipComponent = () => {
                   {formatNumber(label)}
                 </button>
               ))}
-            <button onClick={handleClear}>Clear</button>
+            <button
+              onClick={() => increaseStake(Number(min))}
+              className="px-1.5 py-0.5 rounded-sm bg-[#4CAF50] text-white"
+            >
+              MIN
+            </button>
+            <button
+              onClick={() => increaseStake(Number(max))}
+              className="px-1.5 py-0.5 rounded-sm bg-[#334579] text-white"
+            >
+              MAX
+            </button>
+            <button
+              onClick={handleClear}
+              className="px-1.5 py-0.5 rounded-sm bg-[#FF0000] text-white"
+            >
+              CLEAR
+            </button>
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-between mt-2">
+          <div className="flex justify-between mt-2 gap-2">
             <button
               onClick={handleClear}
-              className="bg-[#B2493E] text-white px-4 py-1"
+              className=" px-4 py-1 w-full rounded-md border border-black"
             >
-              Remove All
+              Cancel
             </button>
 
             <button
               disabled={isLoading || !stake || !rate}
               onClick={handlePlaceBetWithProcessing} // ✅ FIXED HERE
-              className="bg-[#5C996F] text-white px-4 py-1 flex items-center gap-2"
+              className="bg-[#5C996F] text-center text-white  flex justify-center w-full rounded-md items-center gap-2"
             >
               {isLoading && (
                 <AiOutlineLoading3Quarters className="animate-spin" />
               )}
-              Place Order
+              Place Bet
             </button>
           </div>
         </div>
