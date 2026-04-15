@@ -129,7 +129,7 @@ const BetSlipComponent = () => {
           </div>
 
           {/* Stakes */}
-          <div className="bg-white p-3 grid grid-cols-3 gap-2 mt-2">
+          <div className="bg-white p-3 grid grid-cols-4 gap-2 mt-2">
             {Array.isArray(stakesArr) &&
               stakesArr.map(({ label, value }, idx) => (
                 <button

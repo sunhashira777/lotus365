@@ -538,7 +538,7 @@ export const getFixtureDataMobile = async (
 
     // 🔵 Upcoming (inplay FALSE)
     const upcomingRes = await getAuthData(
-      `/fixture?sport=${game}&inplay=false&matchTime=today`,
+      `/fixture?sport=${game}&inplay=false`,
     );
 
     let inplayTrueData = [];

@@ -99,7 +99,7 @@ const MobOpenBets = ({ eventId, setOpenBetCount, activeTabSlip }) => {
               <div
                 key={index}
                 className={`${
-                  item?.bet_on?.toLowerCase() === 'back'
+                  item?.betOn?.toLowerCase() === 'back'
                     ? 'bg-[#A7D8FD]'
                     : 'bg-[#F9C9D4]'
                 } grid grid-cols-4  font-poppins font-medium leading-3 text-12 text-black py-2  border-t  border-white`}
