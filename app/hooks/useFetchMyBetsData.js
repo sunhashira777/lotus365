@@ -28,6 +28,7 @@ export const useFetchMyBetsData = ({
         page: 0,
         limit: take,
         betTime: type ? type.toUpperCase() : 'CURRENT',
+        eventId: eventId,
         // sport: sport,
       });
 

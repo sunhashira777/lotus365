@@ -171,7 +171,6 @@ export const formatNumber = (num, locale = 'en-US') => {
   const safeNumber = Number(num);
 
   return safeNumber.toLocaleString(locale, {
-    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 };

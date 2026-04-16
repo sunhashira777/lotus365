@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import BetProcessing from '../NewModals/BetProcessing'; // ✅ ADD THIS
+import { FormControlLabel, Switch } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const BetSlipComponent = () => {
   const {
@@ -24,6 +26,13 @@ const BetSlipComponent = () => {
     decreaseOdds,
   } = useBetPlaceHook();
 
+  const balanceInfo = useSelector((s) => s.wallet);
+  const mainBalance = balanceInfo?.mainBalance ?? 0;
+  const exposure = balanceInfo?.exposure ?? 0;
+  const lockedAmount = balanceInfo?.lockedAmount ?? 0;
+  const totalBalance = Number(
+    (mainBalance - Math.abs(exposure) - Math.abs(lockedAmount)).toFixed(2),
+  );
   const [processing, setProcessing] = useState(false); // ✅ NEW STATE
 
   const { runnerName, marketName, betOn, rate, stake, min, max, marketType } =
@@ -57,6 +66,7 @@ const BetSlipComponent = () => {
       toast.error('Something went wrong');
     }
   };
+  const [acceptOdds, setAcceptOdds] = useState(true);
   console.log('stakesArr', min, max);
   return (
     <div>
@@ -80,49 +90,63 @@ const BetSlipComponent = () => {
             <p> Max Market: {max} </p>
           </div>
 
+          {/* Profit */}
+          <div className="flex justify-end gap-2">
+            <p>{betOn === 'BACK' ? 'Profit' : 'Liability'}</p>
+            <p
+              className={`font-bold ${
+                betPL > 0 ? 'text-green-600' : betPL < 0 ? 'text-red-600' : ''
+              }`}
+            >
+              {formatNumber(betPL)}
+            </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <div className="w-fit">
+                <FormControlLabel
+                  sx={{
+                    marginX: 0,
+                  }}
+                  control={
+                    <Switch
+                      checked={acceptOddsChange}
+                      onChange={(e) => setAcceptOddsChange(e.target.checked)}
+                      color="primary"
+                      // disabled={loading}
+                    />
+                  }
+                />
+              </div>
+              <p className="text-14 font-bold"> Accept any odds</p>
+            </div>
+            <div className="text-14 font-bold flex items-center gap-2">
+              Avail Bal :{' '}
+              <p className="text-green-600">{formatNumber(totalBalance)}</p>
+            </div>
+          </div>
           <div className="flex items-center gap-2">
             {/* Odds */}
-            <div className="flex flex-col gap-1">
-              <label className="text-12 font-[200]">Odds</label>
-              <div className="relative rounded-md overflow-hidden bg-white">
-                <input
-                  type="text"
-                  disabled
-                  value={rate || ''}
-                  className="outline-none rounded-sm w-full h-[28px] max-w-[103px] px-8 py-2"
-                />
-                <button
-                  type="button"
-                  onClick={decreaseOdds}
-                  className="absolute left-1 top-1 h-[22px] w-[22px] bg-[#051316] text-white"
-                >
-                  -
-                </button>
-                <button
-                  type="button"
-                  onClick={increaseOdds}
-                  className="absolute right-1 top-1 h-[22px] w-[22px] bg-[#051316] text-white"
-                >
-                  +
-                </button>
-              </div>
+
+            {/* <label className="text-12 font-[200]">Odds</label> */}
+            <div className="relative rounded-sm overflow-hidden bg-white">
+              <input
+                type="text"
+                disabled
+                value={rate || ''}
+                className="outline-none rounded-sm w-full h-[26px]  px-8 py-2"
+              />
             </div>
 
             {/* Stake */}
-            <div className="flex flex-col gap-1">
-              <label className="text-12 font-[200]">Stake</label>
+            <div className="flex ">
+              {/* <label className="text-12 font-[200]">Stake</label> */}
               <input
                 type="number"
                 value={String(stake || '')}
                 onChange={(e) => handleStakeChange(e.target.value)}
-                className="border text-center max-w-[90px] h-[26px]"
+                className="border text-center  h-[26px]"
               />
-            </div>
-
-            {/* Profit */}
-            <div>
-              <p>{betOn === 'BACK' ? 'Profit' : 'Liability'}</p>
-              <p className="font-bold">{formatNumber(betPL)}</p>
             </div>
 
             {/* Reset */}
@@ -135,28 +159,34 @@ const BetSlipComponent = () => {
                 <button
                   key={idx}
                   onClick={() => increaseStake(Number(value))}
-                  className="bg-[#1E8067] text-white text-10"
+                  className="bg-[#000000] text-white text-10"
                 >
                   {formatNumber(label)}
                 </button>
               ))}
             <button
               onClick={() => increaseStake(Number(min))}
-              className="px-1.5 py-0.5 rounded-sm bg-[#4CAF50] text-white"
+              className="p-0.5 text-[10px] rounded-sm bg-[#4CAF50] text-white"
             >
-              MIN
+              MIN STAKE
             </button>
             <button
               onClick={() => increaseStake(Number(max))}
-              className="px-1.5 py-0.5 rounded-sm bg-[#334579] text-white"
+              className="p-0.5 text-[10px] rounded-sm bg-[#334579] text-white"
             >
-              MAX
+              MAX STAKE
             </button>
             <button
               onClick={handleClear}
-              className="px-1.5 py-0.5 rounded-sm bg-[#FF0000] text-white"
+              className="p-0.5 text-[10px] rounded-sm bg-[#FF0000] text-white"
             >
               CLEAR
+            </button>
+            <button
+              onClick={handleClear}
+              className="p-0.5 text-[10px] rounded-sm bg-[#018000] text-white"
+            >
+              EDIT STAKE
             </button>
           </div>
 

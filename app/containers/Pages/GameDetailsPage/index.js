@@ -7,7 +7,6 @@ import useGameDetailsHook from '@/hooks/useGameDetailsHook';
 import { reactIcons } from '@/utils/icons';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { actionChannel } from 'redux-saga/effects';
 
 const GameDetailsPage = () => {
   const {
@@ -29,7 +28,10 @@ const GameDetailsPage = () => {
   const [activeTab, setActiveTab] = useState('market');
   const { total } = useFetchMyBetsData({
     take: 1,
+    eventId: eventId,
   });
+  console.log('total', total);
+
   const tabs = [
     { id: 'market', label: 'Market' },
     { id: 'openBets', label: `Open Bets (${total})` },

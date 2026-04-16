@@ -15,7 +15,7 @@ const Sidebar = () => {
           <div className="flex-1 min-w-0 w-full ">
             <Outlet />
           </div>
-          <div className="!w-[290px] mt-[15px] hidden lg:block flex-shrink-0">
+          <div className="!w-[320px] mt-[15px] hidden lg:block flex-shrink-0">
             <BetSlip />
           </div>
         </div>
