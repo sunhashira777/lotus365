@@ -59,7 +59,7 @@ const BetSlip = () => {
 
   useEffect(() => {
     setActiveTab('betslip');
-  }, [bets?.betPlace?.betdetails?.selectionId]);
+  }, [bets?.betPlace?.betdetails?.rate]);
 
   useEffect(() => {
     if (bets?.length == 0) {

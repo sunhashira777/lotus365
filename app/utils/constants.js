@@ -756,9 +756,9 @@ export const isToday = (inputDate) => {
 
 export const casinoProviders = [
   'ALL',
-  'MAC88 GAMING',
-  'MAC88 GAMING VIRTUAL',
-  'MAC EXCITE',
+  // 'MAC88 GAMING',
+  // 'MAC88 GAMING VIRTUAL',
+  // 'MAC EXCITE',
   'SMARTSOFT',
   'SPRIBE',
   'EVOLUTION GAMING',

@@ -12,7 +12,10 @@ const BlueBtn = ({ text, size, disabled, onClick, css }) => {
           : ' bg-[#a7d8fd] '
       } bet-btn flex flex-col items-center justify-center gap-[6px] ${css}`}
     >
-      <span className="text-12 font-semibold leading-none"> {text}</span>
+      <span className="text-12 font-bold sm:font-semibold leading-none">
+        {' '}
+        {text}
+      </span>
       {size && (
         <span className="text-[9px] truncate leading-none"> {size}</span>
       )}

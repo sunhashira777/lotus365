@@ -7,11 +7,12 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from '@/utils/toastHandler';
 import { openModal } from '@/redux/Slices/modalSlice';
+import { useLocation } from 'react-router-dom';
 
 const Casino = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.profile);
-
+  const location = useLocation();
   const itemRefs = useRef([]);
   const loaderRef = useRef(null);
 
@@ -31,6 +32,21 @@ const Casino = () => {
   const [hasMore, setHasMore] = useState(true);
 
   /* -------------------- Debounce Search -------------------- */
+  const provider = location.state?.provider;
+  const type = location.state?.type;
+  console.log('provider', provider);
+  useEffect(() => {
+    if (type === 'provider') {
+      setActiveProvider(provider);
+      setActiveCategory('All');
+      setSearchTerm('');
+      setIframeHtml(null);
+    } else if (type === 'category') {
+      setActiveCategory(provider);
+      setSearchTerm('');
+      setIframeHtml(null);
+    }
+  }, [provider, type]);
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(searchTerm), 500);
     return () => clearTimeout(t);

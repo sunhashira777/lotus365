@@ -5,6 +5,7 @@ import MobOpenBets from '@/components/MobOpenBets';
 import { useFetchMyBetsData } from '@/hooks/useFetchMyBetsData';
 import useGameDetailsHook from '@/hooks/useGameDetailsHook';
 import { reactIcons } from '@/utils/icons';
+import { formatNumber } from '@/utils/marketFormaterHelpers';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -34,7 +35,7 @@ const GameDetailsPage = () => {
 
   const tabs = [
     { id: 'market', label: 'Market' },
-    { id: 'openBets', label: `Open Bets (${total})` },
+    { id: 'openBets', label: `Open Bets (${formatNumber(total || 0)})` },
     { id: 'live', label: 'LIVE', isLive: true },
   ];
 

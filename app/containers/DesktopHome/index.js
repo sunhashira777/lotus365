@@ -8,7 +8,7 @@ import MostPopular from '@/components/MostPopular';
 import { sportSliderLink } from '@/utils/constants';
 import HomeTopSLider from '@/components/HomeTopSlider';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { openModal } from '@/redux/Slices/modalSlice';
 import {
   CasinoPage,
@@ -48,6 +48,7 @@ const gifArr = [
 ];
 
 const DesktopHome = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGif, setSelectedGif] = useState({
     launchId: null,
@@ -204,49 +205,52 @@ const DesktopHome = () => {
 
     return stopPolling;
   }, [login]);
-
+  // type  provider ||category
   const sportSlider1 = [
     {
       title: 'Sportsbook',
       bgImg: getImage('/images/sportSlider1/b1.webp'),
       img: getImage('/images/sportSlider1/s1.webp'),
-      onClick: () => {},
+      key: '',
+      type: '',
     },
     {
       title: 'Evolution',
       bgImg: getImage('/images/sportSlider1/b2.webp'),
       img: getImage('/images/sportSlider1/s2.webp'),
-      onClick: () => {},
+      key: 'EVOLUTION GAMING',
+      type: 'provider',
     },
     {
       title: 'e-Cricket',
       bgImg: getImage('/images/sportSlider1/b3.webp'),
       img: getImage('/images/sportSlider1/s3.webp'),
-      onClick: () => {},
+      key: '',
     },
     {
       title: 'Slot Games',
       bgImg: getImage('/images/sportSlider1/nb1.webp'),
       img: getImage('/images/sportSlider1/ns1.webp'),
-      onClick: () => {},
+      key: '',
     },
     {
       title: 'Lobby More Slots',
       bgImg: getImage('/images/sportSlider1/nb2.webp'),
       img: getImage('/images/sportSlider1/patti.webp'),
-      onClick: () => {},
+      key: '',
     },
     {
       title: 'Lobby Mac 88',
       bgImg: getImage('/images/sportSlider1/nb5.webp'),
       img: getImage('/images/sportSlider1/patti.webp'),
-      onClick: () => {},
+      key: '',
     },
     {
       title: 'Lobby Ezugi',
       bgImg: getImage('/images/sportSlider1/nb7.webp'),
       img: getImage('/images/sportSlider1/patti.webp'),
-      onClick: () => {},
+      key: 'EZUGI',
+      type: 'provider',
     },
   ];
 
@@ -255,45 +259,55 @@ const DesktopHome = () => {
       title: 'Casino',
       bgImg: getImage('/images/sportSlider1/b4.webp'),
       img: getImage('/images/sportSlider1/s3.webp'),
-      onClick: () => {},
+      key: '',
+      type: '',
     },
     {
       title: 'Royal Gaming',
       bgImg: getImage('/images/sportSlider1/b5.webp'),
       img: getImage('/images/sportSlider1/s3.webp'),
-      onClick: () => {},
+      key: 'ROYAL GAMING',
+      type: 'provider',
     },
     {
       title: 'Card Games',
       bgImg: getImage('/images/sportSlider1/b5.webp'),
       img: getImage('/images/sportSlider1/s6.webp'),
-      onClick: () => {},
+      key: '',
     },
     {
       title: 'Fishing Games',
       bgImg: getImage('/images/sportSlider1/nb3.webp'),
       img: getImage('/images/sportSlider1/fish.webp'),
-      onClick: () => {},
+      key: '',
     },
     {
       title: 'Lobby Royal',
       bgImg: getImage('/images/sportSlider1/nb4.webp'),
       img: getImage('/images/sportSlider1/patti.webp'),
-      onClick: () => {},
+      key: '',
     },
     {
       title: 'Lobby Aura',
       bgImg: getImage('/images/sportSlider1/nb6.webp'),
       img: getImage('/images/sportSlider1/patti.webp'),
+      key: '',
       onClick: () => dispatch(openModal('auraLobby')),
     },
     {
       title: 'Lobby Marbles',
       bgImg: getImage('/images/sportSlider1/nb4.webp'),
       img: getImage('/images/sportSlider1/patti.webp'),
-      onClick: () => {},
+      key: '',
     },
   ];
+  const handleClick = (item) => {
+    if (item?.onClick) return item.onClick();
+
+    navigate('/casino', {
+      state: { provider: item.key, type: item.type },
+    });
+  };
 
   return (
     <div className="w-full light-bg ">
@@ -397,8 +411,8 @@ const DesktopHome = () => {
             {sportSlider1?.map((item, index) => (
               <div
                 key={index}
-                onClick={item?.onClick}
                 style={{ backgroundImage: `url(${item?.bgImg})` }}
+                onClick={() => handleClick(item)}
                 className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
               >
                 <div className="flex items-center gap-2">
@@ -412,7 +426,7 @@ const DesktopHome = () => {
             {sportSlider2?.map((item, index) => (
               <div
                 key={index}
-                onClick={item?.onClick}
+                onClick={() => handleClick(item)}
                 style={{ backgroundImage: `url(${item?.bgImg})` }}
                 className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
               >
@@ -434,7 +448,7 @@ const DesktopHome = () => {
             <div className="flex items-center gap-1">
               <p className="text-[13px] font-bold">Open Bets</p>
               <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center ">
-                {total}
+                {total || 0}
               </div>
             </div>
           </div>
