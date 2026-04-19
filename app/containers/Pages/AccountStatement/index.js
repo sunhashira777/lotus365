@@ -37,7 +37,12 @@ function AccountStatement() {
       getTransactionList();
     }
   }, [page, startDate, endDate, sportFilter]);
-
+  const getRecordType = () => {
+    if (sportFilter === 'settling') return 'Transaction';
+    if (sportFilter === 'Casino') return 'Casino';
+    if (sportFilter) return 'Sports';
+    return '';
+  };
   const getTransactionList = async () => {
     if (!isLoggedIn()) return;
 
@@ -47,12 +52,7 @@ function AccountStatement() {
         limit: take,
         fromDate: moment(startDate).startOf('day').toISOString(),
         toDate: moment(endDate).endOf('day').toISOString(),
-        recordType:
-          sportFilter === 'settling'
-            ? 'Transaction'
-            : sportFilter
-            ? 'Sports'
-            : '',
+        recordType: getRecordType(),
       });
 
       const response = await getAuthData(`/users/me/transactions?${params}`);
@@ -115,6 +115,7 @@ function AccountStatement() {
             <option value="Cricket">Cricket</option>
             <option value="Soccer">Soccer</option>
             <option value="Tennis">Tennis</option>
+            <option value="Casino">Casino</option>
           </select>
         </div>
       </div>

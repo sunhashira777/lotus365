@@ -23,11 +23,11 @@ const MarketPanel = ({
           <div className="flex justify-center items-center gap-2 w-max md:w-full md:max-w-[415px]">
             {variation && (
               <>
-                <span className="w-[55px] xs:w-[70px] text-center">
-                  {variation === 'secondary' ? 'No' : 'Back'}
+                <span className="w-[55px] xs:w-[70px] text-center font-bold">
+                  {variation === 'secondary' ? 'No' : 'BACK'}
                 </span>
-                <span className="w-[55px] xs:w-[70px] text-center">
-                  {variation === 'secondary' ? 'Yes' : 'Lay'}
+                <span className="w-[55px] xs:w-[70px] text-center font-bold">
+                  {variation === 'secondary' ? 'Yes' : 'LAY'}
                 </span>
               </>
             )}

@@ -78,10 +78,19 @@ const useInnerMarketRow = ({
   }, [betDetails, marketCategory, eventId, selectionId, marketData?.marketId]);
 
   const totalExposure = exposureFromBookset + calculatedPL;
+  const getBestOdd = (arr = []) => {
+    if (!arr.length) return [];
 
+    const best = arr.reduce((prev, curr) => {
+      if (!prev) return curr;
+      return curr.price > prev.price ? curr : prev;
+    }, null);
+
+    return best ? [best] : [];
+  };
   // ✅ odds display
   const visibleBack = useMemo(
-    () => (isMobile ? back.slice(0, 1) : back),
+    () => (isMobile ? getBestOdd(back) : back),
     [isMobile, back],
   );
 

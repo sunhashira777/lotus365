@@ -122,10 +122,10 @@ const GameDetailsPage = () => {
                     <div className="py-1 px-5 text-sm flex items-center justify-between rounded-[100px] border-b-[2px] ">
                       <div className="font-bold">Sessions</div>
                       <div className="flex justify-center items-center gap-2 w-max md:w-full md:max-w-[415px]">
-                        <span className="w-[55px] xs:w-[70px] text-center">
+                        <span className="w-[55px] xs:w-[70px] text-center font-bold">
                           No
                         </span>
-                        <span className="w-[55px] xs:w-[70px] text-center">
+                        <span className="w-[55px] xs:w-[70px] text-center font-bold">
                           yes
                         </span>
                       </div>

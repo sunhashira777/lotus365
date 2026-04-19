@@ -178,7 +178,7 @@ const BetSlipComponent = () => {
             {/* Buttons */}
             <div className="flex justify-between mt-2 gap-2">
               <button
-                onClick={handleClear}
+                onClick={handleReset}
                 className=" px-4 py-1 w-full rounded-md border border-black"
               >
                 Cancel
