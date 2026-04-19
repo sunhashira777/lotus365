@@ -5,22 +5,22 @@ import dayjs from 'dayjs';
 
 const MobOpenBets = ({ eventId, setOpenBetCount, activeTabSlip }) => {
   const [activeTab, setActiveTab] = useState(1);
+
   const { betsData, loading } = useFetchMyBetsData({
     take: 100,
-    // startDate,
-    // endDate,
     eventId,
     activeTabSlip,
   });
-  console.log('betsData', eventId, betsData);
 
   const matchOddsData =
     betsData?.filter(
       (item) =>
         item?.marketName !== 'bookmaker' && item?.marketName !== 'session',
     ) || [];
+
   const bookmakerData =
     betsData?.filter((item) => item?.marketName === 'bookmaker') || [];
+
   const fancyData =
     betsData?.filter((item) => item?.marketName === 'session') || [];
 
@@ -32,98 +32,93 @@ const MobOpenBets = ({ eventId, setOpenBetCount, activeTabSlip }) => {
       : fancyData;
 
   useEffect(() => {
-    setOpenBetCount && setOpenBetCount(betsData?.bets?.length || 0);
-  }, [betsData]); // eslint-disable-line react-hooks/exhaustive-deps
+    setOpenBetCount && setOpenBetCount(betsData?.length || 0);
+  }, [betsData]);
 
   if (loading) {
     return (
-      <div className="w-full my-4 text-center text-sm text-gray-500 font-poppins">
+      <div className="w-full my-4 text-center text-sm text-gray-500">
         Loading bets...
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="flex items-center gap-[5px]">
+    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      {/* 🔥 TOP FILTER */}
+      <div className="flex items-center gap-2 px-3 py-2 border-b">
         <input type="checkbox" />
-        <label htmlFor="" className="text-14">
-          Average Odds
-        </label>
+        <span className="text-sm">Average Odds</span>
       </div>
-      <div className="grid grid-cols-3">
-        <div
-          onClick={() => setActiveTab(1)}
-          className={`text-14 flex-center py-2 ${
-            activeTab === 1
-              ? 'bg-[#f4d821] shadow-[inset_-2px_-4px_7px_rgba(0,0,0,0.25)]'
-              : 'bg-[#1E8067] text-white'
-          } `}
-        >
-          Matched
-        </div>
-        <div
-          onClick={() => setActiveTab(2)}
-          className={`text-14 flex-center py-2 ${
-            activeTab === 2
-              ? 'bg-[#f4d821] shadow-[inset_-2px_-4px_7px_rgba(0,0,0,0.25)]'
-              : 'bg-[#1E8067] text-white'
-          } `}
-        >
-          Bookmaker
-        </div>
-        <div
-          onClick={() => setActiveTab(3)}
-          className={`text-14 flex-center py-2 ${
-            activeTab === 3
-              ? 'bg-[#f4d821] shadow-[inset_-2px_-4px_7px_rgba(0,0,0,0.25)]'
-              : 'bg-[#1E8067] text-white'
-          } `}
-        >
-          Fancy
-        </div>
-      </div>
-      <div className="px-2">
-        <div className="w-full my-2  pb-4 ">
-          {/* Header */}
-          <div className="grid grid-cols-4 gap-2  font-poppins leading-3 text-14 font-bold text-black py-2  ">
-            <span>Date/Time</span>
-            <span>Selection</span>
-            <span>Odds</span>
-            <span>Stake</span>
-          </div>
 
-          {/* Bets */}
-          {filteredBets?.length > 0 ? (
-            filteredBets?.map((item, index) => (
+      {/* 🔥 TABS */}
+      <div className="grid grid-cols-3 text-sm font-semibold">
+        {['Matched', 'Bookmaker', 'Fancy'].map((tab, i) => (
+          <div
+            key={i}
+            onClick={() => setActiveTab(i + 1)}
+            className={`text-center py-2 cursor-pointer transition ${
+              activeTab === i + 1
+                ? 'bg-yellow-400 text-black'
+                : 'bg-[#1E8067] text-white'
+            }`}
+          >
+            {tab}
+          </div>
+        ))}
+      </div>
+
+      {/* 🔥 TABLE HEADER */}
+      <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] px-3 py-2 text-xs font-bold bg-gray-100 border-b">
+        <span>Date</span>
+        <span>Selection</span>
+        <span className="text-center">Odds</span>
+        <span className="text-center">Stake</span>
+      </div>
+
+      {/* 🔥 BET LIST */}
+      <div className="max-h-[300px] overflow-y-auto">
+        {filteredBets?.length > 0 ? (
+          filteredBets.map((item, index) => {
+            const isBack = item?.betOn?.toLowerCase() === 'back';
+
+            return (
               <div
                 key={index}
-                className={`${
-                  item?.betOn?.toLowerCase() === 'back'
-                    ? 'bg-[#A7D8FD]'
-                    : 'bg-[#F9C9D4]'
-                } grid grid-cols-4  font-poppins font-medium leading-3 text-12 text-black py-2  border-t  border-white`}
+                className={`grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] px-3 py-2 text-xs border-b ${
+                  isBack ? 'bg-blue-200' : 'bg-pink-200'
+                }`}
               >
-                <span>{dayjs(item?.created_at).format('DD/MM/YY hh:mm')}</span>
-                <span>{item?.selection}</span>
-                <span>{item?.odds}</span>
-                <span>{item?.amount}</span>
+                <span className="truncate">
+                  {dayjs(item?.created_at).format('DD/MM HH:mm')}
+                </span>
+
+                <span className="truncate" title={item?.selection}>
+                  {item?.selection}
+                </span>
+
+                <span className="text-center font-semibold">{item?.odds}</span>
+
+                <span className="text-center font-semibold">
+                  ₹{item?.amount}
+                </span>
               </div>
-            ))
-          ) : (
-            <div className="w-full my-4 py-2 text-center text-sm bg-[#DEE2E6] rounded-sm text-[#01af70] font-poppins">
-              No bets available
-            </div>
-          )}
-        </div>
+            );
+          })
+        ) : (
+          <div className="text-center py-4 text-sm text-gray-500">
+            No bets available
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
 MobOpenBets.propTypes = {
   eventId: PropTypes.string,
   setOpenBetCount: PropTypes.func,
-  openBetCount: PropTypes.any,
   activeTabSlip: PropTypes.string,
 };
+
 export default MobOpenBets;

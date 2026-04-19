@@ -2,104 +2,124 @@ import { Loading } from '@/components';
 import InnerMarketRow from '@/components/marketComponents/InnerMarketRow';
 import MarketPanel from '@/components/marketComponents/MarketPanel';
 import MobOpenBets from '@/components/MobOpenBets';
+import InnerHeading from '@/containers/Mobile/InnerHeading';
 import { useFetchMyBetsData } from '@/hooks/useFetchMyBetsData';
 import useGameDetailsHook from '@/hooks/useGameDetailsHook';
 import { reactIcons } from '@/utils/icons';
-import { formatNumber } from '@/utils/marketFormaterHelpers';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
 
 const GameDetailsPage = () => {
   const {
     isLoadingEventDetails,
-    liveScoreUrl,
-    liveTvUrl,
-    startTime,
+    mapMarketData,
+    sessionMarkets,
     eventName,
+    startTime,
+    inplay,
     sessionMinBetAmount,
     sessionMaxBetAmount,
-    minBetAmount,
-    maxBetAmount,
-    mapMarketData,
-    fancyMarketData,
-    sessionMarkets,
-    inplay,
   } = useGameDetailsHook();
+
   const { eventId } = useParams();
-  const [activeTab, setActiveTab] = useState('market');
+
+  const [activeTab, setActiveTab] = useState(1);
+
+  // 🔥 NEW STATE
+  const [liveView, setLiveView] = useState(null);
+
   const { total } = useFetchMyBetsData({
     take: 1,
     eventId: eventId,
   });
-  console.log('total', total);
 
-  const tabs = [
-    { id: 'market', label: 'Market' },
-    { id: 'openBets', label: `Open Bets (${formatNumber(total || 0)})` },
-    { id: 'live', label: 'LIVE', isLive: true },
-  ];
+  // ✅ AUTO OPEN TV WHEN INPLAY
+  useEffect(() => {
+    if (inplay) {
+      setLiveView('score');
+    } else {
+      setLiveView(null);
+    }
+  }, [inplay]);
 
   return (
     <>
       {isLoadingEventDetails && <Loading />}
+
       <div className="flex-1">
-        <div className="hidden md:flex w-full bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)] px-4 py-3 items-center justify-between rounded-md">
-          {/* Left Section */}
-          {inplay ? (
-            <button className="border border-white/40 text-white px-3 py-1 rounded-md text-sm">
-              In-Play
-            </button>
-          ) : (
-            <div></div>
-          )}
+        {/* ✅ DESKTOP HEADER */}
+        <div className="hidden lg:flex flex-col bg-[#1E8067] text-white rounded-md">
+          {/* TOP BAR */}
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex flex-col">
+              <span className="font-semibold text-sm">{eventName}</span>
+              <span className="text-xs opacity-80">
+                {moment(startTime).format('DD MMM YYYY, hh:mm A')}
+              </span>
+            </div>
 
-          <button className="flex items-center gap-2 border border-blue-300 px-4 py-1.5 rounded-md text-white shadow-md">
-            {reactIcons.TrendingUp}
-            Trade Bet
-          </button>
-
-          {/* Right Section */}
-          <button className="text-white">{reactIcons.funnel}</button>
-        </div>
-        <div className="block md:hidden w-full bg-[#2a7f68] rounded-md overflow-hidden">
-          <div className="flex text-white text-sm font-medium">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-2 text-center relative flex items-center justify-center gap-1 ${
-                  activeTab === tab.id ? 'font-semibold' : 'opacity-80'
+            {/* 🔥 ICONS */}
+            <div className="flex items-center gap-4 text-lg">
+              {/* TV */}
+              <span
+                onClick={() => inplay && setLiveView('tv')}
+                className={`cursor-pointer ${
+                  inplay ? 'text-white' : 'opacity-40 cursor-not-allowed'
                 }`}
               >
-                {tab.label}
+                {reactIcons.tv}
+              </span>
 
-                {/* LIVE dot */}
-                {tab.isLive && (
-                  <span className="w-2 h-2 bg-white rounded-full"></span>
-                )}
+              {/* SCORE */}
+              <span
+                onClick={() => inplay && setLiveView('score')}
+                className={`cursor-pointer ${
+                  inplay ? 'text-white' : 'opacity-40 cursor-not-allowed'
+                }`}
+              >
+                {reactIcons.TrendingUp}
+              </span>
 
-                {/* Active underline */}
-                {activeTab === tab.id && (
-                  <span className="absolute bottom-0 left-0 w-full h-[3px] bg-yellow-400"></span>
-                )}
-              </button>
-            ))}
+              {/* 🔥 LIVE BADGE */}
+              {inplay && (
+                <span className="ml-2 px-2 py-0.5 text-xs bg-red-500 rounded animate-pulse">
+                  LIVE
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-        {activeTab === 'market' ? (
-          <div className="bg-innerBg flex-1 h-fit rounded-[36px]">
-            {/* <BackButton textcolor="text-white" />
-        <MatchHeader eventName={eventName} startTime={startTime} /> */}
-            <div className="space-y-0.5">
-              {/* {!isDemoUser && (
-            <Scorecard
-              liveScoreUrl={liveScoreUrl}
-              liveTvUrl={liveTvUrl}
-              type="game"
-              isLive={inplay || false}
+
+          {/* 🔥 LIVE VIEW AREA (AUTO OPEN) */}
+          {inplay && liveView === 'tv' && (
+            <iframe
+              src={`https://e765432.diamondcricketid.com/dtv.php?id=${eventId}`}
+              className="w-full"
+              style={{ aspectRatio: '16/9', border: 'none' }}
+              allow="autoplay; fullscreen"
             />
-          )} */}
-              {/* Normal Market */}
+          )}
+
+          {inplay && liveView === 'score' && (
+            <div className="bg-black text-white text-center py-10">
+              Live Score / Stats Coming Soon
+            </div>
+          )}
+        </div>
+
+        {/* ✅ MOBILE HEADER */}
+        <div className="lg:hidden">
+          <InnerHeading
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            openBetCount={total || 0}
+          />
+        </div>
+
+        {/* ✅ MARKET */}
+        {(activeTab === 1 || window.innerWidth >= 1024) && (
+          <div className="bg-innerBg flex-1 h-fit rounded-[36px]">
+            <div className="space-y-0.5">
               {mapMarketData?.map((market, idx) => (
                 <MarketPanel
                   key={idx}
@@ -112,25 +132,25 @@ const GameDetailsPage = () => {
                   marketCategory={'NORMAL'}
                 />
               ))}
-              {/* {fancyMarketData?.map(({ marketName, markets }, idx) => {
-    
 
-                return ( */}
+              {/* SESSION */}
               {sessionMarkets.length > 0 && (
-                <div className="mb-4 border md:border-0 shadow-lg border-primary-light bg-primary/10 rounded-lg">
+                <div className="mb-4 border shadow-lg border-primary-light bg-primary/10 rounded-lg">
                   <div className="bg-marketHead mb-1">
-                    <div className="py-1 px-5 text-sm flex items-center justify-between rounded-[100px] border-b-[2px] ">
+                    <div className="py-1 px-5 text-sm flex items-center justify-between border-b-[2px]">
                       <div className="font-bold">Sessions</div>
-                      <div className="flex justify-center items-center gap-2 w-max md:w-full md:max-w-[415px]">
-                        <span className="w-[55px] xs:w-[70px] text-center font-bold">
+
+                      <div className="flex gap-2">
+                        <span className="w-[55px] text-center font-semibold">
                           No
                         </span>
-                        <span className="w-[55px] xs:w-[70px] text-center font-bold">
-                          yes
+                        <span className="w-[55px] text-center font-semibold">
+                          Yes
                         </span>
                       </div>
                     </div>
                   </div>
+
                   <div className="space-y-0.5">
                     {sessionMarkets.map((market, idx) => {
                       const runners = market.runners?.[0];
@@ -151,10 +171,13 @@ const GameDetailsPage = () => {
               )}
             </div>
           </div>
-        ) : activeTab === 'openBets' ? (
-          <MobOpenBets eventId={eventId} activeTabSlip={'openBets'} />
-        ) : (
-          <></>
+        )}
+
+        {/* MOBILE OPEN BETS */}
+        {activeTab === 2 && (
+          <div className="lg:hidden">
+            <MobOpenBets eventId={eventId} activeTabSlip={'openBets'} />
+          </div>
         )}
       </div>
     </>
