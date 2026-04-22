@@ -51,9 +51,9 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                     { state: { data: _items } },
                   )
                 }
-                className="flex items-center cursor-pointer justify-between h-[42px] border-y border-[#ddd]"
+                className="flex items-center cursor-pointer justify-between h-[62px] border-y border-[#ddd]"
               >
-                <div className="w-[50px] h-[42px] border-r border-[#ddd]">
+                {/* <div className="w-[50px] h-[42px] border-r border-[#ddd]">
                   <div className=" flex-col  flex w-fit justify-center h-full text-[#1e8067] font-medium text-[9px] ">
                     <div className="leading-3   text-center w-full">
                       {moment(_items?.startTime).format('DD/MM/YYYY')}
@@ -62,7 +62,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                       {moment(_items?.startTime).format('hh:mm A')}
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div
                   onClick={() =>
                     navigate(
@@ -74,9 +74,31 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                   }
                   className="relative flex items-center px-2 h-full text-10 overflow-hidden w-full"
                 >
-                  <p className="text-[11px] font-bold text-black truncate w-[calc(100%-20px)]">
-                    {_items?.name}
-                  </p>
+                  <div className="flex flex-col w-[calc(100%-20px)] overflow-hidden">
+                    {/* Event Name */}
+                    <p
+                      className="
+      text-[12px] font-black text-[#191313]
+      w-[97%] leading-normal
+      overflow-hidden
+      display-webkit-box
+      line-clamp-2
+    "
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                      }}
+                    >
+                      {_items?.name}
+                    </p>
+
+                    {/* Date + Time */}
+                    <p className="text-[12px] text-gray-500 leading-none">
+                      {moment(_items?.startTime).format('DD/MM')} (
+                      {moment(_items?.startTime).format('HH:mm')})
+                    </p>
+                  </div>
                   {_items.inplay && (
                     <div className="flex items-center justify-center shrink-0 px-1">
                       <img

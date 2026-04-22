@@ -342,7 +342,7 @@ const DesktopHome = () => {
         <div className="w-full">
           <HomeTopSLider />
         </div>
-        <div className="bg-white rounded-lg p-2 shadow-md mb-4 mt-2">
+        {/* <div className="bg-white rounded-lg p-2 shadow-md mb-4 mt-2">
           <h2 className="text-[#065f46] mb-1 text-16 font-bold [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">
             🎉 Redeem Your Promo Code
           </h2>
@@ -359,7 +359,7 @@ const DesktopHome = () => {
               Redeem
             </button>
           </div>
-        </div>
+        </div> */}
         <div className="flex hide-scrollbar items-center justify- gap-2 overflow-auto  my-2 mb-4">
           {sportSliderLink.map((_item, index) => (
             <Link
