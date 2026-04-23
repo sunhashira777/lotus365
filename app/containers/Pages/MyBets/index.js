@@ -229,6 +229,7 @@ function MyBets() {
           isOpen={showAll}
           handleClose={() => setShowAll(false)}
           eventId={selectedEventId}
+          type="past"
         />
       )}
     </>

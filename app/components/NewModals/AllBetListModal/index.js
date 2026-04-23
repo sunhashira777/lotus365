@@ -42,7 +42,7 @@ export default function AllBetListModal({
         <Box sx={style}>
           <div className="bg-white  hide-scrollbar">
             <div className="flex items-center justify-between bg-[#1E8067] p-2">
-              <h1 className="  text-18  text-white">Open Bets</h1>
+              <h1 className="  text-18  text-white">Bets</h1>
               <button
                 onClick={handleClose}
                 className=" z-20 text-white font-bold text-2xl cursor-pointer "

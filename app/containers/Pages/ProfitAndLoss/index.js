@@ -44,16 +44,16 @@ function ProfitAndLoss() {
     if (!islogin) return;
 
     try {
-      const url = `/user/user-profitandloss?limit=${take}&offset=${
+      const url = `/bet/profit-loss?limit=${take}&offset=${
         (page - 1) * take
-      }&userId=${User?.username}&gameId=${
+      }&userId=${User?.username}&sport=${
         activeTab === 'Cricket'
-          ? 4
+          ? 'Cricket'
           : activeTab === 'Soccer'
-          ? 1
+          ? 'Soccer'
           : activeTab === 'Tennis'
-          ? 2
-          : 4
+          ? 'Tennis'
+          : 'Cricket'
       }`;
 
       const dateFilter =
