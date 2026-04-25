@@ -8,14 +8,13 @@ const PinkBtn = ({ text, size, disabled, onClick, css }) => {
       onClick={onClick}
       className={`
         bet-btn flex flex-col items-center justify-center gap-[6px]
-        w-[58px] h-[50px] rounded-[10px] border border-[#f5b5c3]
+        w-[45px] h-[50px] rounded-[10px] font-semibold
+          border border-gray-200
+          shadow-sm
+ bg-pink-btn-gradient first-letter:
         ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
         ${css}
       `}
-      style={{
-        background:
-          'linear-gradient(278.15deg, #f8cdd6 45.25%, #ffd6df 139.37%)',
-      }}
     >
       <span className="text-12 font-bold sm:font-semibold leading-none">
         {text}

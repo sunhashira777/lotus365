@@ -84,7 +84,7 @@ const DesktopMarketAll = ({
                         _items?.runners?.[0]?.layPrice1 ||
                         _items?.runners?.[1]?.layPrice1 ||
                         _items?.runners?.[2]?.layPrice1 ? (
-                          <div className="grid grid-cols-6  sm:min-w-[360px] min-w-[300px]">
+                          <div className="grid grid-cols-6 gap-2 sm:min-w-[360px] min-w-[300px]">
                             <div className="">
                               {_items?.runners?.[0]?.backPrice1 ? (
                                 <BlueBtn
@@ -138,7 +138,7 @@ const DesktopMarketAll = ({
                                   size={_items?.runners?.[0]?.laySize1 || '-'}
                                 />
                               ) : (
-                                <BlankBtn css="bg-[#FCE4E9]" /> //pink
+                                <BlankBtn css="bg-blue-btn-gradient" /> //pink
                               )}
                             </div>
                             <div className="">
@@ -166,7 +166,7 @@ const DesktopMarketAll = ({
                                   size={_items?.runners?.[2]?.backSize1 || '-'}
                                 />
                               ) : (
-                                <BlankBtn css="bg-[#D3EBFE]" /> //blue
+                                <BlankBtn css="bg-blue-btn-gradient" /> //blue
                               )}
                             </div>
                             <div className="">
@@ -194,7 +194,7 @@ const DesktopMarketAll = ({
                                   size={_items?.runners?.[2]?.laySize1 || '-'}
                                 />
                               ) : (
-                                <BlankBtn css="bg-[#FCE4E9]" /> //pink
+                                <BlankBtn css="bg-pink-btn-gradient" /> //pink
                               )}
                             </div>
                             <div className="">

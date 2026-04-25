@@ -413,11 +413,11 @@ const DesktopHome = () => {
                 key={index}
                 style={{ backgroundImage: `url(${item?.bgImg})` }}
                 onClick={() => handleClick(item)}
-                className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
+                className="h-[36px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-lg bg-cover bg-center bg-no-repeat text-12"
               >
                 <div className="flex items-center gap-2">
                   <img src={item?.img} className="h-4 w-4" alt="" />
-                  <p className="text-16 font-bold">{item?.title}</p>
+                  <p className="text-12 font-bold">{item?.title}</p>
                 </div>
               </div>
             ))}
@@ -428,11 +428,11 @@ const DesktopHome = () => {
                 key={index}
                 onClick={() => handleClick(item)}
                 style={{ backgroundImage: `url(${item?.bgImg})` }}
-                className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
+                className="h-[36px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative bg-cover bg-center bg-no-repeat rounded-lg text-12"
               >
                 <div className="flex items-center gap-2">
                   <img src={item?.img} className="h-4 w-4" alt="" />
-                  <p className="text-16 font-bold">{item?.title}</p>
+                  <p className="text-12 font-bold">{item?.title}</p>
                 </div>
               </div>
             ))}

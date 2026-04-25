@@ -1,4 +1,5 @@
 import { useGetCatalogueByEventIdQuery } from '@/api/catalogueApi';
+import { getMarketCategories } from '@/helpers/request';
 import {
   formatRunners,
   getOrderedMarkets,
@@ -16,7 +17,7 @@ export const marketTypes = [
 const useGameDetailsHook = () => {
   const navigate = useNavigate();
   const { eventId } = useParams();
-  const [activeTab, setActiveTab] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('All');
   const [pollingInterval, setPollingInterval] = useState(2000);
   const { data, isLoading: isLoadingEventDetails } =
     useGetCatalogueByEventIdQuery(
@@ -38,9 +39,21 @@ const useGameDetailsHook = () => {
     sessionMaxBetAmount,
     sessionMinBetAmount,
   } = data?.betConfig ?? {};
+
+  const fancyMarketsData = {
+    ...(fancyMarkets.Normal ? { Normal: fancyMarkets.Normal } : {}),
+    ...(fancyMarkets.wpmarket ? { wpmarket: fancyMarkets.wpmarket } : {}),
+    ...Object.fromEntries(
+      Object.entries(fancyMarkets).filter(
+        ([key]) =>
+          key?.toLowerCase() !== 'normal' && key?.toLowerCase() !== 'wpmarket',
+      ),
+    ),
+  };
+
   // Market ordering
   const allMarkets = getOrderedMarkets(markets, marketTypes);
-
+  const fancyTabs = getMarketCategories(fancyMarketsData);
   // NORMAL MARKETS
   const mapMarketData = useMemo(() => {
     return (
@@ -76,7 +89,8 @@ const useGameDetailsHook = () => {
     return (
       Object.entries(fancyMarkets)
         .filter(
-          ([marketName]) => activeTab === 'All' || marketName === activeTab,
+          ([marketName]) =>
+            activeCategory === 'All' || marketName === activeCategory,
         )
         .map(([marketName, marketItems]) => ({
           marketName,
@@ -88,7 +102,7 @@ const useGameDetailsHook = () => {
             })),
         })) || []
     );
-  }, [fancyMarkets, activeTab]);
+  }, [fancyMarkets, activeCategory]);
   const sessionMarkets = useMemo(() => {
     const fancyMarkets = data?.catalogue?.fancyMarkets;
 
@@ -106,6 +120,7 @@ const useGameDetailsHook = () => {
   }, [inplay]);
   const liveScoreUrl = null;
   const liveTvUrl = null;
+
   return {
     isLoadingEventDetails,
     liveScoreUrl,
@@ -120,6 +135,9 @@ const useGameDetailsHook = () => {
     fancyMarketData,
     sessionMarkets,
     inplay,
+    fancyTabs,
+    activeCategory,
+    setActiveCategory,
   };
 };
 

@@ -4,7 +4,7 @@ import { getImage } from '@/utils/imagekit';
 
 const DesktopGameHeader = ({ GameName, image, isSmall = false }) => {
   return (
-    <div className="flex items-center justify-between bg-white py-[8.5px] pl-[8.5px]">
+    <div className="flex items-center justify-between bg-white py-[8px] pl-[8.5px]">
       <div className="flex items-center gap-2 sm:pl-2">
         {isSmall ? (
           <img

@@ -17,3 +17,10 @@ export async function getData(url) {
 
   return response.json();
 }
+export const getMarketCategories = (market, sportName) => {
+  if (sportName === 'Football') {
+    return ['All', '1X2', 'Match', 'Total', 'Handicap', 'Odd/Even'];
+  }
+
+  return ['All', ...Object.keys(market || {})];
+};

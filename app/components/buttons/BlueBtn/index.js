@@ -8,14 +8,13 @@ const BlueBtn = ({ text, size, disabled, onClick, css }) => {
       onClick={onClick}
       className={`
         bet-btn flex flex-col items-center justify-center gap-[6px]
-        w-[58px] h-[50px] rounded-[10px] border border-[#cce7ff]
+        w-[45px] h-[50px] rounded-[10px] font-semibold
+          border border-gray-200
+          shadow-sm
+bg-blue-btn-gradient
         ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
         ${css}
       `}
-      style={{
-        background:
-          'linear-gradient(278.15deg, #cfdce9 45.25%, #d1e9ff 139.37%)',
-      }}
     >
       <span className="text-12 font-bold sm:font-semibold leading-none">
         {text}

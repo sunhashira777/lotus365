@@ -10,6 +10,11 @@ module.exports = {
     extend: {
       backgroundImage: {
         paymentBg: "url('/public/images/deposit/depo.webp')",
+        'blue-btn-gradient':
+          'linear-gradient(278.15deg, #eef3f7 45%, #d9ecff 100%)',
+
+        'pink-btn-gradient':
+          'linear-gradient(278.15deg, #f3e6e9 45%, #f8d7df 100%)',
       },
       fontFamily: {
         josefin: ['Josefin', 'sans-serif'],
@@ -46,6 +51,8 @@ module.exports = {
           1100: '#2B3541',
           1200: '#1f5158',
           1300: '#1E8067',
+          1400: '#F4D821',
+          1500: '#1E8067',
         },
         marketHead: '#DDDDDD',
         'odd-pink': {

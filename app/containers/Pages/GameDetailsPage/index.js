@@ -20,6 +20,10 @@ const GameDetailsPage = () => {
     inplay,
     sessionMinBetAmount,
     sessionMaxBetAmount,
+    fancyTabs,
+    fancyMarketData,
+    activeCategory,
+    setActiveCategory,
   } = useGameDetailsHook();
 
   const { eventId } = useParams();
@@ -132,43 +136,64 @@ const GameDetailsPage = () => {
                   marketCategory={'NORMAL'}
                 />
               ))}
-
-              {/* SESSION */}
-              {sessionMarkets.length > 0 && (
-                <div className="mb-4 border shadow-lg border-primary-light bg-primary/10 rounded-lg">
-                  <div className="bg-marketHead mb-1">
-                    <div className="py-1 px-5 text-sm flex items-center justify-between border-b-[2px]">
-                      <div className="font-bold">Sessions</div>
-
-                      <div className="flex gap-2">
-                        <span className="w-[55px] text-center font-semibold">
-                          No
-                        </span>
-                        <span className="w-[55px] text-center font-semibold">
-                          Yes
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-0.5">
-                    {sessionMarkets.map((market, idx) => {
-                      const runners = market.runners?.[0];
-                      return (
-                        <InnerMarketRow
-                          key={idx}
-                          marketCategory={'FANCY'}
-                          marketData={market}
-                          runnersData={runners ?? {}}
-                          reverseOddsOrder
-                          min={sessionMinBetAmount}
-                          max={sessionMaxBetAmount}
-                        />
-                      );
-                    })}
-                  </div>
+              {fancyTabs.length > 1 && (
+                <div className="flex border-b overflow-x-auto">
+                  {fancyTabs?.map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveCategory(tab)}
+                      className={`px-4 py-2 text-sm  transition-all
+              ${
+                activeCategory === tab
+                  ? ' bg-primary-1400 text-black'
+                  : ' bg-primary-1500 text-white'
+              }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
                 </div>
               )}
+              {/* SESSION */}
+              {fancyMarketData.length > 0 &&
+                fancyMarketData?.map(({ marketName, markets }, idx) => (
+                  <div
+                    className="mb-4 border shadow-lg border-primary-light bg-primary/10 rounded-lg"
+                    key={idx}
+                  >
+                    <div className="bg-marketHead mb-1">
+                      <div className="py-1 px-5 text-sm flex items-center justify-between border-b-[2px]">
+                        <div className="font-bold">{marketName}</div>
+
+                        <div className="flex gap-2">
+                          <span className="w-[55px] text-center font-semibold">
+                            No
+                          </span>
+                          <span className="w-[55px] text-center font-semibold">
+                            Yes
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-0.5">
+                      {markets.map((market, idx) => {
+                        const runners = market.runners?.[0];
+                        return (
+                          <InnerMarketRow
+                            key={idx}
+                            marketCategory={'FANCY'}
+                            marketData={market}
+                            runnersData={runners ?? {}}
+                            reverseOddsOrder
+                            min={sessionMinBetAmount}
+                            max={sessionMaxBetAmount}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         )}

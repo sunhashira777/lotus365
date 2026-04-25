@@ -314,7 +314,9 @@ const BetSlip = () => {
             <div
               onClick={() => setActiveTab('betslip')}
               className={`${
-                activeTab === 'betslip' ? 'bg-white' : 'bg-[#DEDBD7]'
+                activeTab === 'betslip'
+                  ? 'bg-primary-1400'
+                  : 'bg-primary-1500 text-white'
               }  text-12 py-2 px-[15px] rounded cursor-pointer`}
             >
               Betslip
@@ -323,7 +325,9 @@ const BetSlip = () => {
               onClick={() => setActiveTab('openBets')}
               disabled={!isLogin}
               className={`${
-                activeTab === 'openBets' ? 'bg-white' : 'bg-[#DEDBD7]'
+                activeTab === 'openBets'
+                  ? 'bg-primary-1400'
+                  : 'bg-primary-1500 text-white'
               } text-12 py-2 px-[15px] rounded cursor-pointer`}
             >
               Open Bets

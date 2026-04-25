@@ -50,7 +50,10 @@ const InnerMarketRow = ({
     <>
       <div className="px-2 bg-white">
         <div className="flex justify-between items-center text-inplay-rowText border-b border-[#ddd]">
-          <div title={runnerName} className="text-[13px] font-semibold mx-2 ">
+          <div
+            title={runnerName}
+            className="text-[12px] font-roboto font-semibold mx-2 "
+          >
             {runnerName}
           </div>
 
