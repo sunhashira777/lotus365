@@ -317,7 +317,7 @@ const BetSlip = () => {
                 activeTab === 'betslip'
                   ? 'bg-primary-1400'
                   : 'bg-primary-1500 text-white'
-              }  text-12 py-2 px-[15px] rounded cursor-pointer`}
+              }  text-12 py-2 px-[15px]  cursor-pointer`}
             >
               Betslip
             </div>
@@ -328,7 +328,7 @@ const BetSlip = () => {
                 activeTab === 'openBets'
                   ? 'bg-primary-1400'
                   : 'bg-primary-1500 text-white'
-              } text-12 py-2 px-[15px] rounded cursor-pointer`}
+              } text-12 py-2 px-[15px] cursor-pointer`}
             >
               Open Bets
             </button>

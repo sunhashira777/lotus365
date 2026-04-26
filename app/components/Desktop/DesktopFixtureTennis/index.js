@@ -73,10 +73,7 @@ const DesktopFixtureTennis = ({ type, fixtureData, isLoading }) => {
   });
   return (
     <div className="tennis mt-2">
-      <DesktopGameHeader
-        GameName={'Tennis'}
-        image="/images/sidebarIcons/tennis.webp"
-      />
+      <DesktopGameHeader GameName={'Tennis'} image="/images/game/tennis.webp" />
       {type == 'LiveMatches' ? (
         <>
           {fixtureData?.length === 0 ? (

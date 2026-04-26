@@ -13,10 +13,10 @@ const DesktopGameHeader = ({ GameName, image, isSmall = false }) => {
             alt=""
           />
         ) : (
-          <img src={getImage(image)} className="sm:w-6 sm:h-6 w-5 h-5" alt="" />
+          <img src={getImage(image)} className="sm:w-6 sm:h-6 w-3 h-3" alt="" />
         )}
 
-        <p className="text-16 font-bold text-center sm:text-left">
+        <p className="text-14 font-bold text-center sm:text-left">
           {GameName}{' '}
         </p>
       </div>

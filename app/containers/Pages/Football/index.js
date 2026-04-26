@@ -103,7 +103,7 @@ const Football = () => {
           <MostPopular text="Most Popular" />
           <DesktopGameHeader
             GameName={'Football'}
-            image="/images/sidebarIcons/football.webp"
+            image="/images/game/football.png"
             isSmall={true}
           />
 

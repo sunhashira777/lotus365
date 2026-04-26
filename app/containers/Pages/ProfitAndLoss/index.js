@@ -11,15 +11,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useSelector } from 'react-redux';
 
 function ProfitAndLoss() {
-  const [activeTab, setActiveTab] = useState('Cricket');
+  const [activeTab, setActiveTab] = useState(null);
+  const [showEvents, setShowEvents] = useState(false);
   const [profitLoss, setProfitLossData] = useState([]);
   const User = useSelector((state) => state?.user?.profile);
   const [profitData, setProfitData] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [page, setPage] = useState(1);
+  const [sportClick, setSportClick] = useState('');
   const take = 15;
-
+  const handleTabClick = (id) => {
+    setActiveTab(id);
+    setShowEvents(true);
+  };
   const [pagination, setPagination] = useState({
     totalCount: 0,
   });
@@ -64,6 +69,7 @@ function ProfitAndLoss() {
           : '';
 
       const response = await getAuthData(url + dateFilter);
+      console.log('response', response);
 
       if (response?.status === 200) {
         const data = response?.data?.data || [];
@@ -146,9 +152,29 @@ function ProfitAndLoss() {
   displayTabs.forEach((event) => {
     totalProfitLoss += parseFloat(event.earning);
   });
+  console.log('displayTabs', displayTabs);
 
   // =========================
   // UI (UNCHANGED ✅)
+  const eventData = {
+    Cricket: [
+      {
+        id: 1,
+        date: '24/04/2026',
+        event: 'Hyderabad Kingsmen V Islamabad United',
+        pnl: -2,
+      },
+      {
+        id: 2,
+        date: '24/04/2026',
+        event: 'Royal Challengers Bengaluru V Gujarat Titans',
+        pnl: 98,
+      },
+    ],
+    Soccer: [],
+    Tennis: [],
+  };
+  const selectedEvents = eventData[activeTab] || [];
   // =========================
   return (
     <div className="min-h-screen mx-1 md:mx-0">
@@ -189,46 +215,110 @@ function ProfitAndLoss() {
         <div className="tab-body max-w-full">
           <div className="tabber min-h-[350px] flex justify-between bg-white overflow-hidden rounded-lg flex-col md:flex-row">
             <div className="tabber-menu w-full min-w-[147px] md:min-w-[221px]">
-              <div className="grid grid-cols-2 gap-[1px] mt-2">
-                <div className="text-white font-bold flex-center text-14 bg-[#8f8f8f] py-1">
-                  EVENT
-                </div>
-                <div className="text-white font-bold flex-center text-14 bg-[#8f8f8f] py-1">
-                  P&L
-                </div>
-              </div>
+              {/* 👉 SHOW SPORTS LIST */}
+              {!showEvents && (
+                <>
+                  <div className="grid grid-cols-2 gap-[1px] mt-2">
+                    <div className="text-white font-bold flex-center text-14 bg-[#8f8f8f] py-1">
+                      EVENT
+                    </div>
+                    <div className="text-white font-bold flex-center text-14 bg-[#8f8f8f] py-1">
+                      P&L
+                    </div>
+                  </div>
 
-              <ul className="border border-[#e9e9e9]">
-                {displayTabs.map((item, index) => (
-                  <li
-                    key={item.id}
-                    className={`text-14 font-medium grid grid-cols-2 gap-[1px] ${
-                      index % 2 !== 0 ? 'bg-white' : 'bg-[#f1f0f0]'
-                    } cursor-pointer`}
-                    onClick={() => setActiveTab(item.id)}
+                  <ul className="border border-[#e9e9e9]">
+                    {displayTabs.map((item, index) => (
+                      <li
+                        key={item.id}
+                        onClick={() => handleTabClick(item.id)}
+                        className={`grid grid-cols-2 text-14 cursor-pointer ${
+                          index % 2 ? 'bg-white' : 'bg-[#f1f0f0]'
+                        }`}
+                      >
+                        <div className="flex-center py-2 border-r ">
+                          <button className="bg-primary-1300 text-center w-[200px] rounded-md py-1 text-white">
+                            {' '}
+                            {item.title}
+                          </button>
+                        </div>
+
+                        <div
+                          className={`flex-center ${
+                            item.earning > 0
+                              ? 'text-green-600'
+                              : item.earning < 0
+                              ? 'text-red-600'
+                              : ''
+                          }`}
+                        >
+                          {item.earning}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {/* 👉 SHOW EVENT TABLE */}
+              {showEvents && (
+                <div className="mt-2">
+                  {/* Back Button */}
+                  <button
+                    onClick={() => setShowEvents(false)}
+                    className="mb-2 text-sm text-blue-600 underline"
                   >
-                    <div className="flex-center py-1 border-r-[2px] border-[#e9e9e9]">
-                      <div className="bg-primary-1300 text-14 max-w-[90px] mx-auto m-1 h-9 flex-center w-full text-white rounded-md">
-                        <p className="text-center w-full">{item.title}</p>
+                    ← Back
+                  </button>
+
+                  <div className="border border-gray-300 rounded-sm overflow-hidden">
+                    {/* Header */}
+                    <div className="grid grid-cols-4 bg-[#8f8f8f] text-white font-bold text-14">
+                      <div className="p-2 border-r">Date</div>
+                      <div className="p-2 border-r">Event Name</div>
+                      <div className="p-2 border-r text-center">P & L</div>
+                      <div className="p-2 text-center">Show Bets</div>
+                    </div>
+
+                    {/* Rows */}
+                    {(eventData?.[activeTab] || []).map((item, index) => (
+                      <div
+                        key={item.id}
+                        className={`grid grid-cols-4 text-12 ${
+                          index % 2 ? 'bg-white' : 'bg-[#f1f0f0]'
+                        }`}
+                      >
+                        <div className="p-2 border-r">{item.date}</div>
+                        <div className="p-2 border-r">{item.event}</div>
+
+                        <div
+                          className={`p-2 border-r text-center ${
+                            item.pnl > 0
+                              ? 'text-green-600'
+                              : item.pnl < 0
+                              ? 'text-red-600'
+                              : ''
+                          }`}
+                        >
+                          {item.pnl}
+                        </div>
+
+                        <div className="p-2 text-center">
+                          <button className="bg-yellow-400 px-3 py-1 rounded font-semibold">
+                            Show Bets
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    ))}
 
-                    <div
-                      className={`${
-                        item.earning > 0
-                          ? '!text-green-700'
-                          : item.earning < 0
-                          ? '!text-red-700'
-                          : 'text-black'
-                      } flex-center`}
-                    >
-                      {item.earning}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              {displayTabs.length === 0 && <Empty className="mt-4" />}
+                    {(eventData?.[activeTab] || []).length === 0 && (
+                      <div className="p-4 text-center text-gray-500">
+                        No events available
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -104,7 +104,7 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
     <div className="cricket">
       <DesktopGameHeader
         GameName={'Cricket'}
-        image="/images/sidebarIcons/cricket.webp"
+        image="/images/game/cricket.jpg"
       />
 
       {type == 'LiveMatches' ? (

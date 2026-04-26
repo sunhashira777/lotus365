@@ -314,10 +314,10 @@ const DesktopHome = () => {
       {/* <MobSlider /> */}
       <div className="min-h-screen overflow-hidden pb-6">
         {login && (
-          <div className="bg-white mt-1 grid grid-cols-2 gap-2 p-3 rounded-md bg-[linear-gradient(90deg,#fff_50%,#f5dba0)]">
+          <div className="bg-white mt-1 grid grid-cols-2 gap-2 p-1 rounded-md bg-[linear-gradient(90deg,#fff_50%,#f5dba0)]">
             <Link
               to="/account/deposit"
-              className="flex items-center justify-center py-2 gap-2 text-14 font-bold rounded-sm bg-[#1e8067] text-white"
+              className="flex items-center justify-center py-1.5 gap-2 text-14 font-bold rounded-l-full bg-[#1e8067] text-white"
             >
               <img
                 src={getImage('/images/deposit.png')}
@@ -328,7 +328,7 @@ const DesktopHome = () => {
             </Link>
             <Link
               to="/account/withdrawal"
-              className="flex items-center justify-center py-2 gap-2 text-14 font-bold rounded-sm  text-white  bg-[#dc2626]"
+              className="flex items-center justify-center py-1.5 gap-2 text-14 font-bold rounded-r-full  text-white  bg-[#dc2626]"
             >
               <img
                 src={getImage('/images/withdraw.png')}

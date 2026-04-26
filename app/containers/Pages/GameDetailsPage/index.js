@@ -9,7 +9,9 @@ import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
-
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
 const GameDetailsPage = () => {
   const {
     isLoadingEventDetails,
@@ -46,11 +48,35 @@ const GameDetailsPage = () => {
       setLiveView(null);
     }
   }, [inplay]);
-
+  const banners = [
+    '/images/game/slide1.webp',
+    '/images/game/slide2.jpeg',
+    '/images/game/slide3.webp',
+  ];
   return (
     <>
       {isLoadingEventDetails && <Loading />}
-
+      <div className="w-full rounded-xl overflow-hidden">
+        <Swiper
+          modules={[Autoplay]}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          loop={true}
+          slidesPerView={1}
+        >
+          {banners.map((img, index) => (
+            <SwiperSlide key={index}>
+              <img
+                src={img}
+                alt={`banner-${index}`}
+                className="w-full h-full object-cover"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
       <div className="flex-1">
         {/* ✅ DESKTOP HEADER */}
         <div className="hidden lg:flex flex-col bg-[#1E8067] text-white rounded-md">

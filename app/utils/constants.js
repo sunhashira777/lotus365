@@ -62,21 +62,21 @@ export const links = [
   {
     title: 'cricket',
     path: '/cricket',
-    icon: '/images/sidebarIcons/cricket.webp',
+    icon: '/images/game/cricket.jpg',
     css: '#8C1000',
     route: 'cricket',
   },
   {
     title: 'Football',
     path: '/football',
-    icon: '/images/sidebarIcons/football.webp',
+    icon: '/images/game/football.png',
     css: '#8C1000',
     route: 'soccer',
   },
   {
     title: 'tennis',
     path: '/tennis',
-    icon: '/images/sidebarIcons/tennis.webp',
+    icon: '/images/game/tennis.webp',
 
     css: '#8C1000',
     route: 'tennis',

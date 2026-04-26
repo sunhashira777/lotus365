@@ -104,7 +104,7 @@ const Tennis = () => {
 
           <DesktopGameHeader
             GameName={'Tennis'}
-            image="/images/sidebarIcons/tennis.webp"
+            image="/images/game/tennis.webp"
             isSmall={true}
           />
           {isMobile ? (

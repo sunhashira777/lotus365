@@ -114,13 +114,41 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
                 : {numberWithCommas(userInfo?.exposureAmount || 0) || 0}
               </p>
             </div>
+            <div className="w-fit rounded-md overflow-hidden shadow-sm border border-gray-200">
+              {/* Header */}
+              <div className="bg-[#1f7a63] flex items-center justify-between px-3 py-2">
+                <div className="flex items-center gap-1 text-white font-semibold text-sm">
+                  <span className="text-12">Bonus Information</span>
+                  <span className="w-4 h-4 flex items-center justify-center rounded-full border border-white text-xs">
+                    i
+                  </span>
+                </div>
 
+                <div className="bg-white text-black text-sm px-2 py-0.5 rounded">
+                  03:10:36
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="bg-[#0f3f36] px-3 py-3">
+                <div className="flex items-center justify-between bg-[#184d43] rounded-md px-3 py-2">
+                  <span className="text-white text-sm font-medium">
+                    LOCKED BONUS
+                  </span>
+
+                  <div className="flex items-center gap-3 text-white">
+                    {reactIcons.refresh}
+                    <span className="font-semibold">00.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div>
               {/* <button className="text-14 my-2 py-2 flex-center border border-[#1e8067] bg-[#1e8067] text-white rounded-[30px] w-full">
                 LOCKED BONUS 120.00
               </button> */}
-              <button className="text-14 my-2 py-2 flex-center rounded-[30px] text-white w-full bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)]">
-                REFER & EARN
+              <button className="text-14 my-2 py-2 flex-center rounded-sm text-white w-full bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)]">
+                Refer & Earn
               </button>
             </div>
           </div>
@@ -137,7 +165,9 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
                 className="rightS-svg w-[18px] h-[18px]"
                 alt=""
               />{' '}
-              {item.title}
+              <span className="font-bold font-roboto text-[13px]">
+                {item.title}
+              </span>
             </div>
           ) : (
             <NavLink
@@ -151,7 +181,9 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
                 className="rightS-svg w-[18px] h-[18px]"
                 alt=""
               />{' '}
-              {item.title}
+              <span className="font-bold font-roboto text-[13px]">
+                {item.title}
+              </span>
             </NavLink>
           );
         })}
