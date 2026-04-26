@@ -44,55 +44,59 @@ function ProfitAndLoss() {
     getProfitLoss(page);
   }, [activeTab, page, take, startDate, endDate, User]);
 
-  const getProfitLoss = async (page) => {
-    const islogin = isLoggedIn();
-    if (!islogin) return;
+const getProfitLoss = async (page) => {
+  const islogin = isLoggedIn();
+  if (!islogin) return;
 
-    try {
-      const url = `/bet/profit-loss?limit=${take}&offset=${
-        (page - 1) * take
-      }&userId=${User?.username}&sport=${
-        activeTab === 'Cricket'
-          ? 'Cricket'
-          : activeTab === 'Soccer'
-          ? 'Soccer'
-          : activeTab === 'Tennis'
-          ? 'Tennis'
-          : 'Cricket'
-      }`;
+  try {
+    const url = `/reports/event/profitloss?limit=${take}&offset=${
+      (page - 1) * take
+    }&gameType=SPORTS&sport=${
+      activeTab === 'Cricket'
+        ? 'Cricket'
+        : activeTab === 'Soccer'
+        ? 'Soccer'
+        : activeTab === 'Tennis'
+        ? 'Tennis'
+        : 'Cricket'
+    }`;
 
-      const dateFilter =
-        startDate && endDate
-          ? `&startDate=${moment(startDate).format(
-              'YYYY-MM-DD',
-            )}&endDate=${moment(endDate).add(1, 'day').format('YYYY-MM-DD')}`
-          : '';
+    const dateFilter =
+      startDate && endDate
+        ? `&startDate=${moment(startDate).format(
+            'YYYY-MM-DD',
+          )}&endDate=${moment(endDate)
+            .add(1, 'day')
+            .format('YYYY-MM-DD')}`
+        : '';
 
-      const response = await getAuthData(url + dateFilter);
-      console.log('response', response);
+    const response = await getAuthData(url + dateFilter);
 
-      if (response?.status === 200) {
-        const data = response?.data?.data || [];
+    if (response?.status === 200) {
+      // ✅ FIXED LINE
+      const data = response?.data?.eventProfitLoss || [];
 
-        const formattedData = data.map((entry) => {
-          const profit =
-            entry.total_winning_amount - entry.total_lossing_amount;
-          return {
-            ...entry,
-            type: profit >= 0 ? 'profit' : 'loss',
-            amount: Math.abs(profit),
-          };
-        });
+      const formattedData = data.map((entry) => {
+        const profit = Number(entry.totalProfitLoss || 0);
 
-        setProfitLossData(formattedData);
-        setPagination({
-          totalCount: response?.data?.totalCount || 0,
-        });
-      }
-    } catch (e) {
-      console.error(e);
+        return {
+          ...entry,
+          type: profit >= 0 ? 'profit' : 'loss',
+          amount: Math.abs(profit),
+          createdAt: entry.lastBetTime,
+        };
+      });
+
+      setProfitLossData(formattedData);
+
+      setPagination({
+        totalCount: response?.data?.pagination?.totalItems || 0,
+      });
     }
-  };
+  } catch (e) {
+    console.error(e);
+  }
+};
 
   // =========================
   // NEW SUMMARY API (ONLY CHANGE)

@@ -13,6 +13,20 @@ import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 const GameDetailsPage = () => {
+  const ALL_TABS = [
+    'Fancy',
+    'Premium Fancy',
+    'Line Markets',
+    'Session Markets',
+    'Over Session Market',
+    'Ball By Ball',
+    'Fall Of Wicket',
+    'Other Markets',
+    'Total Advance',
+    'Meter Markets',
+    'Khado Markets',
+    'Odd Event Markets',
+  ];
   const {
     isLoadingEventDetails,
     mapMarketData,
@@ -39,7 +53,56 @@ const GameDetailsPage = () => {
     take: 1,
     eventId: eventId,
   });
+  const getFilteredMarkets = () => {
+    if (!fancyMarketData?.length) return [];
 
+    return fancyMarketData.filter((item) => {
+      const name = item?.marketName?.toLowerCase() || '';
+
+      switch (activeCategory) {
+        case 'Fancy':
+          return true;
+
+        case 'Premium Fancy':
+          return name.includes('premium');
+
+        case 'Line Markets':
+          return name.includes('line');
+
+        case 'Session Markets':
+          return name.includes('normal') || name.includes('session');
+
+        case 'Over Session Market':
+          return name.includes('over');
+
+        case 'Ball By Ball':
+          return name.includes('ball');
+
+        case 'Fall Of Wicket':
+          return name.includes('wicket');
+
+        case 'Total Advance':
+          return name.includes('total');
+
+        case 'Meter Markets':
+          return name.includes('meter');
+
+        case 'Khado Markets':
+          return name.includes('khado');
+
+        case 'Odd Event Markets':
+          return name.includes('odd');
+
+        case 'Other Markets':
+          return true;
+
+        default:
+          return true;
+      }
+    });
+  };
+  console.log('ACTIVE TAB:', activeCategory);
+  console.log('FANCY DATA:', fancyMarketData);
   // ✅ AUTO OPEN TV WHEN INPLAY
   useEffect(() => {
     if (inplay) {
@@ -162,27 +225,28 @@ const GameDetailsPage = () => {
                   marketCategory={'NORMAL'}
                 />
               ))}
-              {fancyTabs.length > 1 && (
-                <div className="flex border-b overflow-x-auto">
-                  {fancyTabs?.map((tab) => (
+              <div className="w-full overflow-x-auto bg-primary-1500 border-b">
+                <div className="flex min-w-max">
+                  {ALL_TABS.map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveCategory(tab)}
-                      className={`px-4 py-2 text-sm  transition-all
-              ${
-                activeCategory === tab
-                  ? ' bg-primary-1400 text-black'
-                  : ' bg-primary-1500 text-white'
-              }`}
+                      className={`px-4 py-2 text-xs whitespace-nowrap 
+        border-r border-white/10 transition-all flex-shrink-0
+        ${
+          activeCategory === tab
+            ? 'bg-primary-1400 text-black font-semibold'
+            : 'bg-primary-1500 text-white'
+        }`}
                     >
                       {tab}
                     </button>
                   ))}
                 </div>
-              )}
+              </div>
               {/* SESSION */}
-              {fancyMarketData.length > 0 &&
-                fancyMarketData?.map(({ marketName, markets }, idx) => (
+              {getFilteredMarkets().length > 0 ? (
+                getFilteredMarkets().map(({ marketName, markets }, idx) => (
                   <div
                     className="mb-4 border shadow-lg border-primary-light bg-primary/10 rounded-lg"
                     key={idx}
@@ -219,7 +283,12 @@ const GameDetailsPage = () => {
                       })}
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <div className="text-center py-5 text-gray-400">
+                  No Data Available
+                </div>
+              )}
             </div>
           </div>
         )}

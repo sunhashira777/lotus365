@@ -87,22 +87,17 @@ const useGameDetailsHook = () => {
   ]);
   const fancyMarketData = useMemo(() => {
     return (
-      Object.entries(fancyMarkets)
-        .filter(
-          ([marketName]) =>
-            activeCategory === 'All' || marketName === activeCategory,
-        )
-        .map(([marketName, marketItems]) => ({
-          marketName,
-          markets: [...marketItems]
-            .sort((a, b) => (a.sortPriority ?? 0) - (b.sortPriority ?? 0))
-            .map((m) => ({
-              ...m,
-              runners: formatRunners(m),
-            })),
-        })) || []
+      Object.entries(fancyMarkets).map(([marketName, marketItems]) => ({
+        marketName,
+        markets: [...marketItems]
+          .sort((a, b) => (a.sortPriority ?? 0) - (b.sortPriority ?? 0))
+          .map((m) => ({
+            ...m,
+            runners: formatRunners(m),
+          })),
+      })) || []
     );
-  }, [fancyMarkets, activeCategory]);
+  }, [fancyMarkets]);
   const sessionMarkets = useMemo(() => {
     const fancyMarkets = data?.catalogue?.fancyMarkets;
 
