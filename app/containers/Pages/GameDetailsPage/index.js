@@ -220,13 +220,14 @@ const GameDetailsPage = () => {
                   marketData={market}
                   runnersData={market?.runners || []}
                   variation="primary"
+                  // oddsClassName={'justify-end sm:justify-center'}
                   min={market.min}
                   max={market.max}
                   marketCategory={'NORMAL'}
                 />
               ))}
               <div className="w-full overflow-x-auto bg-primary-1500 border-b">
-                <div className="flex min-w-max">
+                <div className="flex w-full overflow-x-auto whitespace-nowrap">
                   {ALL_TABS.map((tab) => (
                     <button
                       key={tab}
@@ -252,10 +253,10 @@ const GameDetailsPage = () => {
                     key={idx}
                   >
                     <div className="bg-marketHead mb-1">
-                      <div className="py-1 px-5 text-sm flex items-center justify-between border-b-[2px]">
+                      <div className="py-1 px-1 text-sm flex items-center justify-between border-b-[2px]">
                         <div className="font-bold">{marketName}</div>
 
-                        <div className="flex gap-2">
+                        <div className="flex justify-center items-center gap-2 w-max md:w-full md:max-w-[415px] overflow-x-auto">
                           <span className="w-[55px] text-center font-semibold">
                             No
                           </span>
@@ -276,6 +277,7 @@ const GameDetailsPage = () => {
                             marketData={market}
                             runnersData={runners ?? {}}
                             reverseOddsOrder
+                            oddsClassName={'justify-end sm:justify-center'}
                             min={sessionMinBetAmount}
                             max={sessionMaxBetAmount}
                           />

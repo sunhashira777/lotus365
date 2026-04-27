@@ -1,9 +1,9 @@
 /* eslint-disable */
 import GradientHeading from '@/components/GradientHeading';
 import Pagination from '@/containers/Pagination';
+
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
-import { numberWithCommas } from '@/utils/numberWithCommas';
-import { Empty } from 'antd';
+import { formatDate, formatNumber } from '@/utils/marketFormaterHelpers';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -19,7 +19,7 @@ function ProfitAndLoss() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [page, setPage] = useState(1);
-  const [sportClick, setSportClick] = useState('');
+  const [total, setTotal] = useState(0);
   const take = 15;
   const handleTabClick = (id) => {
     setActiveTab(id);
@@ -44,59 +44,57 @@ function ProfitAndLoss() {
     getProfitLoss(page);
   }, [activeTab, page, take, startDate, endDate, User]);
 
-const getProfitLoss = async (page) => {
-  const islogin = isLoggedIn();
-  if (!islogin) return;
+  const getProfitLoss = async (page) => {
+    const islogin = isLoggedIn();
+    if (!islogin) return;
 
-  try {
-    const url = `/reports/event/profitloss?limit=${take}&offset=${
-      (page - 1) * take
-    }&gameType=SPORTS&sport=${
-      activeTab === 'Cricket'
-        ? 'Cricket'
-        : activeTab === 'Soccer'
-        ? 'Soccer'
-        : activeTab === 'Tennis'
-        ? 'Tennis'
-        : 'Cricket'
-    }`;
+    try {
+      const url = `/reports/event/profitloss?limit=${take}&offset=${
+        (page - 1) * take
+      }&gameType=SPORTS&sport=${
+        activeTab === 'Cricket'
+          ? 'Cricket'
+          : activeTab === 'Soccer'
+          ? 'Soccer'
+          : activeTab === 'Tennis'
+          ? 'Tennis'
+          : 'Cricket'
+      }`;
 
-    const dateFilter =
-      startDate && endDate
-        ? `&startDate=${moment(startDate).format(
-            'YYYY-MM-DD',
-          )}&endDate=${moment(endDate)
-            .add(1, 'day')
-            .format('YYYY-MM-DD')}`
-        : '';
+      const dateFilter =
+        startDate && endDate
+          ? `&startDate=${moment(startDate).format(
+              'YYYY-MM-DD',
+            )}&endDate=${moment(endDate).add(1, 'day').format('YYYY-MM-DD')}`
+          : '';
 
-    const response = await getAuthData(url + dateFilter);
+      const response = await getAuthData(url + dateFilter);
 
-    if (response?.status === 200) {
-      // ✅ FIXED LINE
-      const data = response?.data?.eventProfitLoss || [];
+      if (response?.status === 200) {
+        // ✅ FIXED LINE
+        const data = response?.data?.eventProfitLoss || [];
+        setTotal(response?.data?.pagination?.totalCount || 0);
+        const formattedData = data.map((entry) => {
+          const profit = Number(entry.totalProfitLoss || 0);
 
-      const formattedData = data.map((entry) => {
-        const profit = Number(entry.totalProfitLoss || 0);
+          return {
+            ...entry,
+            type: profit >= 0 ? 'profit' : 'loss',
+            amount: Math.abs(profit),
+            createdAt: entry.lastBetTime,
+          };
+        });
 
-        return {
-          ...entry,
-          type: profit >= 0 ? 'profit' : 'loss',
-          amount: Math.abs(profit),
-          createdAt: entry.lastBetTime,
-        };
-      });
+        setProfitLossData(formattedData);
 
-      setProfitLossData(formattedData);
-
-      setPagination({
-        totalCount: response?.data?.pagination?.totalItems || 0,
-      });
+        setPagination({
+          totalCount: response?.data?.pagination?.totalItems || 0,
+        });
+      }
+    } catch (e) {
+      console.error(e);
     }
-  } catch (e) {
-    console.error(e);
-  }
-};
+  };
 
   // =========================
   // NEW SUMMARY API (ONLY CHANGE)
@@ -156,29 +154,6 @@ const getProfitLoss = async (page) => {
   displayTabs.forEach((event) => {
     totalProfitLoss += parseFloat(event.earning);
   });
-  console.log('displayTabs', displayTabs);
-
-  // =========================
-  // UI (UNCHANGED ✅)
-  const eventData = {
-    Cricket: [
-      {
-        id: 1,
-        date: '24/04/2026',
-        event: 'Hyderabad Kingsmen V Islamabad United',
-        pnl: -2,
-      },
-      {
-        id: 2,
-        date: '24/04/2026',
-        event: 'Royal Challengers Bengaluru V Gujarat Titans',
-        pnl: 98,
-      },
-    ],
-    Soccer: [],
-    Tennis: [],
-  };
-  const selectedEvents = eventData[activeTab] || [];
   // =========================
   return (
     <div className="min-h-screen mx-1 md:mx-0">
@@ -285,26 +260,28 @@ const getProfitLoss = async (page) => {
                     </div>
 
                     {/* Rows */}
-                    {(eventData?.[activeTab] || []).map((item, index) => (
+                    {profitLoss?.map((item, index) => (
                       <div
                         key={item.id}
                         className={`grid grid-cols-4 text-12 ${
                           index % 2 ? 'bg-white' : 'bg-[#f1f0f0]'
                         }`}
                       >
-                        <div className="p-2 border-r">{item.date}</div>
-                        <div className="p-2 border-r">{item.event}</div>
+                        <div className="p-2 border-r">
+                          {formatDate(item.createdAt)}
+                        </div>
+                        <div className="p-2 border-r">{item.eventName}</div>
 
                         <div
                           className={`p-2 border-r text-center ${
-                            item.pnl > 0
+                            item?.totalProfitLoss > 0
                               ? 'text-green-600'
-                              : item.pnl < 0
+                              : item?.totalProfitLoss < 0
                               ? 'text-red-600'
                               : ''
                           }`}
                         >
-                          {item.pnl}
+                          {formatNumber(item?.totalProfitLoss)}
                         </div>
 
                         <div className="p-2 text-center">
@@ -315,12 +292,19 @@ const getProfitLoss = async (page) => {
                       </div>
                     ))}
 
-                    {(eventData?.[activeTab] || []).length === 0 && (
+                    {profitLoss?.length === 0 && (
                       <div className="p-4 text-center text-gray-500">
                         No events available
                       </div>
                     )}
                   </div>
+                  {profitLoss?.length > 0 && (
+                    <Pagination
+                      pageCount={total}
+                      setPageNumber={setPage}
+                      take={take}
+                    />
+                  )}
                 </div>
               )}
             </div>

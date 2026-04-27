@@ -18,7 +18,7 @@ const MarketPanel = ({
   return (
     <>
       <div className="bg-marketHead">
-        <div className="py-1 px-5 text-sm flex items-center justify-between border-b-[2px]">
+        <div className="py-1 px-1 text-sm flex items-center justify-between border-b-[2px]">
           {/* LEFT SIDE */}
           <div className="flex items-center">
             <div className="flex flex-col leading-[16px] text-[13px] font-bold">

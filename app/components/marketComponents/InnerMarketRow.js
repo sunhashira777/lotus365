@@ -48,18 +48,18 @@ const InnerMarketRow = ({
 
   return (
     <>
-      <div className="px-2 bg-white">
+      <div className="bg-white">
         <div className="flex justify-between items-center text-inplay-rowText border-b border-[#ddd]">
           <div
             title={runnerName}
-            className="text-[12px] font-roboto font-semibold mx-2 "
+            className="text-[12px] font-roboto font-semibold mx-2 leading-none"
           >
             {runnerName}
           </div>
 
           {/* Odds Section */}
           <div className={`w-max md:min-w-[440px] flex gap-2 ${oddsClassName}`}>
-            <div className="relative flex items-center gap-2 mr-5 md:mr-0">
+            <div className="relative flex items-center gap-2 ">
               {marketCategory !== 'FANCY' && totalExposure ? (
                 <div
                   className={`bg-primary/20 rounded px-2 py-0.5 xl:absolute -left-2 xl:-translate-x-full text-xs font-bold flex items-center ${
