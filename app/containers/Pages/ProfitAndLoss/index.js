@@ -250,53 +250,58 @@ function ProfitAndLoss() {
                     ← Back
                   </button>
 
-                  <div className="border border-gray-300 rounded-sm overflow-hidden">
-                    {/* Header */}
-                    <div className="grid grid-cols-4 bg-[#8f8f8f] text-white font-bold text-14">
-                      <div className="p-2 border-r">Date</div>
-                      <div className="p-2 border-r">Event Name</div>
-                      <div className="p-2 border-r text-center">P & L</div>
-                      <div className="p-2 text-center">Show Bets</div>
-                    </div>
+                  <div className="w-full overflow-x-auto">
+                    <div className="min-w-[1000px] border border-gray-300 rounded-sm">
+                      {/* Header */}
+                      <div className="grid grid-cols-4 bg-[#8f8f8f] text-white font-bold text-14">
+                        <div className="p-2 border-r">Date</div>
+                        <div className="p-2 border-r">Event Name</div>
+                        <div className="p-2 border-r text-center">P & L</div>
+                        <div className="p-2 text-center">Show Bets</div>
+                      </div>
 
-                    {/* Rows */}
-                    {profitLoss?.map((item, index) => (
-                      <div
-                        key={item.id}
-                        className={`grid grid-cols-4 text-12 ${
-                          index % 2 ? 'bg-white' : 'bg-[#f1f0f0]'
-                        }`}
-                      >
-                        <div className="p-2 border-r">
-                          {formatDate(item.createdAt)}
-                        </div>
-                        <div className="p-2 border-r">{item.eventName}</div>
-
+                      {/* Rows */}
+                      {profitLoss?.map((item, index) => (
                         <div
-                          className={`p-2 border-r text-center ${
-                            item?.totalProfitLoss > 0
-                              ? 'text-green-600'
-                              : item?.totalProfitLoss < 0
-                              ? 'text-red-600'
-                              : ''
+                          key={item.id}
+                          className={`grid grid-cols-4 text-12 ${
+                            index % 2 ? 'bg-white' : 'bg-[#f1f0f0]'
                           }`}
                         >
-                          {formatNumber(item?.totalProfitLoss)}
-                        </div>
+                          <div className="p-2 border-r whitespace-nowrap">
+                            {formatDate(item.createdAt)}
+                          </div>
 
-                        <div className="p-2 text-center">
-                          <button className="bg-yellow-400 px-3 py-1 rounded font-semibold">
-                            Show Bets
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                          <div className="p-2 border-r whitespace-nowrap">
+                            {item.eventName}
+                          </div>
 
-                    {profitLoss?.length === 0 && (
-                      <div className="p-4 text-center text-gray-500">
-                        No events available
-                      </div>
-                    )}
+                          <div
+                            className={`p-2 border-r text-center whitespace-nowrap ${
+                              item?.totalProfitLoss > 0
+                                ? 'text-green-600'
+                                : item?.totalProfitLoss < 0
+                                ? 'text-red-600'
+                                : ''
+                            }`}
+                          >
+                            {formatNumber(item?.totalProfitLoss)}
+                          </div>
+
+                          <div className="p-2 text-center whitespace-nowrap">
+                            <button className="bg-yellow-400 px-3 py-1 rounded font-semibold">
+                              Show Bets
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+
+                      {profitLoss?.length === 0 && (
+                        <div className="p-4 text-center text-gray-500">
+                          No events available
+                        </div>
+                      )}
+                    </div>
                   </div>
                   {profitLoss?.length > 0 && (
                     <Pagination

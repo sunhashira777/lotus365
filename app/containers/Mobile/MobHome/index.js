@@ -194,7 +194,7 @@ const MobHome = () => {
               className="flex items-center gap-1"
             >
               <p className="text-12">My Bets</p>{' '}
-              <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center ">
+              <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center text-black ">
                 {userInfo?.betcountValue || 0}
               </div>
             </div>

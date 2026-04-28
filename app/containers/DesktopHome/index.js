@@ -447,7 +447,7 @@ const DesktopHome = () => {
             </h1>
             <div className="flex items-center gap-1">
               <p className="text-[13px] font-bold">Open Bets</p>
-              <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center ">
+              <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center text-black">
                 {total || 0}
               </div>
             </div>
