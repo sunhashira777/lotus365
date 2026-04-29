@@ -219,6 +219,9 @@ const Navbar = () => {
                         {reactIcons.search}
                       </div>
                     )}{' '}
+                    <button className="text-[14px] mr-2 border-r-2 border-b-2 text-black bg-[#f4d821]  px-2 py-1 rounded-[3px] border-black/25">
+                      Affiliate
+                    </button>
                     {!(location.pathname === '/dashboard' && isMobile) && (
                       <button
                         onClick={toggleRightDrawer(true)}
@@ -256,7 +259,7 @@ const Navbar = () => {
                       </span>
                     </div> */}
                     <div className="flex items-center ">
-                      <button
+                      {/* <button
                         onClick={() => navigate('/account/deposit')}
                         className="text-[14px] mr-2 bg-[#026B4F] border-r-2 border-b-2 text-white hover:text-[#f4d821] hover:bg-[#1E8067] px-2 py-1 rounded-[3px] border-black/25"
                       >
@@ -267,6 +270,9 @@ const Navbar = () => {
                         className="text-[14px] bg-[#026B4F] border-r-2 border-b-2 text-white hover:text-[#f4d821] hover:bg-[#1E8067] px-2 py-1 rounded-[3px] border-black/25"
                       >
                         Withdrawal
+                      </button> */}
+                      <button className="text-[14px] mr-2 border-r-2 border-b-2 text-black bg-[#f4d821]  px-2 py-1 rounded-[3px] border-black/25">
+                        Affiliate
                       </button>
                       <DropDown />
                       <button

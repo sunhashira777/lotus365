@@ -18,31 +18,43 @@ import {
 } from '@/components';
 import { getImage } from '@/utils/imagekit';
 import { useFetchMyBetsData } from '@/hooks/useFetchMyBetsData';
+import useCasinoGame from '../Pages/Casino/useCasinoGame';
+import CasinoIframe from '@/components/CasinoIframe';
+import { createPortal } from 'react-dom';
 
 const gifArr = [
   {
     id: 1,
     gif: '/images/gifs/1.gif',
-    gameId: 67722,
-    launchId: ['67722-2_8', '6772228'],
+    gameId: {
+      game_id: '2162016',
+    },
+    // launchId: ['67722-2_8', '6772228'],
     title: 'AVIATOR',
   },
   {
     id: 2,
     gif: '/images/gifs/2.gif',
-    gameId: 70011,
+    gameId: {
+      game_id: '2162248',
+    },
     launchId: ['70011_8', '700118'],
     title: 'MINES',
   },
   {
     id: 3,
     gif: '/images/gifs/3.gif',
-    gameId: 70001,
+    gameId: {
+      game_id: '2842988',
+    },
     launchId: ['70001_8', '700018'],
     title: 'FUN GAMES',
   },
   {
     id: 4,
+    gameId: {
+      game_id: '2162248',
+    },
     gif: '/images/gifs/4.gif',
   },
 ];
@@ -50,6 +62,7 @@ const gifArr = [
 const DesktopHome = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [iframeHtml, setIframeHtml] = useState(null);
   const [selectedGif, setSelectedGif] = useState({
     launchId: null,
     title: '',
@@ -308,6 +321,21 @@ const DesktopHome = () => {
       state: { provider: item.key, type: item.type },
     });
   };
+  const { handleGameClick, closeGame } = useCasinoGame({
+    setLoading: setisLoading,
+    setIframeHtml,
+  });
+  useEffect(() => {
+    if (iframeHtml) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [iframeHtml]);
 
   return (
     <div className="w-full light-bg ">
@@ -384,19 +412,13 @@ const DesktopHome = () => {
             <div
               onClick={() => {
                 if (isLogin) {
-                  if (item?.launchId) {
-                    setSelectedGif({
-                      launchId: item.launchId ? item.launchId[0] : null,
-                      title: item.title || 'Casino',
-                    });
-                    setIsModalOpen(true);
-                  }
+                  handleGameClick(item?.gameId);
                 } else {
                   dispatch(openModal('login'));
                 }
               }}
               key={index}
-              className="rounded-[4px] overflow-hidden"
+              className="rounded-[4px] cursor-pointer overflow-hidden"
             >
               <img
                 src={getImage(item?.gif)}
@@ -509,6 +531,18 @@ const DesktopHome = () => {
           />
         )}
       </div>
+
+      {iframeHtml &&
+        createPortal(
+          <CasinoIframe
+            iframeHtml={iframeHtml}
+            onBack={() => {
+              setIframeHtml(null);
+              window.history.back();
+            }}
+          />,
+          document.body,
+        )}
     </div>
   );
 };

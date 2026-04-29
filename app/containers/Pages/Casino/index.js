@@ -1,17 +1,14 @@
 import { Footer, Loading, Navbar } from '@/components';
-import { getAuthData, isLoggedIn, postAuthData } from '@/utils/apiHandlers';
+import { getAuthData } from '@/utils/apiHandlers';
 import { casinoProviders } from '@/utils/constants';
 import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-import { showToast } from '@/utils/toastHandler';
-import { openModal } from '@/redux/Slices/modalSlice';
 import { useLocation } from 'react-router-dom';
+import CasinoIframe from '@/components/CasinoIframe';
+import useCasinoGame from './useCasinoGame';
 
 const Casino = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state?.user?.profile);
   const location = useLocation();
   const itemRefs = useRef([]);
   const loaderRef = useRef(null);
@@ -123,6 +120,7 @@ const Casino = () => {
       params.append('page', page);
       params.append('limit', LIMIT);
       params.append('status', 'ACTIVE');
+      params.append('search', searchTerm);
 
       // ✅ PROVIDER FIX
       if (activeProvider.toLowerCase() !== 'all') {
@@ -186,77 +184,10 @@ const Casino = () => {
   }, [activeProvider]);
 
   /* -------------------- Launch Game -------------------- */
-  const handleGameClick = async (game) => {
-    if (!isLoggedIn()) {
-      dispatch(openModal('login'));
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const payload = {
-        platform: /Mobi|Android|iPhone/i.test(navigator.userAgent)
-          ? 'mobile'
-          : 'desktop',
-        gameid: game?.game_id,
-        id: user.id,
-      };
-
-      const res = await postAuthData('/casino/launch', payload);
-
-      if ((res?.status === 200 || res?.status === 201) && res?.data?.data) {
-        const raw = res.data.data;
-        const json = JSON.parse(raw.substring(raw.indexOf('{')));
-
-        window.history.pushState({ game: true }, '');
-
-        setIframeHtml(`
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-</head>
-<body style="margin:0;padding:0;overflow:hidden;">
-  ${json.gameHtml || ''}
-  <script>
-    ${json.gameScript || ''}
-
-      function forceContainerHeight() {
-    const el = document.getElementById("egamings_container");
-    if (el) {
-      el.style.height = "100vh";
-      el.style.maxHeight = "100vh";
-      el.style.width = "100vw";
-    }
-  }
-
-  // run immediately
-  forceContainerHeight();
-
-  // run again after delays (in case game injects late)
-  setTimeout(forceContainerHeight, 100);
-  setTimeout(forceContainerHeight, 500);
-  setTimeout(forceContainerHeight, 1000);
-
-
-    setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
-    setTimeout(() => window.dispatchEvent(new Event('resize')), 1000);
-  </script>
-</body>
-</html>
-        `);
-      } else {
-        showToast('error', 'Game launch failed');
-      }
-    } catch {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { handleGameClick, closeGame } = useCasinoGame({
+    setLoading,
+    setIframeHtml,
+  });
 
   /* -------------------- UI -------------------- */
   return (
@@ -332,34 +263,13 @@ const Casino = () => {
         </>
       ) : (
         /* ---------------- GAME VIEW ---------------- */
-        <div
-          className="fixed left-0 right-0 bottom-0 z-[9999] bg-black"
-          style={{ top: '64px' }}
-        >
-          {/* Back Button */}
-          <button
-            onClick={() => {
-              setIframeHtml(null);
-              window.history.back();
-            }}
-            className="absolute top-2 left-2 z-[10000] bg-yellow-400 px-3 py-1 rounded font-bold"
-          >
-            ← Back
-          </button>
-
-          <iframe
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-            srcDoc={iframeHtml}
-            allowFullScreen
-            title="Casino Game"
-            style={{
-              width: '100%',
-              height: '100%',
-              border: '0',
-              display: 'block',
-            }}
-          />
-        </div>
+        <CasinoIframe
+          iframeHtml={iframeHtml}
+          onBack={() => {
+            setIframeHtml(null);
+            window.history.back();
+          }}
+        />
       )}
     </div>
   );

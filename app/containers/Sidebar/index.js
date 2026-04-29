@@ -4,6 +4,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import LeftSidebarDesk from '@/components/LeftSidebarDesk';
+import FloatingIcons from '@/components/FloatingIcons';
 
 const Sidebar = () => {
   return (
@@ -21,6 +22,7 @@ const Sidebar = () => {
         </div>
       </section>
       <Footer />
+      <FloatingIcons />
     </div>
   );
 };

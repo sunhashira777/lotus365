@@ -35,55 +35,73 @@ export default function SidebarDrawer({ open, toggleDrawer }) {
 
   const renderDrawerContent = () => {
     return (
-      <div className="w-[240px] shrink-0 bg-white border border-[#ddd] overflow-hidden">
-        <div className="flex flex-col w-full">
-          <NavLink
-            onClick={toggleDrawer}
-            to={'/'}
-            className={
-              'text-[16px] font-bold border-b text-black border-[#ddd] py-[9px] pl-[15px] flex items-center gap-2  hover:bg-gray-100'
-            }
+      <>
+        <div
+          // onClick={toggleDrawer}
+          // to={'/'}
+          className={
+            'flex items-center justify-between bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)] border-b border-gray-100 p-1'
+          }
+        >
+          <img src="/images/lotusLogo.jpg" alt="log" className="h-10" />
+          <button
+            onClick={() => toggleDrawer(false)()}
+            className="text-black font-bold text-xl cursor-pointer bg-[#f4d821] rounded"
           >
-            <div className="text-[#e4c41e] w-[18px]">{reactIcons.star}</div>
-            Favourites
-          </NavLink>
-          {links.map((item, index) => (
-            <div
-              onClick={() => handleLinkClick(item)}
-              // to={item.path}
-              key={index}
+            {reactIcons.close}
+          </button>
+        </div>
+
+        <div className="w-[240px] shrink-0 bg-white border border-[#ddd] overflow-hidden">
+          <div className="flex flex-col w-full">
+            <NavLink
+              onClick={toggleDrawer}
+              to={'/'}
               className={
                 'text-[16px] font-bold border-b text-black border-[#ddd] py-[9px] pl-[15px] flex items-center gap-2  hover:bg-gray-100'
               }
             >
-              <span className="">
-                <img
-                  src={getImage(item.icon)}
-                  alt={item.title}
-                  className="w-[18px] h-[18px]"
-                />
-              </span>{' '}
-              {item.title}
-            </div>
-          ))}
-        </div>
-
-        <div className="px-4">
-          <h4 className="text-[#1e8067] text-16 font-bold my-4">
-            Get Instant ID On Whatsapp
-          </h4>
-          <div>
-            {getIdArr.map((item, index) => (
-              <img
-                src={getImage(item.img)}
+              <div className="text-[#e4c41e] w-[18px]">{reactIcons.star}</div>
+              Favourites
+            </NavLink>
+            {links.map((item, index) => (
+              <div
+                onClick={() => handleLinkClick(item)}
+                // to={item.path}
                 key={index}
-                className="w-[80%] mb-2"
-                alt=""
-              />
+                className={
+                  'text-[16px] font-bold border-b text-black border-[#ddd] py-[9px] pl-[15px] flex items-center gap-2  hover:bg-gray-100'
+                }
+              >
+                <span className="">
+                  <img
+                    src={getImage(item.icon)}
+                    alt={item.title}
+                    className="w-[18px] h-[18px]"
+                  />
+                </span>{' '}
+                {item.title}
+              </div>
             ))}
           </div>
+
+          <div className="px-4">
+            <h4 className="text-[#1e8067] text-16 font-bold my-4">
+              Get Instant ID On Whatsapp
+            </h4>
+            <div>
+              {getIdArr.map((item, index) => (
+                <img
+                  src={getImage(item.img)}
+                  key={index}
+                  className="w-[80%] mb-2"
+                  alt=""
+                />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
