@@ -158,14 +158,14 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             <div
               onClick={() => dispatch(openModal('rules'))}
               key={index}
-              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-bold gap-2 "
+              className="text-12 border-y border-[#ddd] py-2 px-3 flex items-center font-bold gap-2 "
             >
               <img
                 src={getImage(item.icon)}
                 className="rightS-svg w-[18px] h-[18px]"
                 alt=""
               />{' '}
-              <span className="font-bold font-roboto text-[13px]">
+              <span className="font-bold font-roboto text-[14px]">
                 {item.title}
               </span>
             </div>
@@ -174,14 +174,14 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               to={item.path}
               onClick={() => setOpen(false)}
               key={index}
-              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-bold gap-2 "
+              className="text-12 border-y border-[#ddd] py-2 px-3 flex items-center font-bold gap-2 "
             >
               <img
                 src={getImage(item.icon)}
                 className="rightS-svg w-[18px] h-[18px]"
                 alt=""
               />{' '}
-              <span className="font-bold font-roboto text-[13px]">
+              <span className="font-bold font-roboto text-[14px]">
                 {item.title}
               </span>
             </NavLink>

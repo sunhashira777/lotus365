@@ -214,10 +214,10 @@ const Casino = () => {
                 <button
                   key={p}
                   onClick={() => handleProviderClick(p)}
-                  className={`px-3 py-1 whitespace-nowrap ${
+                  className={`px-3 capitalize text-12 font-roboto py-1 whitespace-nowrap ${
                     activeProvider === p
                       ? 'bg-yellow-400'
-                      : 'bg-green-600 text-white'
+                      : 'bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)] text-white'
                   }`}
                 >
                   {p}
@@ -226,20 +226,33 @@ const Casino = () => {
             </div>
 
             {/* Categories */}
-            <div className="flex gap-1 mt-2 overflow-x-auto">
+            <div className="flex mt-2 overflow-x-auto no-scrollbar px-1">
               {categories.map((cat, i) => (
-                <button
+                <div
                   key={i}
                   ref={(el) => (itemRefs.current[i] = el)}
                   onClick={() => handleCategoryClick(cat, i)}
-                  className={`px-2 py-1 whitespace-nowrap ${
-                    activeCategory === cat.category
-                      ? 'bg-yellow-400'
-                      : 'bg-gray-200'
-                  }`}
+                  className={`flex flex-col items-center justify-center 
+        min-w-[80px] h-[60px] cursor-pointer 
+        border transition-all
+        ${
+          activeCategory === cat.category
+            ? 'bg-yellow-400 border-yellow-500 text-white'
+            : 'bg-[#e9e9e9] border-gray-300'
+        }`}
                 >
-                  {cat.category}
-                </button>
+                  {/* Icon */}
+                  <img
+                    src="/images/casino.svg"
+                    alt={cat.category}
+                    className="w-6 h-6 mb-1"
+                  />
+
+                  {/* Label */}
+                  <span className="text-[12px] whitespace-nowrap font-medium text-center px-1">
+                    {cat.category}
+                  </span>
+                </div>
               ))}
             </div>
 

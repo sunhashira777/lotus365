@@ -4,6 +4,7 @@ import { Footer, MobFooter, Navbar } from '@/components';
 import { Outlet } from 'react-router-dom';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { useSelector } from 'react-redux';
+import FloatingIcons from '@/components/FloatingIcons';
 // import { isLoggedIn } from '@/utils/apiHandlers';
 
 function MobLayout() {
@@ -53,6 +54,7 @@ function MobLayout() {
           <Outlet />
         </div>
         <Footer />
+        <FloatingIcons />
       </div>
     </>
   );
