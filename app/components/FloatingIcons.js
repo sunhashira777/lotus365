@@ -1,8 +1,9 @@
+import { useGetContactSupportQuery } from '@/api/userApi';
 import { MessageCircle, Eye, ChevronUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 const FloatingIcons = () => {
   const [show, setShow] = useState(false);
-
+  const { data: supportInfo } = useGetContactSupportQuery();
   useEffect(() => {
     const handleScroll = () => {
       // show button after scrolling 200px
@@ -27,10 +28,14 @@ const FloatingIcons = () => {
           🎮
         </div>
 
-        {/* Support */}
-        <div className="rounded-full shadow-md cursor-pointer">
-          <img src="/images/support.webp" alt="message" className="w-16" />
-        </div>
+        {supportInfo?.whatsapp && (
+          <a
+            href={supportInfo?.whatsapp}
+            className="rounded-full shadow-md cursor-pointer"
+          >
+            <img src="/images/support.webp" alt="message" className="w-16" />
+          </a>
+        )}
       </div>
 
       {/* RIGHT SIDE */}
@@ -54,9 +59,14 @@ const FloatingIcons = () => {
         </div>
 
         {/* Support / Chat */}
-        <div className="w-12 h-12 rounded-full bg-[#1e8067] flex items-center justify-center text-white shadow-md cursor-pointer">
-          <img src="/images/message.webp" alt="message" className="w-4" />
-        </div>
+        {supportInfo?.whatsapp && (
+          <a
+            href={supportInfo?.whatsapp}
+            className="w-12 h-12 rounded-full bg-[#1e8067] flex items-center justify-center text-white shadow-md cursor-pointer"
+          >
+            <img src="/images/message.webp" alt="message" className="w-4" />
+          </a>
+        )}
       </div>
     </>
   );
