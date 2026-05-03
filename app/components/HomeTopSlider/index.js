@@ -7,6 +7,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { getImage } from '@/utils/imagekit';
+import { useGetBannersQuery } from '@/api/contentApi';
+import { useBannerPlatform } from '@/hooks/useBannerPlatform';
 
 const imagesArr = [
   {
@@ -57,6 +59,31 @@ const imagesArr = [
 ];
 
 const HomeTopSLider = () => {
+  const { platform } = useBannerPlatform();
+  const { data, isLoading } = useGetBannersQuery({
+    platform,
+    type: 'HomeBanner',
+  });
+  const banners = data?.data?.[platform]?.HomeBanner ?? [];
+  console.log('banners', banners);
+  const MIN_SLIDES = 3;
+
+  const getBannerList = (apiBanners, fallbackBanners) => {
+    let finalBanners = [...(apiBanners || [])];
+
+    if (finalBanners.length === 0) {
+      return fallbackBanners;
+    }
+    let i = 0;
+    while (finalBanners.length < MIN_SLIDES) {
+      finalBanners.push(fallbackBanners[i % fallbackBanners.length]);
+      i++;
+    }
+
+    return finalBanners;
+  };
+
+  const bannerList = getBannerList(banners, imagesArr);
   return (
     <div className="my-2 relative w-full ">
       <Swiper
@@ -65,8 +92,8 @@ const HomeTopSLider = () => {
         slidesPerView={3}
         spaceBetween={0}
         autoplay={{
-          delay: 30000,
-          disableOnInteraction: true,
+          delay: 3000,
+          disableOnInteraction: false,
         }}
         breakpoints={{
           10: {
@@ -93,7 +120,7 @@ const HomeTopSLider = () => {
         }}
         className="mySwiper w-full"
       >
-        {imagesArr?.map((item, index) => (
+        {bannerList?.map((item, index) => (
           <SwiperSlide
             key={index}
             className=" h-[200px] flex items-center justify-center"
